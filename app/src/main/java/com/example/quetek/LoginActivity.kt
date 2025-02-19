@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 
 class LoginActivity : Activity() {
@@ -18,6 +18,7 @@ class LoginActivity : Activity() {
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnGuest = findViewById<Button>(R.id.btnGuest)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnForgetPassword = findViewById<TextView>(R.id.btnForgetPassword)
 
         btnLogin.setOnClickListener {
             val username = etUsername.text
@@ -28,11 +29,16 @@ class LoginActivity : Activity() {
                 return@setOnClickListener
             }
 
+            Log.e("QueTek", "Navigating to LandingActivity")
             val intent = Intent(this, LandingActivity::class.java)
             startActivity(intent)
         }
 
         btnGuest.setOnClickListener {
+            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
+        }
+
+        btnForgetPassword.setOnClickListener {
             Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
     }
