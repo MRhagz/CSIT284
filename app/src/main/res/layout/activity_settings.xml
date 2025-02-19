@@ -141,4 +141,22 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/flATD"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_border"
+        android:layout_margin="5dp"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About the developers"
+            android:textColor="@color/black"
+            android:layout_margin="5dp"/>
+
+    </FrameLayout>
+
 </LinearLayout>
