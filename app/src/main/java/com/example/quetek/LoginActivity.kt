@@ -14,6 +14,10 @@ class LoginActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        val adminUser = "admin"
+        val adminPass = "admin123"
+
+        val tvInfo = findViewById<TextView>(R.id.tvInfo)
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnGuest = findViewById<Button>(R.id.btnGuest)
@@ -29,9 +33,14 @@ class LoginActivity : Activity() {
                 return@setOnClickListener
             }
 
-            Log.e("QueTek", "Navigating to LandingActivity")
-            val intent = Intent(this, LandingActivity::class.java)
-            startActivity(intent)
+            if (adminUser.equals(username.toString()) && adminPass.equals(password.toString())) {
+                Log.e("QueTek", "Navigating to LandingActivity")
+                val intent = Intent(this, LandingActivity::class.java)
+                startActivity(intent)
+            } else {
+                Log.e("Quetek", "Incorrect information.")
+                tvInfo.setText("Incorrect username or password.")
+            }
         }
 
         btnGuest.setOnClickListener {

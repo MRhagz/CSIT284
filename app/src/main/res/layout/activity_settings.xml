@@ -50,6 +50,7 @@
         android:focusable="true">
 
         <ImageButton
+            android:layout_marginVertical="5dp"
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:src="@drawable/profile_icon"
