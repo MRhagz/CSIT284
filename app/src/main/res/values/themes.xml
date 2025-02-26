@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.QueTek" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.QueTek" parent="Theme.AppCompat.DayNight.NoActionBar">
+
+    <item name="colorPrimary">@color/gold</item>
+    <item name="colorPrimaryDark">@color/maroon</item>
+    <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="Theme.Demo" parent="Theme.QueTek" />
 </resources>

@@ -8,5 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#007AFF</color>
-    <color name="red">#F44336</color>
+    <color name="red">#D84747</color>
+
+    <color name="maroon">#8c3a3f</color>
+    <color name="gold">#f4c108</color>
 </resources>

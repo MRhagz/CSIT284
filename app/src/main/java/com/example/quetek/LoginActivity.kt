@@ -15,7 +15,7 @@ class LoginActivity : Activity() {
         setContentView(R.layout.activity_login)
 
         val adminUser = "admin"
-        val adminPassword = "admin123"
+        val adminPass = "admin123"
 
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
@@ -31,20 +31,24 @@ class LoginActivity : Activity() {
             if (username.isNullOrBlank() || password.isNullOrBlank()) {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
-            } else if (adminUser.equals(username.toString()) && adminPassword.equals(password.toString())) {
+            }
+
+            if (adminUser.equals(username.toString()) && adminPass.equals(password.toString())) {
                 Log.e("QueTek", "Navigating to LandingActivity")
                 val intent = Intent(this, LandingActivity::class.java)
                 startActivity(intent)
+            } else {
+                Log.e("Quetek", "Incorrect information.")
+                tvloginFeedback.setText("Incorrect username or password.")
             }
-            tvloginFeedback.setText("Incorrect username or password.")
         }
 
         btnGuest.setOnClickListener {
-            Toast.makeText(this, "Feature under development.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
 
         btnForgetPassword.setOnClickListener {
-            Toast.makeText(this, "Feature under development.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
     }
 
