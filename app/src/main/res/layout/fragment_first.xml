@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FirstFragment">
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LandingActivity"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/llHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal">
+
+
+            <ImageView
+                android:layout_width="101dp"
+                android:layout_height="66dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/quetek_logo" />
+
+            <ImageView
+                android:maxWidth="100dp"
+                android:layout_width="0dp"
+                android:layout_height="41dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/quetek_text"
+                android:layout_weight="1"
+                android:layout_marginEnd="30dp"/>
+
+
+            <ImageButton
+                android:id="@+id/ibtnMenu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/profile_icon"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="menu"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:padding="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_border"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ticket ID:"
+                    android:layout_gravity="center"
+                    android:textSize="24dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:layout_gravity="center"
+                    android:textSize="64dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:padding="12dp"
+                android:background="@drawable/rounded_border"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Serving Time:"
+                    android:layout_gravity="center"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00:00"
+                    android:layout_gravity="center"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="12dp"
+                android:background="@drawable/rounded_border"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Queue Position:"
+                    android:layout_gravity="center"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:layout_gravity="center"
+                    android:textSize="42dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:padding="12dp"
+                android:background="@drawable/rounded_border"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Queue Length:"
+                    android:layout_gravity="center"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:layout_gravity="center"
+                    android:textSize="42dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="12dp"
+                android:background="@drawable/rounded_border"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Window no.:"
+                    android:layout_gravity="center"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:layout_gravity="center"
+                    android:textSize="42dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnNotifyMe"
+            android:layout_marginVertical="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/button_rounded"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"
+            android:textAllCaps="false"
+            android:text="Notify Me"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"/>
+
+        <Button
+            android:id="@+id/btnJoinQueue"
+            android:layout_marginVertical="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/button_rounded"
+            android:textColor="@color/white"
+            android:layout_margin="5dp"
+            android:textAllCaps="false"
+            android:text="Join Queue"/>
+
+        <Button
+            android:id="@+id/btnPriorityLane"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/rounded_border"
+            android:text="Priority Lane"
+            android:textAllCaps="false"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>
