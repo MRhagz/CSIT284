@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context=".LandingFragment">
 
     <LinearLayout
         android:id="@+id/main"
@@ -206,42 +206,45 @@
         </LinearLayout>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnNotifyMe"
             android:layout_marginVertical="5dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/button_rounded"
-            android:textColor="@color/white"
+            android:background="@drawable/button_selector"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/black"
             android:layout_margin="5dp"
             android:textAllCaps="false"
-            android:text="Notify Me"/>
+            android:text="Notify Me" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="40dp"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnJoinQueue"
             android:layout_marginVertical="5dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/button_rounded"
+            android:background="@drawable/button_selector"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:textColor="@color/white"
             android:layout_margin="5dp"
             android:textAllCaps="false"
             android:text="Join Queue"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPriorityLane"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="5dp"
             android:layout_marginVertical="5dp"
-            android:background="@drawable/rounded_border"
+            android:background="@drawable/button_selector"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="Priority Lane"
             android:textAllCaps="false"
-            android:textColor="@color/black"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

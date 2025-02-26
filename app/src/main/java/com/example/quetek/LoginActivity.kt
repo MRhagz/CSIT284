@@ -30,7 +30,7 @@ class LoginActivity : Activity() {
             }
 
             Log.e("QueTek", "Navigating to LandingActivity")
-            val intent = Intent(this, LandingActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 

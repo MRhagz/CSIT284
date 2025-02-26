@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        val firstFragment = FirstFragment()
+        val firstFragment = LandingFragment()
         val secondFragment = SecondFragment()
 //        val thirdFragment = ThirdFragment()
 

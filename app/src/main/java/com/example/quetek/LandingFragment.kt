@@ -8,15 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
-import androidx.lifecycle.findViewTreeViewModelStoreOwner
 
-class FirstFragment : Fragment() {
+class LandingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view =  inflater.inflate(R.layout.fragment_first, container, false)
+        val view =  inflater.inflate(R.layout.fragment_landing, container, false)
 
         val btnNotifyMe = view.findViewById<Button>(R.id.btnNotifyMe)
         val btnJoinQueue = view.findViewById<Button>(R.id.btnJoinQueue)
@@ -25,7 +23,6 @@ class FirstFragment : Fragment() {
 
         ibtnMenu.setOnClickListener {
 //            toast("Settings for now kay naa kang classmate ang screen.")
-
             Log.e("QueTek", "Navigating to SettingsActivity")
 //
 //            val intent = Intent(this, SettingsActivity::class.java)
@@ -34,6 +31,7 @@ class FirstFragment : Fragment() {
 
         btnNotifyMe.setOnClickListener {
             // TODO
+            Log.e("QueTek", "Notify Me is Clicked")
 //            toast("Si teammate nag himo, sir!")
         }
 
