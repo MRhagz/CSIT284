@@ -14,11 +14,15 @@ class LoginActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        val adminUser = "admin"
+        val adminPassword = "admin123"
+
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnGuest = findViewById<Button>(R.id.btnGuest)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val btnForgetPassword = findViewById<TextView>(R.id.btnForgetPassword)
+        val btnForgetPassword = findViewById<Button>(R.id.btnForgetPassword)
+        val tvloginFeedback = findViewById<TextView>(R.id.tvLoginFeedback)
 
         btnLogin.setOnClickListener {
             val username = etUsername.text
@@ -27,19 +31,20 @@ class LoginActivity : Activity() {
             if (username.isNullOrBlank() || password.isNullOrBlank()) {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
+            } else if (adminUser.equals(username.toString()) && adminPassword.equals(password.toString())) {
+                Log.e("QueTek", "Navigating to LandingActivity")
+                val intent = Intent(this, LandingActivity::class.java)
+                startActivity(intent)
             }
-
-            Log.e("QueTek", "Navigating to LandingActivity")
-            val intent = Intent(this, LandingActivity::class.java)
-            startActivity(intent)
+            tvloginFeedback.setText("Incorrect username or password.")
         }
 
         btnGuest.setOnClickListener {
-            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Feature under development.", Toast.LENGTH_LONG).show()
         }
 
         btnForgetPassword.setOnClickListener {
-            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Feature under development.", Toast.LENGTH_LONG).show()
         }
     }
 

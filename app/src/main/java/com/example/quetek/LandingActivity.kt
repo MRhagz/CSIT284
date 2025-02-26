@@ -33,8 +33,8 @@ class LandingActivity : Activity() {
             toast("Si teammate nag himo, sir!")
         }
 
-        btnJoinQueue.setOnClickListener { toast("Feature underdevelopment.") }
-        btnPriorityQueue.setOnClickListener { toast("Feature underdevelopment.") }
+        btnJoinQueue.setOnClickListener { toast("Feature under development.") }
+        btnPriorityQueue.setOnClickListener { toast("Feature under development.") }
 
     }
 
