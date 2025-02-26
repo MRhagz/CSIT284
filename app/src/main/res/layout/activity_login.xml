@@ -46,6 +46,7 @@
 
     <EditText
         android:id="@+id/etPassword"
+        android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
@@ -55,18 +56,32 @@
         android:padding="15dp"
         android:background="@drawable/rounded_border"/>
 
-    <Button
-        android:id="@+id/btnForgetPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:text="Forgot password?"
-        android:layout_marginVertical="5dp"
-        android:textColor="@color/blue"
-        android:layout_gravity="right"
-        android:textAllCaps="false"
-        android:background="@null"/>
 
-    <Button
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp">
+
+        <TextView
+            android:id="@+id/tvLoginFeedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/red"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnForgetPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="Forgot password?"
+            android:layout_marginVertical="5dp"
+            android:textColor="@color/blue"
+            android:layout_gravity="right"
+            android:textAllCaps="false"
+            android:background="@null"/>
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogin"
         android:layout_marginVertical="5dp"
         android:layout_width="match_parent"
@@ -95,7 +110,7 @@
         android:textColor="@color/black"
         android:layout_gravity="center_horizontal"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGuest"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
