@@ -23,11 +23,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> setCurrentFragment(firstFragment)
                 R.id.nav_profile -> setCurrentFragment(secondFragment)
 //                R.id.settings -> setCurrentFragment(thirdFragment)
-
             }
             true
         }
-
     }
 
     private fun setCurrentFragment(fragment: Fragment) =
