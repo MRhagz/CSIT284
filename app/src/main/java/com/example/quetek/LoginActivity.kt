@@ -17,7 +17,7 @@ class LoginActivity : Activity() {
         val adminUser = "admin"
         val adminPass = "admin123"
 
-        val etUsername = findViewById<EditText>(R.id.etUsername)
+        val etUsername = findViewById<EditText>(R.id.etIdNumber)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnGuest = findViewById<Button>(R.id.btnGuest)
         val btnLogin = findViewById<Button>(R.id.btnLogin)

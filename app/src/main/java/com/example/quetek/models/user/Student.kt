@@ -1,8 +1,6 @@
 package com.example.quetek.models.user
 
-import java.lang.RuntimeException
-
-class User(username: String, password: String, firstName: String, middleName: String, lastName: String, email: String, idNumber: String) {
+class Student(username: String, password: String, firstName: String, middleName: String, lastName: String, email: String, idNumber: String) {
     private val username: String
         get(): String = field
     var password = ""
@@ -36,6 +34,16 @@ class User(username: String, password: String, firstName: String, middleName: St
         this.middleName = middleName
         this.lastName = lastName
         this.idNumber = idNumber
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Student) return false
+        return idNumber == other.idNumber
+    }
+
+    override fun hashCode(): Int {
+        return idNumber.hashCode()
     }
 }
 
