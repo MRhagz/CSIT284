@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="25dp">
+
+    <Button
+        android:id="@+id/backProfileButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/backbutton"
+        android:importantForAccessibility="no"
+        android:layout_marginBottom="30dp"
+        />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/profile"
+        android:src="@drawable/user"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        app:shapeAppearanceOverlay="@style/roundedImageView"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:id="@+id/usernameDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="5dp"
+        />
+
+    <TextView
+        android:id="@+id/emailDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="25dp"
+        />
+
+<!--    <Button-->
+<!--        android:id="@+id/editProfilePictureButton"-->
+<!--        android:layout_width="180dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:text="Change Picture"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:layout_marginBottom="40dp"-->
+<!--        android:background="@drawable/blackbutton"-->
+<!--        />-->
+
+    <TextView
+        android:text="Username:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/usernameInput"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/input_rectangle"
+        android:importantForAccessibility="no"
+        />
+
+    <TextView
+        android:text="Email:"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_gravity="start"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/emailInput"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:paddingStart="10dp"
+        android:singleLine="true"
+        android:textSize="24sp"
+        android:background="@drawable/input_rectangle"
+        android:importantForAccessibility="no"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/transparent"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:text="Update"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@drawable/blackbutton"/>
+
+
+</LinearLayout>

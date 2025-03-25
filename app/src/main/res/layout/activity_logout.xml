@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:padding="20dp">
+
+        <TextView
+            android:text="Logout"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Are you sure you want to log out? Please confirm your action."
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:text="Cancel"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:text="Logout"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/blackbutton"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
