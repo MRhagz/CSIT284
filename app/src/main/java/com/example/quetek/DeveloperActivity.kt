@@ -14,9 +14,9 @@ class DeveloperActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val backSettingsButton = findViewById<Button>(R.id.backSettingsButton)
-        backSettingsButton.setOnClickListener {
-            showToast("Back button clicked,  this will return to the settings page")
-        }
+//        val backSettingsButton = findViewById<Button>(R.id.backSettingsButton)
+//        backSettingsButton.setOnClickListener {
+//            showToast("Back button clicked,  this will return to the settings page")
+//        }
     }
 }

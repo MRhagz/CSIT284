@@ -29,13 +29,13 @@ class SettingsActivity : Activity() {
         ibtnBack.setOnClickListener {
             Log.e("Quetek", "Navigating to LandingActivity")
 
-            val intent = Intent(this, LandingFragment::class.java)
+            val intent = Intent(this, LandingActivity::class.java)
             startActivity(intent)
         }
 
         flATD.setOnClickListener {
             Log.e("Quetek", "About the devleopers clicked.")
-            Toast.makeText(this, "Teammate has the screen.", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, DeveloperActivity::class.java))
         }
 
     }

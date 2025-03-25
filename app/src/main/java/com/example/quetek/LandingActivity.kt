@@ -20,17 +20,15 @@ class LandingActivity : Activity() {
         val ibtnMenu = findViewById<ImageButton>(R.id.ibtnMenu)
 
         ibtnMenu.setOnClickListener {
-            toast("Settings for now kay naa kang classmate ang screen.")
+            Log.e("QueTek", "Navigating to Menu")
 
-            Log.e("QueTek", "Navigating to SettingsActivity")
-
-            val intent = Intent(this, SettingsActivity::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
         btnNotifyMe.setOnClickListener {
             // TODO
-            toast("Si teammate nag himo, sir!")
+            toast("Feature under development")
         }
 
         btnJoinQueue.setOnClickListener { toast("Feature under development.") }

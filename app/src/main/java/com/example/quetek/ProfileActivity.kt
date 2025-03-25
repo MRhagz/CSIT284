@@ -44,12 +44,13 @@ class ProfileActivity : Activity() {
         btnCancel.setOnClickListener { dialog.dismiss() }
         btnLogout.setOnClickListener {
             showToast("this will go back to the login page")
+            Log.e("ProfileActivity", "Navigating to Login Activity")
         }
 
         backButton.setOnClickListener {
-            Log.e("ProfileActivity", "will go back to my partner's page")
+            Log.e("ProfileActivity", "Navigating to Landing Activity")
             showToast("will go back to my partner's page")
-            return@setOnClickListener
+            startActivity(Intent(this, LandingActivity::class.java))
         }
 
         editProfileButton.setOnClickListener {
@@ -65,7 +66,9 @@ class ProfileActivity : Activity() {
         }
 
         settingsButton.setOnClickListener {
-            showToast("Settings clicked, this will be handled by my partner")
+//            showToast("Settings clicked, this will be handled by my partner")
+            Log.e("ProfileActivity", "Navigating to Settings Activity")
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         logoutButton.setOnClickListener {
