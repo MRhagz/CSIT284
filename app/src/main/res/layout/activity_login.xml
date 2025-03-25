@@ -34,13 +34,13 @@
         android:minHeight="50dp"/>
 
     <EditText
-        android:id="@+id/etUsername"
+        android:id="@+id/etIdNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:padding="15dp"
-        android:hint="Username"
+        android:hint="ID Number"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_border"/>
 
