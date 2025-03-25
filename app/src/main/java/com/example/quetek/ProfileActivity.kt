@@ -43,8 +43,8 @@ class ProfileActivity : Activity() {
 
         btnCancel.setOnClickListener { dialog.dismiss() }
         btnLogout.setOnClickListener {
-            showToast("this will go back to the login page")
             Log.e("ProfileActivity", "Navigating to Login Activity")
+            startActivity(Intent(this, LoginActivity::class.java))
         }
 
         backButton.setOnClickListener {
