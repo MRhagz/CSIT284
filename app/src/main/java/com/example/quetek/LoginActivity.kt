@@ -35,7 +35,7 @@ class LoginActivity : Activity() {
 
             if (adminUser.equals(username.toString()) && adminPass.equals(password.toString())) {
                 Log.e("QueTek", "Navigating to LandingActivity")
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, LandingActivity::class.java)
                 startActivity(intent)
             } else {
                 Log.e("Quetek", "Incorrect information.")
