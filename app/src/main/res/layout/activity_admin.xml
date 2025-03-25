@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LandingActivity"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_marginBottom="10dp"
+        android:id="@+id/llHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingEnd="15dp"
+        android:layout_gravity="center_horizontal">
+
+
+        <ImageView
+            android:layout_width="101dp"
+            android:layout_height="66dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/quetek_logo" />
+
+        <ImageView
+            android:maxWidth="100dp"
+            android:layout_width="0dp"
+            android:layout_height="41dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/quetek_text"
+            android:layout_weight="1"
+            android:layout_marginEnd="30dp"/>
+
+
+        <ImageButton
+            android:id="@+id/ibtnMenu"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/profile_icon"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="menu"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:padding="12dp"
+            android:background="@drawable/rounded_border"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_margin="5dp">
+
+            <TextView
+
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Queue Length:"
+                android:layout_gravity="center"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:textColor="@color/black"
+                android:id="@+id/QueueLength"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:layout_gravity="center"
+                android:textSize="42sp"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="12dp"
+            android:background="@drawable/rounded_border"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_margin="5dp">
+
+            <TextView
+
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Window no.:"
+                android:layout_gravity="center"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/windowNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                android:text="00"
+                android:layout_gravity="center"
+                android:textSize="42sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/rounded_border"
+        android:layout_margin="5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Now Serving:"
+                android:layout_gravity="center"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/servingNumber"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:layout_gravity="center"
+                android:textSize="64dp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:layout_marginTop = "20dp"
+        android:layout_marginStart = "20dp"
+        android:layout_marginEnd = "20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/blackbutton"/>
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:visibility="gone"
+        android:textSize="20dp"
+        android:layout_marginStart = "20dp"
+        android:layout_marginEnd = "20dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/rectangle"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_height="2dp"/>
+
+    <ListView
+        android:id="@+id/CustomAdminPanel"
+        android:nestedScrollingEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnStop"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_marginTop = "20dp"
+        android:layout_marginStart = "20dp"
+        android:layout_marginEnd = "20dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/blackbutton"/>
+
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>

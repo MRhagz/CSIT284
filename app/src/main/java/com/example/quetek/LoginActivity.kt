@@ -15,7 +15,7 @@ class LoginActivity : Activity() {
         setContentView(R.layout.activity_login)
 
         val adminUser = "admin"
-        val adminPass = "admin123"
+        val adminPass = "123"
 
         val etUsername = findViewById<EditText>(R.id.etIdNumber)
         val etPassword = findViewById<EditText>(R.id.etPassword)
@@ -34,12 +34,16 @@ class LoginActivity : Activity() {
             }
 
             if (adminUser.equals(username.toString()) && adminPass.equals(password.toString())) {
+                Log.e("QueTek", "Navigating to AdminActivity")
+                val intent = Intent(this, AdminActivity::class.java)
+                startActivity(intent)
+            } else {
                 Log.e("QueTek", "Navigating to LandingActivity")
                 val intent = Intent(this, LandingActivity::class.java)
                 startActivity(intent)
-            } else {
-                Log.e("Quetek", "Incorrect information.")
-                tvloginFeedback.setText("Incorrect username or password.")
+//                Log.e("Quetek", "Incorrect information.")
+//                print("invalid")
+//                tvloginFeedback.setText("Incorrect username or password.")
             }
         }
 

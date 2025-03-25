@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".LandingActivity"
     android:orientation="vertical"
+    android:background="@color/white"
     android:paddingHorizontal="20dp"
     android:gravity="center">
 
@@ -66,12 +67,14 @@
                 android:layout_height="wrap_content"
                 android:text="Ticket ID:"
                 android:layout_gravity="center"
+                android:textColor="@color/black"
                 android:textSize="24dp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="00"
                 android:layout_gravity="center"
                 android:textSize="64dp"
@@ -99,6 +102,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="Serving Time:"
                 android:layout_gravity="center"
                 android:textSize="18dp"
@@ -108,6 +112,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="00:00:00"
                 android:layout_gravity="center"
                 android:textSize="24dp"
@@ -128,6 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Queue Position:"
+                android:textColor="@color/black"
                 android:layout_gravity="center"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
@@ -137,6 +143,7 @@
                 android:layout_height="wrap_content"
                 android:text="00"
                 android:layout_gravity="center"
+                android:textColor="@color/black"
                 android:textSize="42dp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -146,6 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
@@ -161,6 +169,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Queue Length:"
+                android:textColor="@color/black"
                 android:layout_gravity="center"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
@@ -171,6 +180,7 @@
                 android:text="00"
                 android:layout_gravity="center"
                 android:textSize="42dp"
+                android:textColor="@color/black"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -188,6 +198,7 @@
                 android:layout_height="wrap_content"
                 android:text="Window no.:"
                 android:layout_gravity="center"
+                android:textColor="@color/black"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
@@ -197,6 +208,7 @@
                 android:text="00"
                 android:layout_gravity="center"
                 android:textSize="42dp"
+                android:textColor="@color/black"
                 android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>

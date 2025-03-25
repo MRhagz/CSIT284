@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".app.DataManager"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QueTek"
         tools:targetApi="31">
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -25,10 +29,10 @@
         </activity>
         <activity
             android:name=".LandingActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ProfileActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -40,7 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>
