@@ -38,7 +38,7 @@ class LoginActivity : Activity() {
                 Log.e("QueTek", "Navigating to AdminActivity")
                 val intent = Intent(this, AdminActivity::class.java)
                 startActivity(intent)
-            } else if (student != null && student.idNumber == username.toString()) {
+            } else if (student != null && student.password == password.toString()) {
                 Log.e("QueTek", "Navigating to LandingActivity")
                 val intent = Intent(this, LandingActivity::class.java)
                 startActivity(intent)
