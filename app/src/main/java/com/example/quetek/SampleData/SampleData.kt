@@ -9,7 +9,7 @@ class SampleData {
         val adminUser = "admin"
         val adminPass = "admin123"
         val userList: List<Student> = listOf(
-            Student("johndoe", "password123", "John", "", "Doe", "john.doe@cit.edu", "24-3456-789"),
+            Student("johndoe", "password123", "John", "", "Doe", "john.doe@cit.edu", "12-3456-789"),
             Student("janedoe", "password123", "Jane", "", "Doe", "jane.doe@cit.edu", "11-4123-321"),
             Student("jampinca", "password123", "Jam", "", "Pinca", "jane.doe@cit.edu", "21-5344-546"),
             Student("moenrago", "password123", "Moen Malone", "", "Rago", "jane.doe@cit.edu", "15-656-123"),

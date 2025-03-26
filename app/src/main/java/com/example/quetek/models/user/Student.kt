@@ -3,11 +3,12 @@ package com.example.quetek.models.user
 class Student(username: String, password: String, firstName: String, middleName: String, lastName: String, email: String, idNumber: String) {
     private val username: String
         get(): String = field
-    var password = ""
+    var password = password
         set(value: String) {
             if (value.length < 8) {
                 throw IllegalArgumentException("Passowrd's length must be at least 8 characters")
             }
+            field = value
         }
     val firstName: String
     val middleName: String

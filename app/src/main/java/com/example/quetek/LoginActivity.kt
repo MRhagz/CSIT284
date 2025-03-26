@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.quetek.SampleData.SampleData
 
 class LoginActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,18 +33,23 @@ class LoginActivity : Activity() {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-
-            if (adminUser.equals(username.toString()) && adminPass.equals(password.toString())) {
+            val student = SampleData.userList.find { it.idNumber == username.toString() }
+            Log.e("QueTek", student.toString())
+            if (student != null) {
+                Log.e("QueTek", student.password)
+            }
+            if (adminUser == username.toString() && adminPass == password.toString()) {
                 Log.e("QueTek", "Navigating to AdminActivity")
                 val intent = Intent(this, AdminActivity::class.java)
                 startActivity(intent)
-            } else {
+            } else if (student?.password == password.toString()){
                 Log.e("QueTek", "Navigating to LandingActivity")
                 val intent = Intent(this, LandingActivity::class.java)
                 startActivity(intent)
-//                Log.e("Quetek", "Incorrect information.")
-//                print("invalid")
-//                tvloginFeedback.setText("Incorrect username or password.")
+            }
+            else {
+                Log.e("QuetTek", "Incorrect credentials.")
+                tvloginFeedback.text = "Incorrect username or password."
             }
         }
 

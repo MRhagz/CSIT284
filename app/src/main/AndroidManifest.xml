@@ -16,15 +16,15 @@
         android:theme="@style/Theme.QueTek"
         tools:targetApi="31">
         <activity
-<<<<<<< HEAD
             android:name=".AdminActivity"
-=======
+            android:exported="false" />
+        <activity
             android:name=".TicketConfirmationActivity"
             android:exported="false" />
         <activity
             android:name=".QueueRegistrationActivity"
->>>>>>> 108fe0015145e8939e0bfd04cc5c029a4e9f0b35
             android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
