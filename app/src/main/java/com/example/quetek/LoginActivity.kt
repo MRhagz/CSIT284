@@ -52,12 +52,14 @@ class LoginActivity : Activity() {
         }
 
         btnGuest.setOnClickListener {
-            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         btnForgetPassword.setOnClickListener {
             Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
+
+
     }
 
 }
