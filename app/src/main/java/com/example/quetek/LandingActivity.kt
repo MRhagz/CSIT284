@@ -31,7 +31,12 @@ class LandingActivity : Activity() {
             toast("Feature under development")
         }
 
-        btnJoinQueue.setOnClickListener { toast("Feature under development.") }
+        btnJoinQueue.setOnClickListener {
+            Log.e("QueTek", "Navigating to QueueRegistration")
+
+            val intent = Intent(this, QueueRegistrationActivity::class.java)
+            startActivity(intent)
+        }
         btnPriorityQueue.setOnClickListener { toast("Feature under development.") }
 
     }

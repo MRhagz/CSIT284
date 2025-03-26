@@ -5,5 +5,14 @@
     <string name="team_vision">QueTek envisions a seamless queuing system that eliminates long waits and frustration. With smart management, real-time updates, and a user-friendly design, we enhance convenience and productivity.</string>
     <string name="jam_bio">A Computer Science student at CIT-U, passionate about technology, innovation, and community impact. I thrive on problem-solving, coding, and creating meaningful projects.</string>
     <string name="moen_bio">Moen is an athletic person who enjoys going to the gym, jogging, walking, and hiking. He sometimes reads self-help books and mystery fiction, with favorites like Sherlock Holmes and Arsène Lupin. A fun fact about Moen—he’s a total sleepyhead and should be asleep by 10 PM! He also has a passion for problem-solving, even when it gets frustrating at times.</string>
+
+
+    <string-array name="payment_for_array">
+        <item>Select payment for…</item>
+        <item>TUITION</item>
+        <item>CAR_PARKING_STICKER</item>
+        <item>MOTORCYCLE_PARKING_STICKER</item>
+        <item>OTHERS</item>
+    </string-array>
 </resources>
 
