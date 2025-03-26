@@ -6,8 +6,27 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".QueueRegistrationActivity">
-    <?xml version="1.0" encoding="utf-8"?>
+
+    <TextView
+        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Queue Registration"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student Information"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="10dp"/>
 
     <EditText
         android:id="@+id/etIdNumber"
@@ -50,6 +69,15 @@
         android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_border"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_margin="10dp"/>
+
     <Spinner
         android:id="@+id/sPaymentFor"
         android:layout_width="match_parent"
@@ -59,10 +87,22 @@
         android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_border"/>
 
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:padding="15dp"
+        android:hint="Amount"
+        android:inputType="number"
+        android:layout_marginVertical="5dp"
+        android:background="@drawable/rounded_border"/>
+
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="40dp"/>
+        android:layout_height="20dp"/>
 
     <Button
         android:id="@+id/btnSubmit"

@@ -15,6 +15,9 @@
         android:theme="@style/Theme.QueTek"
         tools:targetApi="31">
         <activity
+            android:name=".TicketConfirmationActivity"
+            android:exported="false" />
+        <activity
             android:name=".QueueRegistrationActivity"
             android:exported="false" />
         <activity
