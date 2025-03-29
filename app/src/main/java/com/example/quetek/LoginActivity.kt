@@ -33,33 +33,33 @@ class LoginActivity : Activity() {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            val student = SampleData.userList.find { it.idNumber == username.toString() }
-            Log.e("QueTek", student.toString())
-            if (student != null) {
-                Log.e("QueTek", student.password)
-            }
+            val student = SampleData.userList.find { it.idNumber == username.toString()}
             if (adminUser == username.toString() && adminPass == password.toString()) {
                 Log.e("QueTek", "Navigating to AdminActivity")
                 val intent = Intent(this, AdminActivity::class.java)
                 startActivity(intent)
-            } else if (student?.password == password.toString()){
+            } else if (student != null && student.password == password.toString()) {
                 Log.e("QueTek", "Navigating to LandingActivity")
                 val intent = Intent(this, LandingActivity::class.java)
                 startActivity(intent)
+//                Log.e("Quetek", "Incorrect information.")
+//                print("invalid")
+//                tvloginFeedback.setText("Incorrect username or password.")
             }
             else {
-                Log.e("QuetTek", "Incorrect credentials.")
                 tvloginFeedback.text = "Incorrect username or password."
             }
         }
 
         btnGuest.setOnClickListener {
-            Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         btnForgetPassword.setOnClickListener {
             Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
+
+
     }
 
 }
