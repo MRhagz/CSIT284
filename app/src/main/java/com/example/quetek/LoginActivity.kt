@@ -17,6 +17,7 @@ import android.graphics.Color
 import android.text.Spannable
 
 class LoginActivity : Activity() {
+    lateinit var etUsername: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -24,35 +25,15 @@ class LoginActivity : Activity() {
         val adminUser = "admin"
         val adminPass = "123"
 
-        val etUsername = findViewById<EditText>(R.id.etIdNumber)
+        etUsername = findViewById(R.id.etIdNumber)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnGuest = findViewById<Button>(R.id.btnGuest)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnForgetPassword = findViewById<Button>(R.id.btnForgetPassword)
         val tvloginFeedback = findViewById<TextView>(R.id.tvLoginFeedback)
 
-        etUsername.addTextChangedListener(object : TextWatcher {
-            private var isEditing = false
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if (isEditing || s == null) return
-
-                isEditing = true
-
-                val cleanText = s.toString().replace("-", "") // Remove existing dashes
-                val formattedText = formatWithDashes(cleanText)
-
-                etUsername.setText(formattedText)
-                etUsername.setSelection(formattedText.length) // Move cursor to end
-
-                isEditing = false
-            }
-        })
-
+        setUsernameListner()
         btnLogin.setOnClickListener {
             val username = etUsername.text
             val password = etPassword.text
@@ -88,6 +69,30 @@ class LoginActivity : Activity() {
         }
 
 
+    }
+
+    private fun setUsernameListner() {
+        etUsername.addTextChangedListener(object : TextWatcher {
+            private var isEditing = false
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isEditing || s == null) return
+
+                isEditing = true
+
+                val cleanText = s.toString().replace("-", "") // Remove existing dashes
+                val formattedText = formatWithDashes(cleanText)
+
+                etUsername.setText(formattedText)
+                etUsername.setSelection(formattedText.length) // Move cursor to end
+
+                isEditing = false
+            }
+        })
     }
 
     private fun formatWithDashes(input: String): SpannableStringBuilder {
