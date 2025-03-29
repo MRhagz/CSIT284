@@ -3,12 +3,18 @@ package com.example.quetek
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.quetek.SampleData.SampleData
+import android.graphics.Color
+import android.text.Spannable
 
 class LoginActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +30,28 @@ class LoginActivity : Activity() {
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnForgetPassword = findViewById<Button>(R.id.btnForgetPassword)
         val tvloginFeedback = findViewById<TextView>(R.id.tvLoginFeedback)
+
+        etUsername.addTextChangedListener(object : TextWatcher {
+            private var isEditing = false
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isEditing || s == null) return
+
+                isEditing = true
+
+                val cleanText = s.toString().replace("-", "") // Remove existing dashes
+                val formattedText = formatWithDashes(cleanText)
+
+                etUsername.setText(formattedText)
+                etUsername.setSelection(formattedText.length) // Move cursor to end
+
+                isEditing = false
+            }
+        })
 
         btnLogin.setOnClickListener {
             val username = etUsername.text
@@ -60,6 +88,22 @@ class LoginActivity : Activity() {
         }
 
 
+    }
+
+    private fun formatWithDashes(input: String): SpannableStringBuilder {
+        val sb = SpannableStringBuilder()
+        for (i in input.indices) {
+            if (i == 2 || i == 6) {
+                sb.append("-")
+                sb.setSpan(
+                    ForegroundColorSpan(Color.GRAY), // Set dash color to gray
+                    sb.length - 1, sb.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            sb.append(input[i])
+        }
+        return sb
     }
 
 }

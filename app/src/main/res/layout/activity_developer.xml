@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,8 +14,8 @@
 
     <Button
         android:id="@+id/backSettingsButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@drawable/backbutton"
         android:text="-" />
 
@@ -28,7 +27,7 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"/>
+        android:layout_marginHorizontal="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
