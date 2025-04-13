@@ -1,6 +1,9 @@
 package com.example.quetek.models.user
 
+import com.example.quetek.models.User
+
 class Student(username: String, password: String, firstName: String, middleName: String, lastName: String, email: String, idNumber: String) {
+
     private val username: String
         get(): String = field
     var password = password

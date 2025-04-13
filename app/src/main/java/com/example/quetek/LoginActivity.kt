@@ -36,6 +36,7 @@ class LoginActivity : Activity() {
         btnLogin.setOnClickListener {
             val username = etUsername.text
             val password = etPassword.text
+            Log.e("Button", "Login button clicked")
             if (username.isNullOrBlank() || password.isNullOrBlank()) {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
@@ -56,7 +57,6 @@ class LoginActivity : Activity() {
                         data.program = user.child("program").getValue(String::class.java) ?: "";
                         data.idNumber = ChildId;
                         startActivity(Intent(this, LandingActivity::class.java))
-                        finish()
                         return@addOnSuccessListener
                     } else if (ChildId.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
                         && ChilduserType.equals("Admin")) {
