@@ -34,18 +34,19 @@
             android:scaleType="centerCrop"
             android:src="@drawable/quetek_text"
             android:layout_weight="1"
-            android:layout_marginEnd="30dp"/>
+            android:layout_marginEnd="20dp"/>
 
 
         <ImageButton
             android:id="@+id/ibtnMenu"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/profile_icon"
-            android:background="@null"
-            android:scaleType="fitCenter"
             android:layout_gravity="center_vertical"
-            android:contentDescription="menu"/>
+            android:background="@null"
+            android:contentDescription="menu"
+            android:scaleType="fitCenter"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/profile_icon" />
     </LinearLayout>
 
     <FrameLayout

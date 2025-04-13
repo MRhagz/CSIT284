@@ -8,6 +8,7 @@
         android:orientation="vertical"
         android:layout_width="300dp"
         android:layout_height="200dp"
+        android:background="@color/white"
         android:padding="20dp">
 
         <TextView

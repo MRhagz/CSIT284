@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.quetek.app.DataManager
 import com.google.android.material.imageview.ShapeableImageView
 import intentPutExtra
 import showToast
@@ -24,19 +25,17 @@ class ProfileActivity : Activity() {
         val editProfileButton = findViewById<Button>(R.id.editProfile)
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         val logoutButton = findViewById<Button>(R.id.logoutButton)
-
         val usernameDisplay = findViewById<TextView>(R.id.usernameDisplay)
-        val emailDisplay = findViewById<TextView>(R.id.emailDisplay)
-        val username = intent.getStringExtra("username") ?: "John Doe"
-        val email = intent.getStringExtra("email") ?: "johndoe@gmail.com"
+        val idDisplay = findViewById<TextView>(R.id.idNumberDisplay)
 
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.activity_logout)
         dialog.window?.setBackgroundDrawable(getDrawable(R.drawable.rectanglelogoutdialog))
 
-        usernameDisplay.text = username
-        emailDisplay.text = email
+        val data = (application as DataManager);
+        usernameDisplay.text = data.firstname + " " + data.lastname
+        idDisplay.text = data.idNumber
 
         val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
         val btnLogout = dialog.findViewById<Button>(R.id.btnLogout)
@@ -54,19 +53,10 @@ class ProfileActivity : Activity() {
         }
 
         editProfileButton.setOnClickListener {
-            startActivity(Intent(this, EditProfileActivity::class.java).apply {
-                intent.putExtra("username", username)
-                intent.putExtra("email", email)
-            })
-//            val intent = Intent(this, EditProfileActivity::class.java)
-//            val keys = arrayOf("username", "email")
-//            val values = arrayOf(username, email)
-//            intentPutExtra(this, intent, keys, values)
-//            startActivity(intent)
+            startActivity(Intent(this, EditProfileActivity::class.java))
         }
 
         settingsButton.setOnClickListener {
-//            showToast("Settings clicked, this will be handled by my partner")
             Log.e("ProfileActivity", "Navigating to Settings Activity")
             startActivity(Intent(this, SettingsActivity::class.java))
         }

@@ -106,7 +106,7 @@
         android:textColorHint="@color/black"
         android:padding="15dp"
         android:scrollHorizontally="true"
-        android:hint="Confirm Program"
+        android:hint="Confirm Password"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_border"/>
 

@@ -79,6 +79,7 @@ class RegisterActivity : AppCompatActivity() {
                             Toast.makeText(this, "Failed to add user!", Toast.LENGTH_SHORT).show()
                         }
                 }
+                finish()
             }
 
         }

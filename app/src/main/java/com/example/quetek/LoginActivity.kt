@@ -15,6 +15,7 @@ import android.widget.Toast
 import com.example.quetek.SampleData.SampleData
 import android.graphics.Color
 import android.text.Spannable
+import com.example.quetek.app.DataManager
 import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : Activity() {
@@ -22,9 +23,6 @@ class LoginActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        val adminUser = "admin"
-        val adminPass = "123"
 
         etUsername = findViewById(R.id.etIdNumber)
         val etPassword = findViewById<EditText>(R.id.etPassword)
@@ -38,47 +36,37 @@ class LoginActivity : Activity() {
         btnLogin.setOnClickListener {
             val username = etUsername.text
             val password = etPassword.text
-
+            if (username.isNullOrBlank() || password.isNullOrBlank()) {
+                Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             // database login
             val database = FirebaseDatabase.getInstance().getReference("users");
-            var Childusername : String = "";
-            var Childpassword : String = "";
-            var ChilduserType : String = "";
             database.get().addOnSuccessListener { DataSnapshot ->
                 for(user in DataSnapshot.children){
-                    Childusername = user.child("id").getValue(String::class.java) ?: ""
-                    Childpassword = user.child("password").getValue(String::class.java) ?: ""
-                    ChilduserType = user.child("userType").getValue(String::class.java) ?: ""
-                    if(Childusername.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
+                    val ChildId = user.child("id").getValue(String::class.java) ?: ""
+                    val Childpassword = user.child("password").getValue(String::class.java) ?: ""
+                    val ChilduserType = user.child("userType").getValue(String::class.java) ?: ""
+                    if(ChildId.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
                         && ChilduserType.equals("Student")){
+                        val data = (application as DataManager);
+                        val Childusername = user.child("username").getValue(String::class.java) ?: ""
+                        data.firstname  = Childusername.split(" ").dropLast(1).joinToString(" ");
+                        data.lastname = Childusername.split(" ").last();
+                        data.program = user.child("program").getValue(String::class.java) ?: "";
+                        data.idNumber = ChildId;
                         startActivity(Intent(this, LandingActivity::class.java))
+                        finish()
                         return@addOnSuccessListener
-                    } else if (Childusername.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
+                    } else if (ChildId.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
                         && ChilduserType.equals("Admin")) {
                         startActivity(Intent(this, AdminActivity::class.java))
+                        finish()
                         return@addOnSuccessListener
                     }
                 }
-
-                if (username.isNullOrBlank() || password.isNullOrBlank()) {
-                    Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
-                    return@addOnSuccessListener
-                }
-                val student = SampleData.userList.find { it.idNumber == username.toString()}
-                if (adminUser == username.toString() && adminPass == password.toString()) {
-                    Log.e("QueTek", "Navigating to AdminActivity")
-                    val intent = Intent(this, AdminActivity::class.java)
-                    startActivity(intent)
-                } else if (student != null && student.password == password.toString()) {
-                    Log.e("QueTek", "Navigating to LandingActivity")
-                    val intent = Intent(this, LandingActivity::class.java)
-                    startActivity(intent)
-//                Log.e("Quetek", "Incorrect information.")
-//                print("invalid")
-//                tvloginFeedback.setText("Incorrect username or password.")
-                } else {
-                    tvloginFeedback.text = "Incorrect username or password."
-                }
+            } .addOnFailureListener {
+                tvloginFeedback.text = "Incorrect username or password."
             }
 
         }
@@ -90,8 +78,6 @@ class LoginActivity : Activity() {
         btnForgetPassword.setOnClickListener {
             Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
-
-
     }
 
     private fun setUsernameListner() {
@@ -135,3 +121,20 @@ class LoginActivity : Activity() {
     }
 
 }
+
+
+//            val adminUser = "admin"
+//            val adminPass = "123"
+//            val student = SampleData.userList.find { it.idNumber == username.toString()}
+//            if (adminUser == username.toString() && adminPass == password.toString()) {
+//                Log.e("QueTek", "Navigating to AdminActivity")
+//                val intent = Intent(this, AdminActivity::class.java)
+//                startActivity(intent)
+//            } else if (student != null && student.password == password.toString()) {
+//                Log.e("QueTek", "Navigating to LandingActivity")
+//                val intent = Intent(this, LandingActivity::class.java)
+//                startActivity(intent)
+////                Log.e("Quetek", "Incorrect information.")
+////                print("invalid")
+////                tvloginFeedback.setText("Incorrect username or password.")
+//}

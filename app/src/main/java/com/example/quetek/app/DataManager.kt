@@ -5,6 +5,11 @@ import com.example.quetek.models.Program
 import com.example.quetek.models.User
 
 class DataManager : Application() {
+    lateinit var firstname : String;
+    lateinit var lastname : String;
+    lateinit var program : String;
+    lateinit var idNumber : String;
+
     val usersHistory : List<String> = listOf( // inital values for now
         User("0", "12345", "Jamiel","Pinca", Program.BS_COMPUTER_SCIENCE).displayHistory(),
         User("1", "12345", "James","Ewican", Program.BS_COMPUTER_SCIENCE).displayHistory(),

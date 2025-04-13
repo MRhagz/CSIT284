@@ -39,12 +39,12 @@
         />
 
     <TextView
-        android:id="@+id/emailDisplay"
+        android:id="@+id/idNumberDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/email"
         android:layout_gravity="center_horizontal"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textColor="@color/black"
         android:layout_marginBottom="25dp"
         />
@@ -70,6 +70,7 @@
         android:drawableRight="@drawable/buttonarrow"
         android:drawablePadding="16dp"
         android:textSize="16sp"
+        android:textColor="@color/black"
         android:background="@android:color/transparent"
         android:layout_marginStart="10dp"
         android:gravity="start|center_vertical"

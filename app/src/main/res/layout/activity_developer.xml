@@ -84,25 +84,28 @@
             android:scaleType="centerCrop"
             android:src="@drawable/jamiel_picture"
             app:layout_constraintEnd_toEndOf="@id/textView3"
+            app:layout_constraintHorizontal_bias="0.142"
             app:layout_constraintStart_toStartOf="@id/textView3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/roundedImageView" />
+            app:layout_constraintTop_toTopOf="@id/jamBioText"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
+            app:layout_constraintBottom_toBottomOf="@id/jamBioText"/>
 
         <TextView
             android:id="@+id/jamBioText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:justificationMode="inter_word"
             android:lineSpacingExtra="2dp"
             android:text="@string/jam_bio"
             android:textColor="@color/black"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/PincaImage"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/PincaImage"
-            app:layout_constraintBottom_toBottomOf="@id/textView3"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/PincaImage"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -118,17 +121,19 @@
             android:id="@+id/MoenBioText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/moen_bio"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:lineSpacingExtra="2dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="15dp"
             android:justificationMode="inter_word"
-            app:layout_constraintStart_toStartOf="parent"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/moen_bio"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/MoenImage"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintVertical_bias="0.0" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/MoenImage"
