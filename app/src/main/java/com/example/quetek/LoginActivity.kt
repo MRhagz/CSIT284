@@ -93,7 +93,9 @@ class LoginActivity : Activity() {
 
                 isEditing = true
 
-                val cleanText = s.toString().replace("-", "") // Remove existing dashes
+                // Remove non-digit characters and existing dashes
+                val cleanText = s.toString().replace(Regex("[^\\d]"), "").take(9)
+
                 val formattedText = formatWithDashes(cleanText)
 
                 etUsername.setText(formattedText)
@@ -101,6 +103,7 @@ class LoginActivity : Activity() {
 
                 isEditing = false
             }
+
         })
     }
 

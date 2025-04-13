@@ -2,15 +2,15 @@ package com.example.quetek
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import checkInput
+import com.example.quetek.utils.generateAndSaveUser
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
-import getTextValue
 import showToast
 
 class RegisterActivity : AppCompatActivity() {
@@ -19,7 +19,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         FirebaseApp.initializeApp(this)
 
-        val etIdNumber = findViewById<EditText>(R.id.etIdNumber)
         val etFirstName = findViewById<EditText>(R.id.etFirstName)
         val etLastName = findViewById<EditText>(R.id.etLastName)
         val etProgram = findViewById<EditText>(R.id.etProgram)
@@ -34,7 +33,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         btnSubmit.setOnClickListener {
-            if(etIdNumber.checkInput() || etFirstName.checkInput() || etLastName.checkInput()
+            if(etFirstName.checkInput() || etLastName.checkInput()
                 || etProgram.checkInput()  || etPassword.checkInput() || etConfirmPassword.checkInput()){
                 showToast("All input fields must be present")
                 return@setOnClickListener
@@ -44,44 +43,30 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-
-            databaseReference.get().addOnSuccessListener { DataSnapshot ->
-                var username = etFirstName.getTextValue() + " " + etLastName.getTextValue()
-                for(user in DataSnapshot.children){
-                    var usernameDatabase = user.child("username").getValue(String::class.java) ?: ""
-                    var idDatabase = user.child("id").getValue(String::class.java) ?: ""
-                    if(etIdNumber.getTextValue().equals(idDatabase)){
-                        showToast("Id Number already exists")
-                        return@addOnSuccessListener
-                    }
-
-                    if(username.equals(usernameDatabase)){
-                        showToast("Username already exists")
-                        return@addOnSuccessListener
-                    }
-                }
-
-                val userId = databaseReference.push().key
-                if (userId != null) {
+            generateAndSaveUser(
+                onSuccess = { newId ->
                     val user = HashMap<String, String>()
-                    user["id"] = etIdNumber.text.toString()
+                    user["id"] = newId
                     user["password"] = etPassword.text.toString()
                     user["username"] = "${etFirstName.text} ${etLastName.text}"
                     user["program"] = etProgram.text.toString()
 
+                    val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                    val userId = databaseReference.push().key ?: ""
+
                     databaseReference.child(userId).setValue(user)
                         .addOnSuccessListener {
                             Toast.makeText(this, "User added successfully!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, LoginActivity::class.java))
                         }
                         .addOnFailureListener {
                             Toast.makeText(this, "Failed to add user!", Toast.LENGTH_SHORT).show()
                         }
+                },
+                onFailure = {
+                    Toast.makeText(this, "Failed to generate ID: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
-                finish()
-            }
-
+            )
+            finish()
         }
     }
 }
