@@ -54,8 +54,9 @@ class LoginActivity : Activity() {
                         val Childusername = user.child("username").getValue(String::class.java) ?: ""
                         data.firstname  = Childusername.split(" ").dropLast(1).joinToString(" ");
                         data.lastname = Childusername.split(" ").last();
-                        data.program = user.child("program").getValue(String::class.java) ?: "";
+                        data.email = user.child("email").getValue(String::class.java) ?: "";
                         data.idNumber = ChildId;
+                        data.key = user.key.toString()
                         startActivity(Intent(this, LandingActivity::class.java))
                         return@addOnSuccessListener
                     } else if (ChildId.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())

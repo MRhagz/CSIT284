@@ -68,6 +68,7 @@
         android:layout_height="50dp"
         android:padding="10dp"
         android:singleLine="true"
+        android:textColor="@color/black"
         android:layout_marginBottom="20dp"
         android:background="@drawable/input_rectangle"
         android:importantForAccessibility="no"
@@ -89,28 +90,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:paddingStart="10dp"
-        android:singleLine="true"
-        android:textSize="24sp"
-        android:background="@drawable/input_rectangle"
-        android:importantForAccessibility="no"
-        />
-
-    <TextView
-        android:text="Program:"
-        android:textStyle="bold"
-        android:textSize="20sp"
         android:textColor="@color/black"
-        android:layout_gravity="start"
-        android:layout_width="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/programInput"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="10dp"
-        android:paddingStart="10dp"
         android:singleLine="true"
         android:textSize="24sp"
         android:background="@drawable/input_rectangle"
@@ -141,6 +121,7 @@
         android:paddingStart="10dp"
         android:singleLine="true"
         android:textSize="24sp"
+        android:textColor="@color/black"
         android:background="@drawable/input_rectangle"
         android:importantForAccessibility="no"
         />
@@ -162,6 +143,7 @@
         android:layout_marginBottom="10dp"
         android:paddingStart="10dp"
         android:singleLine="true"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:background="@drawable/input_rectangle"
         android:importantForAccessibility="no"

@@ -17,7 +17,7 @@ fun Activity.getStringExtraSafe(key: String, msg : String): String { return inte
 fun EditText.checkInput(): Boolean{
     return (this.text.trim().isNullOrEmpty())
 }
-fun EditText.getTextValue(): String { return this.text.toString().trim() }
+fun EditText.getTextValue(): String { return this.text.toString() }
 fun EditText.getTextOrMessage(message: String): String {
     val input = this.getTextValue()
     return if (input.isEmpty()) message else input

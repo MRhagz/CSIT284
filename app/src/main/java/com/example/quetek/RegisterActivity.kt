@@ -21,7 +21,7 @@ class RegisterActivity : AppCompatActivity() {
 
         val etFirstName = findViewById<EditText>(R.id.etFirstName)
         val etLastName = findViewById<EditText>(R.id.etLastName)
-        val etProgram = findViewById<EditText>(R.id.etProgram)
+        val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
 
@@ -34,7 +34,7 @@ class RegisterActivity : AppCompatActivity() {
 
         btnSubmit.setOnClickListener {
             if(etFirstName.checkInput() || etLastName.checkInput()
-                || etProgram.checkInput()  || etPassword.checkInput() || etConfirmPassword.checkInput()){
+                || etEmail.checkInput()  || etPassword.checkInput() || etConfirmPassword.checkInput()){
                 showToast("All input fields must be present")
                 return@setOnClickListener
             }
@@ -49,7 +49,8 @@ class RegisterActivity : AppCompatActivity() {
                     user["id"] = newId
                     user["password"] = etPassword.text.toString()
                     user["username"] = "${etFirstName.text} ${etLastName.text}"
-                    user["program"] = etProgram.text.toString()
+                    user["email"] = etEmail.text.toString()
+                    user["userType"] = "Student";
 
                     val databaseReference = FirebaseDatabase.getInstance().getReference("users")
                     val userId = databaseReference.push().key ?: ""
