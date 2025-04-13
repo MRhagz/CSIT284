@@ -37,6 +37,7 @@
         android:textColorHint="@color/black"
         android:padding="15dp"
         android:hint="ID Number"
+        android:inputType="number"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_border"/>
     <EditText
@@ -48,6 +49,7 @@
         android:padding="15dp"
         android:hint="First Name"
         android:layout_marginVertical="5dp"
+        android:inputType="text"
         android:background="@drawable/rounded_border"/>
     <EditText
         android:id="@+id/etMiddleInitial"
@@ -56,6 +58,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:padding="15dp"
+        android:inputType="text"
         android:hint="Middle Initial"
         android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_border"/>
@@ -68,6 +71,7 @@
         android:padding="15dp"
         android:hint="Last Name"
         android:layout_marginVertical="5dp"
+        android:inputType="text"
         android:background="@drawable/rounded_border"/>
 
     <TextView

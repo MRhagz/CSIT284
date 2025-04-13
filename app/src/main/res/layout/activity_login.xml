@@ -43,6 +43,7 @@
         android:padding="15dp"
         android:hint="ID Number"
         android:layout_marginVertical="5dp"
+        android:inputType="number"
         android:background="@drawable/rounded_border"/>
 
     <EditText
