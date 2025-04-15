@@ -30,7 +30,7 @@ class UserCustomListView(private val context : Context,
         val username = view.findViewById<TextView>(R.id.username)
         val image = view.findViewById<ImageView>(R.id.image)
         image.setImageResource(R.drawable.user)
-        val data = dataManager.usersHistory
+//        val data = dataManager.usersHistory
         val user = userList[position]
         username.setText(user)
 

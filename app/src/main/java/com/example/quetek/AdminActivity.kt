@@ -24,8 +24,8 @@ class AdminActivity : Activity() {
         val listView = findViewById<ListView>(R.id.CustomAdminPanel)
         val userList : MutableList<String> = mutableListOf()
         val users : MutableList<User>  = mutableListOf()
-        for(user in data.userList){ userList.add(user) }
-        for(user in data.users){ users.add(user) }
+//        for(user in data.userList){ userList.add(user) }
+//        for(user in data.users){ users.add(user) }
 
         val queueLength = findViewById<TextView>(R.id.QueueLength)
         val windowNumber = findViewById<TextView>(R.id.windowNumber)
