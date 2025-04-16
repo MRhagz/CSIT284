@@ -16,12 +16,17 @@ import android.text.Spannable
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLoginBinding
+import com.example.quetek.models.Program
 import com.example.quetek.models.Student
+import com.example.quetek.models.UserType
+import com.example.quetek.models.Window
+import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 
 class LoginActivity : Activity() {
     lateinit var etUsername: EditText
@@ -44,94 +49,33 @@ class LoginActivity : Activity() {
 
         setUsernameListner()
         btnLogin.setOnClickListener {
-            val username = etUsername.text.toString().trim()
-            val password = etPassword.text.toString().trim()
-            Log.e("Button", "Login button clicked with id: $username")
+            val enteredId = etUsername.text.toString().trim()
+            val enteredPassword = etPassword.text.toString().trim()
+            Log.e("Button", "Login button clicked with id: $enteredId")
 
-            if (username.isEmpty() || password.isEmpty()) {
+            if (enteredId.isEmpty() || enteredPassword.isEmpty()) {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            val usersRef = FirebaseDatabase.getInstance().getReference("users")
-            usersRef.orderByChild("id").equalTo(username)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists()) {
-                            for (userSnap in snapshot.children) {
-                                val user = userSnap.getValue(User::class.java)
-                                if (user != null && user.password == password) {
-                                    Toast.makeText(this@LoginActivity, "Welcome ${user.firstName}", Toast.LENGTH_SHORT).show()
-                                    // Navigate to next screen here
-                                    return
-                                }
-                            }
-                            Toast.makeText(this@LoginActivity, "Incorrect password", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this@LoginActivity, "ID not found", Toast.LENGTH_SHORT).show()
-                        }
+            Database().getUser(this, enteredId) { user ->
+                if (user != null) {
+                    if (user.password == enteredPassword) {
+                        (application as DataManager).user_logged_in = user
+                        Toast.makeText(this, "Welcome ${user.firstName}", Toast.LENGTH_SHORT).show()
+                        navigateToLandingPage(user.userType)
                     }
+                    else {
+                        tvLoginFeedback.setText("Incorrect ID or password.")
+                    }
+                } else {
+                    Toast.makeText(this, "ID or password incorrect", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-                    override fun onCancelled(error: DatabaseError) {
-                        Toast.makeText(this@LoginActivity, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
 
             Log.e("Debug", "Beyond the fetching")
         }
-//        btnLogin.setOnClickListener {
-//            val enteredId = etUsername.text.toString()
-//            val enteredPasword = etPassword.text.toString()
-//            Log.e("Button", "Login button clicked")
-//            if (enteredId.isBlank() || enteredPasword.isBlank()) {
-//                tvLoginFeedback.setText("Username and Password cannot be empty.")
-//                return@setOnClickListener
-//            }
-//
-//            verifyLogin(enteredPasword)
-//
-//            // database login
-//            val database = FirebaseDatabase.getInstance().getReference("users");
-//            database.get().addOnSuccessListener { DataSnapshot ->
-//                for(user in DataSnapshot.children){
-//                    val ChildId = user.child("id").getValue(String::class.java) ?: ""
-//                    if (ChildId == enteredId) {
-//                        val username = user.child("username").getValue(String::class.java) ?: ""
-//                        val password = user.child("password").getValue(String::class.java) ?: ""
-//                        val firstname = username.split(" ").dropLast(1).joinToString(" ")
-//                        val lastname = username.split(" ").last()
-//
-//                        val user_obj = when(user.child("userType").getValue(String::class.java)) {
-//                            "Student" -> Student(enteredId, firstname, lastname)
-//                        }
-//                        verifyLogin(user);
-//                        break
-//                    }
-//
-//
-//                    if(ChildId.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
-//                        && ChilduserType.equals("Student")){
-//                        val data = (application as DataManager);
-//                        val Childusername = user.child("username").getValue(String::class.java) ?: ""
-//                        data.firstname  = Childusername.split(" ").dropLast(1).joinToString(" ");
-//                        data.lastname = Childusername.split(" ").last();
-//                        data.email = user.child("email").getValue(String::class.java) ?: "";
-//                        data.idNumber = ChildId;
-//                        data.key = user.key.toString()
-//                        startActivity(Intent(this, LandingActivity::class.java))
-//                        return@addOnSuccessListener
-//                    } else if (ChildId.equals(etUsername.text.toString()) && Childpassword.equals(etPassword.text.toString())
-//                        && ChilduserType.equals("Admin")) {
-//                        startActivity(Intent(this, AdminActivity::class.java))
-//                        finish()
-//                        return@addOnSuccessListener
-//                    }
-//                }
-//            } .addOnFailureListener {
-//                tvLoginFeedback.text = "Incorrect username or password."
-//            }
-//
-//        }
 
         btnGuest.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -185,35 +129,35 @@ class LoginActivity : Activity() {
         return sb
     }
 
-    private fun verifyLogin(password: String) {
-        val data = (application as DataManager);
+//    private fun verifyLogin() {
+//        val data = (application as DataManager);
+//
+//        Database().getUser(etUsername.text.toString()) { userSnapshot ->
+//            if (userSnapshot != null) {
+//                val username = userSnapshot.child("username").getValue(String::class.java) ?: ""
+//                val password = userSnapshot.child("password").getValue(String::class.java) ?: ""
+//                val id = userSnapshot.child("id").getValue(String::class.java) ?: ""
+//
+//                // save to data manager
+//                data.firstname  = username.split(" ").dropLast(1).joinToString(" ");
+//                data.lastname = username.split(" ").last();
+//                data.email = userSnapshot.child("email").getValue(String::class.java) ?: "";
+//                data.idNumber = id;
+//                data.key = userSnapshot.key.toString()
+//
+////                navigateToLandingPage()
+//                Log.d("User", "User name: $username")
+//            } else {
+//                tvLoginFeedback.setText("Incorrect ID or password.")
+//                Log.d("User", "User not found")
+//            }
+//        }
+//    }
 
-        Database().getUser("12345") { userSnapshot ->
-            if (userSnapshot != null) {
-                val username = userSnapshot.child("username").getValue(String::class.java) ?: ""
-                val password = userSnapshot.child("password").getValue(String::class.java) ?: ""
-                val id = userSnapshot.child("id").getValue(String::class.java) ?: ""
-
-                // save to data manager
-                data.firstname  = username.split(" ").dropLast(1).joinToString(" ");
-                data.lastname = username.split(" ").last();
-                data.email = userSnapshot.child("email").getValue(String::class.java) ?: "";
-                data.idNumber = id;
-                data.key = userSnapshot.key.toString()
-
-//                navigateToLandingPage()
-                Log.d("User", "User name: $username")
-            } else {
-                tvLoginFeedback.setText("Incorrect ID or password.")
-                Log.d("User", "User not found")
-            }
-        }
-    }
-
-    private fun navigateToLandingPage(userType: String) {
+    private fun navigateToLandingPage(userType: UserType) {
         val destination = when (userType) {
-            "Student" -> LandingActivity::class.java
-            "Admin" -> AdminActivity::class.java
+            UserType.STUDENT -> LandingActivity::class.java
+            UserType.ACCOUNTANT -> AdminActivity::class.java
             else -> LandingActivity::class.java
         }
 

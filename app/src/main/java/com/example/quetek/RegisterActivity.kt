@@ -125,7 +125,7 @@ class RegisterActivity : AppCompatActivity() {
                                 Window.valueOf(spinAddtl.selectedItem.toString())
                         )
 
-                        val databaseReference = FirebaseDatabase.getInstance().getReference("users2")
+                        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
                         val userKey = databaseReference.push().key ?: return@generateAndSaveUser
 
                         databaseReference.child(userKey).setValue(user)

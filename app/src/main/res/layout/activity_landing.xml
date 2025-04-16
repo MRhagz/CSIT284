@@ -27,15 +27,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/quetek_logo" />
 
+
         <ImageView
-            android:maxWidth="100dp"
             android:layout_width="0dp"
             android:layout_height="41dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/quetek_text"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1"
-            android:layout_marginEnd="20dp"/>
-
+            android:maxWidth="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/quetek_text" />
 
         <ImageButton
             android:id="@+id/ibtnMenu"
