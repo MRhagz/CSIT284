@@ -1,36 +1,62 @@
 package com.example.quetek.data
 
 import android.app.Activity
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
+import com.example.quetek.app.DataManager
+import com.example.quetek.models.PaymentFor
 import com.example.quetek.models.Program
+import com.example.quetek.models.Status
 import com.example.quetek.models.Student
+import com.example.quetek.models.Ticket
 import com.example.quetek.models.UserType
 import com.example.quetek.models.Window
 import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
+import com.google.firebase.Timestamp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import showFullscreenLoadingDialog
+import java.time.temporal.TemporalAmount
 
 class Database {
-    companion object {
-        val database = FirebaseDatabase.getInstance()
-        val users = database.getReference("users")
-    }
-
+    val database = FirebaseDatabase.getInstance()
+    val users = database.getReference("users")
+    val tickets = database.getReference("tickets")
     fun getUser(
         activity: Activity,
         enteredId: String,
         callback: (User?) -> Unit
     ) {
-        val usersRef = Database.users
+        val usersRef = users
         val dialog = activity.showFullscreenLoadingDialog()
+        var isHandled = false
+
+        // Set a timeout to dismiss the dialog if no response is received
+        val handler = Handler(Looper.getMainLooper())
+        val timeoutRunnable = Runnable {
+            if (!isHandled) {
+                isHandled = true
+                dialog.dismiss()
+                callback(null)
+                Toast.makeText(activity, "Request timed out. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+        }
+        handler.postDelayed(timeoutRunnable, 15000) // 15 seconds
+
         usersRef.orderByChild("id").equalTo(enteredId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    if (isHandled) return  // Already timed out
+
+                    handler.removeCallbacks(timeoutRunnable)
+                    isHandled = true
+
                     if (snapshot.exists()) {
                         for (userSnap in snapshot.children) {
                             val baseUser = userSnap.getValue(User::class.java)
@@ -54,8 +80,7 @@ class Database {
 
                                     UserType.ACCOUNTANT -> {
                                         val window = Window.valueOf(
-                                            userSnap.child("window")
-                                                .getValue(String::class.java) ?: "NONE"
+                                            userSnap.child("window").getValue(String::class.java) ?: "NONE"
                                         )
                                         Accountant(
                                             id = baseUser.id,
@@ -73,19 +98,180 @@ class Database {
                                 return
                             }
                         }
+                        dialog.dismiss()
                         callback(null) // Incorrect password
                     } else {
-                        callback(null) // ID not found
                         dialog.dismiss()
+                        callback(null) // ID not found
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    if (isHandled) return
+                    handler.removeCallbacks(timeoutRunnable)
+                    isHandled = true
                     callback(null)
                     dialog.dismiss()
                 }
             })
     }
+
+    fun addTicket(activity: Activity, ticket: Ticket) {
+        val ticketId = tickets.push().key ?: return
+
+        tickets.child(ticketId).setValue(ticket)
+            .addOnSuccessListener {
+                activity.showFullscreenLoadingDialog().dismiss()
+
+            }
+            .addOnFailureListener { error ->
+                activity.showFullscreenLoadingDialog().dismiss()
+
+            }
+    }
+
+    fun addTicketSynchronized(
+        activity: Activity,
+        studentId: String,
+        paymentFor: PaymentFor,
+        amount: Double
+    ) {
+        val dialog = activity.showFullscreenLoadingDialog()
+        val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
+        val newTimestamp = Timestamp.now()
+
+        // Step 1: Query all tickets
+        ticketsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val position = snapshot.children.count { ticketSnap ->
+                    val ticket = ticketSnap.getValue(Ticket::class.java)
+                    ticket?.status == Status.QUEUED &&
+                            ticket.paymentFor == paymentFor &&
+                            (ticket.timestamp.seconds) < newTimestamp.seconds
+                } + 1 // Include this ticket
+
+                val ticket = Ticket(
+                    timestamp = newTimestamp,
+                    position = position,
+                    number = 0, // generate this as needed
+                    studentId = studentId,
+                    paymentFor = paymentFor,
+                    amount = amount,
+                    status = Status.QUEUED
+                )
+
+                val key = ticketsRef.push().key ?: return
+
+                ticketsRef.child(key).setValue(ticket)
+                    .addOnSuccessListener { dialog.dismiss() }
+                    .addOnFailureListener { dialog.dismiss() }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                dialog.dismiss()
+            }
+        })
+    }
+
+
+    fun listenToStudentTickets(
+        studentId: String,
+        onServed: (Ticket) -> Unit,
+        onQueueLengthUpdate: (Int) -> Unit,
+        paymentFor: PaymentFor
+    ) {
+        val ticketsRef = tickets
+
+        // Listen for all ticket changes
+        ticketsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var queueLength = 0
+
+                for (ticketSnap in snapshot.children) {
+                    val ticket = ticketSnap.getValue(Ticket::class.java)
+
+                    if (ticket != null) {
+                        // Count queue length only for QUEUED tickets of same PaymentFor
+                        if (ticket.studentId == studentId && ticket.status == Status.SERVED) {
+                            onServed(ticket)
+                        }
+
+                        // Assuming all students see the queue of their current `PaymentFor`
+                        if (ticket.status == Status.QUEUED && ticket.paymentFor == paymentFor) {
+                            queueLength++
+                        }
+                    }
+                }
+
+                onQueueLengthUpdate(queueLength)
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+
+    fun serveNextTicketForWindow(windowId: String, onNoTicket: () -> Unit) {
+        val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
+
+        ticketsRef.orderByChild("windowId").equalTo(windowId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var earliestTicket: DataSnapshot? = null
+
+                    for (ticketSnap in snapshot.children) {
+                        val ticket = ticketSnap.getValue(Ticket::class.java)
+                        if (ticket != null && ticket.status == Status.QUEUED) {
+                            if (earliestTicket == null ||
+                                ticket.timestamp < (earliestTicket.child("timestamp")
+                                    .getValue(Timestamp::class.java) ?: Timestamp.now())
+                            ) {
+                                earliestTicket = ticketSnap
+                            }
+                        }
+                    }
+
+                    if (earliestTicket != null) {
+                        earliestTicket.ref.child("status").setValue("SERVED")
+                    } else {
+                        onNoTicket()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
+    fun listenToQueuedTickets(windowId: String, callback: (List<Ticket>) -> Unit) {
+        val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
+
+        ticketsRef.orderByChild("windowId").equalTo(windowId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val queuedTickets = mutableListOf<Ticket>()
+                    for (ticketSnap in snapshot.children) {
+                        val ticket = ticketSnap.getValue(Ticket::class.java)
+                        if (ticket?.status == Status.QUEUED) {
+                            queuedTickets.add(ticket)
+                        }
+                    }
+                    // Return the current list of QUEUED tickets for this window
+                    callback(queuedTickets)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("AccountantListener", "Listener cancelled: ${error.message}")
+                }
+            })
+    }
+
+
+
+
+
+
+
+
 
 
 }

@@ -16,5 +16,5 @@ class Accountant(
 ) : User(id, password, firstName, lastName, userType ) {
 
     constructor() : this("", "", "", "", Window.NONE, UserType.ACCOUNTANT)
-    constructor(id: String, password: String, firstname: String, lastname: String, window: Window) : this(id, password, firstname, lastname, window, UserType.ACCOUNTANT);
+    constructor(id: String, password: String, firstname: String, lastname: String, window: Window) : this(id, password, firstname, lastname, window, UserType.ACCOUNTANT)
 }

@@ -12,7 +12,6 @@ import com.example.quetek.AdminActivity
 import com.example.quetek.LandingActivity
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
-import com.example.quetek.data.Database.Companion.database
 import com.example.quetek.models.UserType
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.TimeoutCancellationException

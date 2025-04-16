@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import checkInput
+import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityRegisterBinding
 import com.example.quetek.models.Program
@@ -138,7 +139,7 @@ class RegisterActivity : AppCompatActivity() {
                                 Window.valueOf(spinAddtl.selectedItem.toString())
                         )
 
-                        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                        val databaseReference = Database().users
                         val userKey = databaseReference.push().key ?: return@generateAndSaveUser
 
                         databaseReference.child(userKey).setValue(user)

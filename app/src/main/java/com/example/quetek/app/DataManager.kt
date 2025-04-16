@@ -1,6 +1,7 @@
 package com.example.quetek.app
 
 import android.app.Application
+import com.example.quetek.models.Ticket
 import com.example.quetek.models.user.User
 
 class DataManager : Application() {
@@ -11,6 +12,7 @@ class DataManager : Application() {
     lateinit var lastname : String;
     lateinit var email : String;
     lateinit var idNumber : String;
+    lateinit var ticket: Ticket
 
 //    val usersHistory : List<String> = listOf( // inital values for now
 //        User("0", "12345", "Jamiel","Pinca", Program.BS_COMPUTER_SCIENCE).displayHistory(),

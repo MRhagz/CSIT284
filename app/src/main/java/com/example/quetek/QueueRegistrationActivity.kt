@@ -8,9 +8,13 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.compose.ui.res.stringArrayResource
 import com.example.quetek.app.DataManager
+import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityQueueRegistrationBinding
+import com.example.quetek.models.PaymentFor
+import com.example.quetek.models.Queue
 import com.example.quetek.models.Student
 
 class QueueRegistrationActivity : Activity() {
@@ -20,6 +24,8 @@ class QueueRegistrationActivity : Activity() {
         binding = ActivityQueueRegistrationBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        val student = (application as DataManager).user_logged_in as Student
 
 
         val data = (application as DataManager)
@@ -41,9 +47,19 @@ class QueueRegistrationActivity : Activity() {
         }
 
         btnSubmit.setOnClickListener {
-            // TODO SAVE INFORMATION BEFORE NAVIGATING
+            // TODO:  ADD VALIDATIONS
+
+            // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
+
+            Queue.enqueue(
+                this, student.id,
+                PaymentFor.valueOf(binding.sPaymentFor.selectedItem.toString()),
+                binding.etAmount.text.toString().toDouble()
+            )
+
              Log.e("QueuRegistration", "Navigating to LandingActivity")
-             startActivity(Intent(this, TicketConfirmationActivity::class.java))
+//             startActivity(Intent(this, TicketConfirmationActivity::class.java))
+            startActivity(Intent(this, LandingActivity::class.java))
         }
         btnCancel.setOnClickListener {
             Log.e("QueuRegistration", "Navigating to LandingActivity")
