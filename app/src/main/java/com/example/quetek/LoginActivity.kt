@@ -40,7 +40,6 @@ class LoginActivity : Activity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
-
         setContentView(view)
 
         etUsername = binding.etIdNumber

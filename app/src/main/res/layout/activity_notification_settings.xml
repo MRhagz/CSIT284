@@ -31,13 +31,121 @@
         <!-- Back Button (Stacked on Top Left) -->
         <Button
             android:id="@+id/btnBack"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/backbutton"
             android:importantForAccessibility="no"
             />
 
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_marginVertical="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="When should we notify you?"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="10dp"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radioButtonOption1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Time-based" />
+
+            <RadioButton
+                android:id="@+id/radioButtonOption2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Queue position" />
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/timeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time Remaining [Minutes]: "
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/etTime"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:importantForAccessibility="no"
+            android:layout_marginVertical="5dp"
+            android:inputType="number"
+            android:background="@drawable/less_rounded_border"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/positionInput"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User's Queue Position: "
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginEnd="5dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/etPosition"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:padding="15dp"
+            android:importantForAccessibility="no"
+            android:layout_marginVertical="5dp"
+            android:inputType="number"
+            android:background="@drawable/less_rounded_border"/>
+
+
+    </LinearLayout>
+
+
 
     <View
         android:layout_width="match_parent"

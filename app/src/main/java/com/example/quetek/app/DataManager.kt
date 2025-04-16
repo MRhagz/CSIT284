@@ -1,16 +1,19 @@
 package com.example.quetek.app
 
 import android.app.Application
+import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.user.User
 
 class DataManager : Application() {
     lateinit var user_logged_in: User
-    var isPriority : Boolean = false;
-    lateinit var key : String;
-    lateinit var firstname : String;
-    lateinit var lastname : String;
-    lateinit var email : String;
-    lateinit var idNumber : String;
+    var notifPref = NotificationSetting.DEFAULT
+    var timeValue : Int = 0;
+    var positionValue : Int = 5;
+
+    override fun onCreate() {
+        super.onCreate()
+    }
+}
 
 //    val usersHistory : List<String> = listOf( // inital values for now
 //        User("0", "12345", "Jamiel","Pinca", Program.BS_COMPUTER_SCIENCE).displayHistory(),
@@ -31,8 +34,3 @@ class DataManager : Application() {
 //        User("3", "12345", "Jared","Acebes", Program.BS_COMPUTER_SCIENCE),
 //        User("4", "12345", "Jervin","Milleza", Program.BS_COMPUTER_SCIENCE))
 
-
-    override fun onCreate() {
-        super.onCreate()
-    }
-}
