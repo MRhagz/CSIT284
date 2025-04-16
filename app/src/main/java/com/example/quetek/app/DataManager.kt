@@ -1,8 +1,7 @@
 package com.example.quetek.app
 
 import android.app.Application
-import com.example.quetek.models.Program
-import com.example.quetek.models.User
+import com.example.quetek.models.user.User
 
 class DataManager : Application() {
     lateinit var user_logged_in: User

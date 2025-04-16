@@ -14,5 +14,28 @@
         <item>MOTORCYCLE_PARKING_STICKER</item>
         <item>OTHERS</item>
     </string-array>
+
+    <string-array name="user_type_array">
+        <item>SELECT</item>
+        <item>STUDENT</item>
+        <item>ACCOUNTANT</item>
+    </string-array>
+
+    <string-array name="program_array">
+        <item>SELECT</item>
+        <item>BS Computer Science</item>
+        <item>BS Information Technology</item>
+        <item>BS Medical Technology</item>
+        <item>BS Nursing</item>
+        <item>BS Civil Engineering</item>
+    </string-array>
+
+    <string-array name="window_array">
+        <item>Select</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+    </string-array>
 </resources>
 

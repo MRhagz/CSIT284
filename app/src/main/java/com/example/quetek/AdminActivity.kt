@@ -7,12 +7,8 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.quetek.app.DataManager
-import com.example.quetek.models.User
+import com.example.quetek.models.user.User
 import com.example.quetek.util.UserCustomListView
 
 class AdminActivity : Activity() {
