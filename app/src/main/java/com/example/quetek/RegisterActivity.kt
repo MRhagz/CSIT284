@@ -25,6 +25,8 @@ import com.example.quetek.utils.generateAndSaveUser
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import org.w3c.dom.Text
+import showFullscreenLoadingDialog
+//import showLoadingDialog
 import showToast
 import java.util.zip.Inflater
 
@@ -104,6 +106,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun setRegisterButtonListener() {
         btnSubmit.setOnClickListener {
             if (checkInputs()) {
+                val loadingDialog = showFullscreenLoadingDialog()
                 Log.e("Register", "Register button is clicked")
                 generateAndSaveUser(
                     onSuccess = { newId ->
@@ -127,19 +130,22 @@ class RegisterActivity : AppCompatActivity() {
 
                         databaseReference.child(userKey).setValue(user)
                             .addOnSuccessListener {
-                                Toast.makeText(this, "User added successfully!", Toast.LENGTH_SHORT)
-                                    .show()
+                                loadingDialog.dismiss()
+//                                Toast.makeText(this, "User added successfully!", Toast.LENGTH_SHORT)
+//                                    .show()
                                 finish()
                             }
                             .addOnFailureListener { error ->
-                                Toast.makeText(
-                                    this,
-                                    "Failed to add user: ${error.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                loadingDialog.dismiss()
+//                                Toast.makeText(
+//                                    this,
+//                                    "Failed to add user: ${error.message}",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
                             }
                     },
                     onFailure = { error ->
+                        loadingDialog.dismiss()
                         Log.e("Firebase", "Failed to save user", error)
                         Toast.makeText(
                             this,
@@ -234,7 +240,4 @@ class RegisterActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
-
-
-
 }

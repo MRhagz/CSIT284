@@ -1,11 +1,25 @@
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.drawable.ColorDrawable
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
+import com.example.quetek.R
+import kotlinx.coroutines.Job
 
 // Activity
 fun Activity.showToast(msg : String){
@@ -47,5 +61,55 @@ fun Context.intentPutExtra(activity: Activity, intent: Intent, key: Array<String
     }
 
 }
+fun Activity.showFullscreenLoadingDialog(): Dialog {
+    val dialog = Dialog(this)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.setContentView(R.layout.loading_screen)
+    dialog.setCancelable(false)
+
+    // Make it fullscreen
+    dialog.window?.setLayout(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    )
+    dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+    dialog.window?.setFlags(
+        WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        WindowManager.LayoutParams.FLAG_FULLSCREEN
+    )
+
+    // Setup the progress bar
+    val progressBar: ProgressBar = dialog.findViewById(R.id.progressBar)
+    val colors = listOf(
+        ContextCompat.getColor(this, R.color.colorAccent),
+        ContextCompat.getColor(this, R.color.colorPrimaryDark)
+    )
+
+    var currentColorIndex = 0
+
+    // Handler to change the progress bar color at intervals
+    val handler = Handler(Looper.getMainLooper())
+
+    val colorChanger = object : Runnable {
+        override fun run() {
+            val color = colors[currentColorIndex]
+            progressBar.indeterminateTintList = ColorStateList.valueOf(color)
+            currentColorIndex = (currentColorIndex + 1) % colors.size
+            handler.postDelayed(this, 2000) // Change color every 800ms
+        }
+    }
+
+    // Start changing colors
+    handler.post(colorChanger)
+
+    dialog.show()
+    return dialog
+}
+
+
+
+
+
+
 
 
