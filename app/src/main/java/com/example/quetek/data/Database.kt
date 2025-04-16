@@ -137,8 +137,8 @@ class Database {
         amount: Double
     ) {
         val dialog = activity.showFullscreenLoadingDialog()
-        val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
-        val newTimestamp = Timestamp.now()
+        val ticketsRef = tickets
+        val newTimestamp = System.currentTimeMillis()
 
         // Step 1: Query all tickets
         ticketsRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -147,7 +147,7 @@ class Database {
                     val ticket = ticketSnap.getValue(Ticket::class.java)
                     ticket?.status == Status.QUEUED &&
                             ticket.paymentFor == paymentFor &&
-                            (ticket.timestamp.seconds) < newTimestamp.seconds
+                            ticket.timestamp < newTimestamp
                 } + 1 // Include this ticket
 
                 val ticket = Ticket(
@@ -173,6 +173,38 @@ class Database {
         })
     }
 
+    fun getTicket(activity: Activity, studentId: String, onTicketFetched: (Ticket?) -> Unit) {
+        val dialog = activity.showFullscreenLoadingDialog()
+        val ticketRef = tickets
+        Log.e("Ticket", "Fetching Ticket")
+
+        ticketRef.orderByChild("studentId").equalTo(studentId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    dialog.dismiss()
+                    if (snapshot.exists()) {
+                        for (ticketSnap in snapshot.children) {
+                            val ticket = ticketSnap.getValue(Ticket::class.java)
+                            if (ticket?.studentId == studentId) {
+                                Log.e("Ticket", ticket.toString())
+                                onTicketFetched(ticket)
+                                return
+                            }
+                        }
+                    }
+                    onTicketFetched(null) // No valid ticket found
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("Firebase", "Error fetching ticket: ${error.message}")
+                    dialog.dismiss()
+                    onTicketFetched(null)
+                }
+            })
+    }
+
+
+
 
     fun listenToStudentTickets(
         studentId: String,
@@ -186,21 +218,30 @@ class Database {
         ticketsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var queueLength = 0
+                val queuedTickets = mutableListOf<DataSnapshot>()
 
                 for (ticketSnap in snapshot.children) {
                     val ticket = ticketSnap.getValue(Ticket::class.java)
 
                     if (ticket != null) {
-                        // Count queue length only for QUEUED tickets of same PaymentFor
                         if (ticket.studentId == studentId && ticket.status == Status.SERVED) {
                             onServed(ticket)
                         }
 
-                        // Assuming all students see the queue of their current `PaymentFor`
                         if (ticket.status == Status.QUEUED && ticket.paymentFor == paymentFor) {
                             queueLength++
+                            queuedTickets.add(ticketSnap)
                         }
                     }
+                }
+
+                // Optional: Update real-time position field
+                queuedTickets.sortBy {
+                    it.getValue(Ticket::class.java)?.timestamp
+                }
+
+                queuedTickets.forEachIndexed { index, snap ->
+                    snap.ref.child("position").setValue(index + 1)
                 }
 
                 onQueueLengthUpdate(queueLength)
@@ -223,8 +264,8 @@ class Database {
                         val ticket = ticketSnap.getValue(Ticket::class.java)
                         if (ticket != null && ticket.status == Status.QUEUED) {
                             if (earliestTicket == null ||
-                                ticket.timestamp < (earliestTicket.child("timestamp")
-                                    .getValue(Timestamp::class.java) ?: Timestamp.now())
+                                ticket.timestamp.toLong() < (earliestTicket.child("timestamp")
+                                    .getValue(Long::class.java) ?: Long.MAX_VALUE)
                             ) {
                                 earliestTicket = ticketSnap
                             }
