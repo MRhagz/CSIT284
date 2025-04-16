@@ -9,23 +9,27 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.compose.ui.res.stringArrayResource
+import com.example.quetek.app.DataManager
+import com.example.quetek.databinding.ActivityQueueRegistrationBinding
+import com.example.quetek.models.Student
 
 class QueueRegistrationActivity : Activity() {
+    private lateinit var binding: ActivityQueueRegistrationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_queue_registration)
+        binding = ActivityQueueRegistrationBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        val etIdNumber = findViewById<EditText>(R.id.etIdNumber)
-        val etFirstName = findViewById<EditText>(R.id.etFirstName)
-        val etMiddleInitial = findViewById<EditText>(R.id.etMiddleInitial)
-        val etLastName = findViewById<EditText>(R.id.etLastName)
-        
-        val sPaymentFor = findViewById<Spinner>(R.id.sPaymentFor)
-        val etAmount = findViewById<EditText>(R.id.etAmount)
+
+        val data = (application as DataManager)
+        val user = data.user_logged_in as Student
+        binding.tvIdNumber.text = user.id
+        binding.tvFullName.text = "${user.firstName} ${user.lastName}"
+        binding.tvProgram.text = user.program.displayName
 
         val btnSubmit: Button = findViewById(R.id.btnSubmit)
         val btnCancel: Button = findViewById(R.id.btnCancel)
-
 
         ArrayAdapter.createFromResource(
             this,
@@ -33,7 +37,7 @@ class QueueRegistrationActivity : Activity() {
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            sPaymentFor.adapter = adapter
+            binding.sPaymentFor.adapter = adapter
         }
 
         btnSubmit.setOnClickListener {
