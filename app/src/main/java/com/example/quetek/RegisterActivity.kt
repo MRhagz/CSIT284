@@ -109,7 +109,6 @@ class RegisterActivity : AppCompatActivity() {
                     onSuccess = { newId ->
                         val selectedUserType =
                             UserType.valueOf(spinUserType.selectedItem.toString())
-//                    val selectedProgram =  // get it from your UI
 
                         val user = UserFactory.createUser(
                             id = newId,
@@ -118,7 +117,7 @@ class RegisterActivity : AppCompatActivity() {
                             lastName = etLastName.text.toString().trim(),
                             userType = selectedUserType,
                             programOrWindow = if (selectedUserType == UserType.STUDENT)
-                                Program.valueOf(spinAddtl.selectedItem.toString())
+                                Program.fromDisplayName(spinAddtl.selectedItem.toString())
                             else
                                 Window.valueOf(spinAddtl.selectedItem.toString())
                         )
@@ -163,6 +162,17 @@ class RegisterActivity : AppCompatActivity() {
         spinner.adapter = adapter
     }
 
+    private fun populateSpinner(spinner: Spinner, items: List<String>) {
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            items
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+    }
+
+
     private fun setUserTypeSpinnerListener() {
         spinUserType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -176,7 +186,7 @@ class RegisterActivity : AppCompatActivity() {
                 when (selectedType) {
                     UserType.STUDENT -> {
                         tvAddtl.text = "Program"
-                        populateSpinner(spinAddtl, R.array.program_array)
+                        populateSpinner(spinAddtl, Program.getDisplayNames())
                         binding.llAdditional.visibility = View.VISIBLE
                     }
                     UserType.ACCOUNTANT -> {

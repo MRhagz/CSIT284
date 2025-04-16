@@ -16,13 +16,12 @@ open class User(
     var firstName: String,
     var lastName: String,
     var userType: UserType = UserType.NONE,
-    var timeServed: String = Date().simpleFormat()
 ) {
-    constructor() : this("", "", "", "", UserType.NONE, "")
+    constructor() : this("", "", "", "", UserType.NONE)
 
     companion object {
         fun create(id: String, password: String, firstName: String, lastName: String, userType: UserType): User {
-            return User(id, password, firstName, lastName, userType, Date().simpleFormat())
+            return User(id, password, firstName, lastName, userType)
         }
     }
 }

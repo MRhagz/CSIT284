@@ -9,11 +9,10 @@ class Student(
     password: String,
     firstName: String,
     lastName: String,
-    program: Program = Program.NONE,
+    val program: Program = Program.NONE,
     userType: UserType = UserType.STUDENT,
-    timeServed: String = Date().simpleFormat(),
-) : User(id, password, firstName, lastName, userType, timeServed) {
+) : User(id, password, firstName, lastName, userType) {
 
-    constructor() : this("", "", "", "", Program.NONE, UserType.STUDENT,"")
-    constructor(id: String, password: String, firstname: String, lastname: String, program: Program) : this(id, password, firstname, lastname, program, UserType.STUDENT,"");
+    constructor() : this("", "", "", "", Program.NONE, UserType.STUDENT)
+    constructor(id: String, password: String, firstname: String, lastname: String, program: Program) : this(id, password, firstname, lastname, program, UserType.STUDENT)
 }

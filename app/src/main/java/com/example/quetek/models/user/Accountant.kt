@@ -11,11 +11,10 @@ class Accountant(
     password: String,
     firstName: String,
     lastName: String,
-    window: Window = Window.NONE,
+    val window: Window = Window.NONE,
     userType: UserType = UserType.ACCOUNTANT,
-    timeServed: String = Date().simpleFormat(),
-) : User(id, password, firstName, lastName, userType, timeServed) {
+) : User(id, password, firstName, lastName, userType ) {
 
-    constructor() : this("", "", "", "", Window.NONE, UserType.ACCOUNTANT,"")
+    constructor() : this("", "", "", "", Window.NONE, UserType.ACCOUNTANT)
     constructor(id: String, password: String, firstname: String, lastname: String, window: Window) : this(id, password, firstname, lastname, window, UserType.ACCOUNTANT);
 }
