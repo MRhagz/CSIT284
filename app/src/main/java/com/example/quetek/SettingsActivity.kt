@@ -26,9 +26,9 @@ class SettingsActivity : Activity() {
         val username = findViewById<TextView>(R.id.username)
         val idNumber = findViewById<TextView>(R.id.idNumber)
 
-        val data = (application as DataManager)
-        username.text = data.firstname + " " + data.lastname
-        idNumber.text = data.idNumber
+        val data = (application as DataManager).user_logged_in
+        username.text = data.firstName + " " + data.lastName
+        idNumber.text = data.id
 
         llAccount.setOnClickListener {
             Log.e("Quetek", "Account option is clicked")
