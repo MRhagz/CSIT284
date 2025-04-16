@@ -1,6 +1,7 @@
 package com.example.quetek
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +13,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.text.Spannable
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
@@ -55,6 +58,9 @@ class LoginActivity : Activity() {
 
             if (enteredId.isEmpty() || enteredPassword.isEmpty()) {
                 Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            } else if (!isNetworkConnected()) {
+                tvLoginFeedback.setText("No internet connecion available.")
                 return@setOnClickListener
             }
 
@@ -164,6 +170,12 @@ class LoginActivity : Activity() {
         val intent = Intent(this, destination)
         startActivity(intent)
         finish()
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
     }
 
 

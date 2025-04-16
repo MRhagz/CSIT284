@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center_horizontal"
-    android:padding="12dp">
+    android:padding="20dp">
 
     <ImageView
         android:layout_width="150dp"
@@ -17,22 +17,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="@color/black"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold" />
 
     <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Smarter Queues for a Smoother Teknoy Experience!"
+        android:text="@string/login_tagline"
         android:textStyle="italic"
         android:layout_gravity="center"/>
 
-    <Space
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"/>
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:layout_gravity="center"/>
 
     <EditText
         android:id="@+id/etIdNumber"
@@ -41,7 +48,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:padding="15dp"
-        android:hint="ID Number"
+        android:hint="@string/id_number"
         android:layout_marginVertical="5dp"
         android:inputType="number"
         android:background="@drawable/rounded_border"/>
@@ -49,42 +56,42 @@
     <EditText
         android:id="@+id/etPassword"
         android:inputType="textPassword"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
         android:hint="Password"
-        android:layout_marginVertical="5dp"
+        android:layout_marginTop="5dp"
         android:padding="15dp"
         android:background="@drawable/rounded_border"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="38dp"
         android:layout_marginTop="5dp"
-        android:paddingHorizontal="12dp">
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/tvLoginFeedback"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
+            android:paddingTop="10dp"
+            android:textSize="12sp"
             android:text=""
             android:textColor="@color/red"/>
 
         <Button
             android:id="@+id/btnForgetPassword"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="Forgot password?"
-            android:layout_marginVertical="5dp"
-            android:textColor="@color/blue"
+            android:layout_height="38dp"
             android:layout_gravity="right"
+            android:background="@null"
+            android:layout_marginEnd="8dp"
+            android:text="Forgot password?"
             android:textAllCaps="false"
-            android:background="@null"/>
+            android:textColor="@color/blue" />
 
     </FrameLayout>
-
 
 
     <Button
@@ -97,9 +104,8 @@
         android:text="Login"/>
 
     <Space
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="50dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
 
     <View
         android:layout_width="match_parent"

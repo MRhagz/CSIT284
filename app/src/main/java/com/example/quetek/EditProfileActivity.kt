@@ -2,7 +2,10 @@ package com.example.quetek
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -15,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import checkInput
 import clearText
 import com.example.quetek.app.DataManager
+import com.example.quetek.models.Student
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -34,8 +38,6 @@ class EditProfileActivity : Activity() {
         setContentView(R.layout.activity_edit_profile)
 
         val backProfileButton = findViewById<Button>(R.id.backProfileButton)
-        val username = findViewById<EditText>(R.id.usernameInput)
-        val email = findViewById<EditText>(R.id.emailInput)
         val usernameDisplay = findViewById<TextView>(R.id.usernameDisplay)
         val emailDisplay = findViewById<TextView>(R.id.emailDisplay)
         val updateButton = findViewById<Button>(R.id.updateButton)
@@ -47,34 +49,28 @@ class EditProfileActivity : Activity() {
             startActivity(intent)
         }
 
-        val data = (application as DataManager)
-        usernameDisplay.text = data.firstname + " " + data.lastname
-        emailDisplay.text = data.email
-        username.setText( data.firstname + " " + data.lastname )
-        email.setText(data.email)
+        val data = ((application as DataManager).user_logged_in as Student)
+        usernameDisplay.text = data.firstName + " " + data.lastName
+        emailDisplay.text = data.id
+
 
         updateButton.setOnClickListener {
             val database = FirebaseDatabase.getInstance().getReference("users")
-            if (username.text.isNullOrBlank() || email.text.isNullOrBlank() ) {
-                Toast.makeText(this, "cannot update if empty", Toast.LENGTH_LONG).show()
+
+            if (!isNetworkConnected()) {
+                showToast("No internet connection available.")
                 return@setOnClickListener
-            }
-            if(!email.isEmailValid()) {
-                Toast.makeText(this, "Invalid input please try again", Toast.LENGTH_LONG).show()
+            } else if (password.getTextValue().isNullOrBlank() || confirmpassword.getTextValue().isNullOrBlank()){
+                showToast("All input fields must be present.")
                 return@setOnClickListener
             }
 
-            database.orderByKey().equalTo(data.key).addValueEventListener(object : ValueEventListener {
+            database.orderByChild("id").equalTo(data.id).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()){
                         val usersnapshot = snapshot.children.first();
-                        usersnapshot.ref.child("username").setValue(username.getTextValue())
-                        usersnapshot.ref.child("email").setValue(email.getTextValue())
-                        data.firstname = username.getTextValue().split(" ").dropLast(1).joinToString(" ")
-                        data.lastname = username.getTextValue().split(" ").last()
-                        data.email = email.getTextValue()
                         if(!password.text.isNullOrBlank() && !password.getTextValue().equals(confirmpassword.getTextValue())){
-                            Toast.makeText(applicationContext, "Incorrect password", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "password does not match", Toast.LENGTH_SHORT).show()
                             return;
                         } else if(!password.text.isNullOrBlank() && password.getTextValue().equals(confirmpassword.getTextValue())){
                             usersnapshot.ref.child("password").setValue(password.getTextValue())
@@ -91,4 +87,11 @@ class EditProfileActivity : Activity() {
             })
         }
     }
+
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
+    }
+
 }

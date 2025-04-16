@@ -12,7 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/backbutton"
-        android:text="-"
+        android:importantForAccessibility="no"
         android:layout_marginBottom="30dp"
         />
 

@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsActivity"
-    android:paddingHorizontal="20dp"
+    android:padding="20dp"
     android:background="@color/white"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:padding="10dp">
 
         <!-- Settings Text (Always Centered) -->
@@ -23,19 +24,17 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_gravity="center" />
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal" />
 
         <!-- Back Button (Stacked on Top Left) -->
-        <ImageButton
-            android:id="@+id/ibtnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="fitCenter"
-            android:background="@null"
-            android:src="@drawable/back_icon"
-            android:contentDescription="Go Back"
-            android:layout_gravity="start|center_vertical"
-            tools:ignore="RtlHardcoded" />
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/backbutton"
+            android:importantForAccessibility="no"
+            />
 
     </FrameLayout>
 

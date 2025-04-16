@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quetek.app.DataManager
+import com.example.quetek.models.Student
 import com.google.android.material.imageview.ShapeableImageView
 import intentPutExtra
 import showToast
@@ -33,9 +34,9 @@ class ProfileActivity : Activity() {
         dialog.setContentView(R.layout.activity_logout)
         dialog.window?.setBackgroundDrawable(getDrawable(R.drawable.rectanglelogoutdialog))
 
-        val data = (application as DataManager);
-        usernameDisplay.text = data.firstname + " " + data.lastname
-        idDisplay.text = data.idNumber
+        val data = ((application as DataManager).user_logged_in as Student)
+        usernameDisplay.text = data.firstName + " " + data.lastName
+        idDisplay.text = data.id
 
         val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
         val btnLogout = dialog.findViewById<Button>(R.id.btnLogout)

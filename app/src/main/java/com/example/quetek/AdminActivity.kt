@@ -20,8 +20,6 @@ class AdminActivity : Activity() {
         val listView = findViewById<ListView>(R.id.CustomAdminPanel)
         val userList : MutableList<String> = mutableListOf()
         val users : MutableList<User>  = mutableListOf()
-//        for(user in data.userList){ userList.add(user) }
-//        for(user in data.users){ users.add(user) }
 
         val queueLength = findViewById<TextView>(R.id.QueueLength)
         val windowNumber = findViewById<TextView>(R.id.windowNumber)
@@ -38,29 +36,29 @@ class AdminActivity : Activity() {
         val removedUser : MutableList<User>  = mutableListOf()
         val removedUserString : MutableList<String>  = mutableListOf()
         btnStart.setOnClickListener {
-           if(btnStart.text.equals("Done")){
-               servingNumber.text = "00"
-               if (userList.isNotEmpty()) {
-                   removedUserString.add(userList[0])
-                   removedUser.add(users[0])
-                   servingNumber.setText(users[0].id)
-                   userList.removeAt(0)
-                   users.removeAt(0)
-                   queueLength.text = if (userList.size < 10) "0${userList.size}" else "${userList.size}"
+            if(btnStart.text.equals("Done")){
+                servingNumber.text = "00"
+                if (userList.isNotEmpty()) {
+                    removedUserString.add(userList[0])
+                    removedUser.add(users[0])
+                    servingNumber.setText(users[0].id)
+                    userList.removeAt(0)
+                    users.removeAt(0)
+                    queueLength.text = if (userList.size < 10) "0${userList.size}" else "${userList.size}"
 
-                   listAdapter.notifyDataSetChanged()
-               }
-           } else {
-               btnStart.text = "Done"
-               btnCancel.visibility = View.VISIBLE
-               servingNumber.text = "00"
-               if (users.isNotEmpty()) {
-                   servingNumber.text = users[0].id
-               }
-               queueLength.text = if (userList.size < 10) "0${userList.size}" else "${userList.size}"
-               windowNumber.text = "01"
-               btnStop.visibility = View.VISIBLE
-           }
+                    listAdapter.notifyDataSetChanged()
+                }
+            } else {
+                btnStart.text = "Done"
+                btnCancel.visibility = View.VISIBLE
+                servingNumber.text = "00"
+                if (users.isNotEmpty()) {
+                    servingNumber.text = users[0].id
+                }
+                queueLength.text = if (userList.size < 10) "0${userList.size}" else "${userList.size}"
+                windowNumber.text = "01"
+                btnStop.visibility = View.VISIBLE
+            }
         }
 
         btnCancel.setOnClickListener {

@@ -17,6 +17,7 @@ class UserCustomListView(private val context : Context,
                          private val dataManager: DataManager,
                          private val onClick: (String) -> Unit,
                          private val onLongClick: (String) -> Unit,) : BaseAdapter(){
+    var isLoading = true
     override fun getCount(): Int = userList.size
 
     override fun getItem(position: Int): Any = userList[position]
@@ -24,6 +25,11 @@ class UserCustomListView(private val context : Context,
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val inflater = LayoutInflater.from(context)
+//        if (isLoading) {
+//            return inflater.inflate(R.layout.skeleton_list_item, parent, false)
+//        }
+
         val view = convertView ?: LayoutInflater.from(context)
             .inflate(R.layout.activity_custom_list, parent, false)
 

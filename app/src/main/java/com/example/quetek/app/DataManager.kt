@@ -5,6 +5,7 @@ import com.example.quetek.models.user.User
 
 class DataManager : Application() {
     lateinit var user_logged_in: User
+    var isPriority : Boolean = false;
     lateinit var key : String;
     lateinit var firstname : String;
     lateinit var lastname : String;

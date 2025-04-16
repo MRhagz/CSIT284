@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -19,7 +20,7 @@ class SettingsActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val ibtnBack = findViewById<ImageButton>(R.id.ibtnBack)
+        val ibtnBack = findViewById<Button>(R.id.btnBack)
         val llAccount = findViewById<LinearLayout>(R.id.llAcount)
         val flATD = findViewById<FrameLayout>(R.id.flATD)
         val username = findViewById<TextView>(R.id.username)

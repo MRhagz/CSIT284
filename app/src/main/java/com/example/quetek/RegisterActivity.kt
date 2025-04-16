@@ -1,6 +1,9 @@
 package com.example.quetek
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +17,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import checkInput
 import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityRegisterBinding
@@ -24,6 +28,10 @@ import com.example.quetek.util.UserFactory
 import com.example.quetek.utils.generateAndSaveUser
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 import org.w3c.dom.Text
 import showFullscreenLoadingDialog
 //import showLoadingDialog
@@ -97,6 +105,11 @@ class RegisterActivity : AppCompatActivity() {
             if (showFeedback) tvInputFeedback.text = "Passwords do not match."
             tvInputFeedback.visibility = if (showFeedback) View.VISIBLE else View.GONE
             return false
+        }
+
+        if (!isNetworkConnected()) {
+            showToast("No internet connection available.")
+            return false;
         }
 
         tvInputFeedback.visibility = View.GONE
@@ -239,5 +252,11 @@ class RegisterActivity : AppCompatActivity() {
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
     }
 }
