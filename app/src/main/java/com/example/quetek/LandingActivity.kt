@@ -84,6 +84,7 @@ class LandingActivity : Activity() {
                 data.ticket = ticket
                 binding.tvTicketId.text = ticket.number.toString()
                 binding.tvWindow.text = ticket.paymentFor.window
+                binding.tvPosition.text = ticket.position.toString()
 
                 Database().listenToStudentTickets(
                     studentId = data.user_logged_in.id,

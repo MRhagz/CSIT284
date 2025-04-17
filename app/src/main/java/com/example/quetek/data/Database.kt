@@ -3,6 +3,7 @@ package com.example.quetek.data
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import android.renderscript.Sampler.Value
 import android.util.Log
 import android.widget.Toast
 import com.example.quetek.app.DataManager
@@ -31,6 +32,7 @@ class Database {
     val database = FirebaseDatabase.getInstance()
     val users = database.getReference("users")
     val tickets = database.getReference("tickets")
+    val windows = database.getReference("windows")
     fun getUser(
         activity: Activity,
         enteredId: String,
@@ -350,6 +352,20 @@ class Database {
 //                override fun onCancelled(error: DatabaseError) {}
 //            })
 //    }
+
+    fun getCurrentTicket(window: Window, callback: (Int) -> Unit) {
+        windows.child(window.name).child("currentTicket").addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val curr = snapshot.getValue(Int::class.java) ?: -1
+                Log.e("Debug", "Current ticket: $curr")
+                callback(curr)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
 
     fun serveNextTicketForWindow(windowId: String, onNoTicket: () -> Unit) {
         val db = FirebaseDatabase.getInstance()

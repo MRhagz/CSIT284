@@ -11,32 +11,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
+import com.example.quetek.databinding.ActivityAdminBinding
 import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
 import com.example.quetek.util.TicketCustomListViewAdapter
+import com.google.firebase.database.values
 
 class AdminActivity : Activity() {
+    lateinit var accountant: Accountant
+    private lateinit var binding: ActivityAdminBinding
+    private lateinit var queueLength: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
+
+        binding = ActivityAdminBinding.inflate(layoutInflater)
 
         val data = (application as DataManager)
         val recyclerView = findViewById<RecyclerView>(R.id.CustomAdminPanel)
         val userList : MutableList<String> = mutableListOf()
         val users : MutableList<User>  = mutableListOf()
 
-        val queueLength = findViewById<TextView>(R.id.QueueLength)
+        queueLength = findViewById(R.id.QueueLength)
         val windowNumber = findViewById<TextView>(R.id.windowNumber)
         val servingNumber = findViewById<TextView>(R.id.servingNumber)
         val btnStart = findViewById<Button>(R.id.btnStart)
         val btnCancel = findViewById<Button>(R.id.btnCancel)
         val btnStop = findViewById<Button>(R.id.btnStop)
 
-//        val listAdapter = UserCustomListView(this, queueLength, userList, data,
-//            onClick = {string -> Toast.makeText(this, string, Toast.LENGTH_SHORT).show()},
-//            onLongClick = {string -> Toast.makeText(this, string, Toast.LENGTH_SHORT).show() })
-//        listView.adapter = listAdapter
-        val accountant = (application as DataManager).user_logged_in as Accountant
+        accountant = (application as DataManager).user_logged_in as Accountant
+
 
 
         val adapter = TicketCustomListViewAdapter(
@@ -57,6 +61,8 @@ class AdminActivity : Activity() {
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+//        setQueueState()
 
         Database().listenToQueuedTickets(accountant.window.name) { updatedTickets ->
             adapter.updateList(updatedTickets)
@@ -133,5 +139,19 @@ class AdminActivity : Activity() {
 //            listAdapter.notifyDataSetChanged()
 //        }
 //
+    }
+
+    private fun setQueueState() { // WON"T WORK AS WHAT IT"S SUPPOSED TO
+        var currentTicket = -1
+        Database().getCurrentTicket(accountant.window) { curr ->
+            if (curr != -1) {
+                runOnUiThread {
+                    binding.btnStart.text = "Done"
+                    binding.btnCancel.visibility = View.VISIBLE
+                    binding.btnStop.visibility = View.VISIBLE
+                }
+            }
+        }
+
     }
 }
