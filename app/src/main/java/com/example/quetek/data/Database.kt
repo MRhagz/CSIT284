@@ -256,7 +256,7 @@ class Database {
                     if (snapshot.exists()) {
                         for (ticketSnap in snapshot.children) {
                             val ticket = ticketSnap.getValue(Ticket::class.java)
-                            if (ticket?.studentId == studentId) {
+                            if (ticket?.studentId == studentId && ticket.status != Status.SERVED) {
                                 Log.e("Ticket", ticket.toString())
                                 onTicketFetched(ticket)
                                 return
@@ -356,49 +356,42 @@ class Database {
         val windowsRef = db.getReference("windows").child(windowId)
         val ticketsRef = db.getReference("tickets")
 
-        // Step 1: Fetch currentTicket
+        // Step 1: Get currentTicket
         windowsRef.child("currentTicket").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(currentTicketSnap: DataSnapshot) {
-                val currentTicketNumber = currentTicketSnap.getValue(Int::class.java)
-                Log.e("Debug", currentTicketNumber.toString())
+                val currentTicketNumber = currentTicketSnap.getValue(Int::class.java) ?: -1
 
-                // Step 2: Fetch all tickets for this window
+                if (currentTicketNumber == -1) {
+                    // No ticket is being served
+                    onNoTicket()
+                    return
+                }
+
+                // Step 2: Find and serve the current ticket
                 ticketsRef.orderByChild("paymentFor")
                     .equalTo(PaymentFor.getValueFromDisplay(windowId).name)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            var nextTicketSnap: DataSnapshot? = null
-
-                            for (ticketSnap in snapshot.children) {
-                                val ticket = ticketSnap.getValue(Ticket::class.java)
-                                if (ticket != null && ticket.status == Status.QUEUED) {
-                                    if (currentTicketNumber == null) {
-                                        // No current ticket: serve the EARLIEST
-                                        val nextCandidate = nextTicketSnap?.getValue(Ticket::class.java)
-                                        if (nextCandidate == null || ticket.number < nextCandidate.number) {
-                                            nextTicketSnap = ticketSnap
-                                        }
-                                    } else {
-                                        // Normal flow: find ticket after current
-                                        if (ticket.number > currentTicketNumber) {
-                                            val nextCandidate = nextTicketSnap?.getValue(Ticket::class.java)
-                                            if (nextCandidate == null || ticket.number < nextCandidate.number) {
-                                                nextTicketSnap = ticketSnap
-                                            }
-                                        }
-                                    }
-                                }
+                            val queuedTickets = snapshot.children.mapNotNull { snap ->
+                                val ticket = snap.getValue(Ticket::class.java)
+                                if (ticket != null) Pair(snap, ticket) else null
                             }
 
-                            if (nextTicketSnap != null) {
-                                val nextTicket = nextTicketSnap.getValue(Ticket::class.java)
-                                nextTicketSnap.ref.child("status").setValue("SERVED")
+                            // Serve the current ticket
+                            val currentSnap = queuedTickets.find { it.second.number == currentTicketNumber }?.first
+                            currentSnap?.ref?.child("status")?.setValue(Status.SERVED.name)
 
-                                if (nextTicket != null) {
-                                    Log.e("Debug", "new current: ${nextTicket.number}")
-                                    windowsRef.child("currentTicket").setValue(nextTicket.number)
-                                }
+                            // Step 3: Find the next QUEUED ticket
+                            val nextTicketPair = queuedTickets
+                                .filter { it.second.status == Status.QUEUED && it.second.number > currentTicketNumber }
+                                .minByOrNull { it.second.number }
+
+                            if (nextTicketPair != null) {
+                                // Set new current ticket
+                                windowsRef.child("currentTicket").setValue(nextTicketPair.second.number)
                             } else {
+                                // No more tickets left
+                                windowsRef.child("currentTicket").setValue(-1)
                                 onNoTicket()
                             }
                         }
@@ -410,6 +403,7 @@ class Database {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
 
 
 

@@ -15,6 +15,7 @@ import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLandingBinding
 import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityQueueRegistrationBinding
+import com.example.quetek.models.Status
 import org.w3c.dom.Text
 
 

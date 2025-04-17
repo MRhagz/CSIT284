@@ -53,19 +53,21 @@ class AdminActivity : Activity() {
 
         var isStarted = false // indicator if the accountant started the queue
         windowNumber.text = accountant.window.name
-        var firstTicket: String = "/"
+        var firstTicket = -1
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         Database().listenToQueuedTickets(accountant.window.name) { updatedTickets ->
-            Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
             adapter.updateList(updatedTickets)
-//            queueLength.text = updatedTickets.size.toString()
-            firstTicket = updatedTickets.first().number.toString()
             if (updatedTickets.isEmpty()) {
                 Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
+                return@listenToQueuedTickets
             }
+            queueLength.text = updatedTickets.size.toString()
+            Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
+            firstTicket = updatedTickets.first().number
+            servingNumber.text = firstTicket.toString()
         }
 
 
@@ -75,7 +77,7 @@ class AdminActivity : Activity() {
             if(btnStart.text.equals("Done")){
 //                servingNumber.text = tick
                 Database().serveNextTicketForWindow(accountant.window.name) {
-//                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
                 }
                 if (userList.isNotEmpty()) {
 //                    removedUserString.add(userList[0])
@@ -91,7 +93,8 @@ class AdminActivity : Activity() {
                 btnStart.text = "Done"
                 btnCancel.visibility = View.VISIBLE
 //                isStarted = true
-                servingNumber.text = firstTicket
+//                servingNumber.text = firstTicket.toString()
+                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
 
 //                xt = "00"
 //                if (users.isNotEmpty()) {
