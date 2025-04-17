@@ -11,7 +11,7 @@ class Student(
     password: String,
     firstName: String,
     lastName: String,
-    val program: Program = Program.NONE,
+    var program: Program = Program.NONE,
     userType: UserType = UserType.STUDENT,
 ) : User(id, password, firstName, lastName, userType) {
 

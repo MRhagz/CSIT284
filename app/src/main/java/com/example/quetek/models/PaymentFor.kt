@@ -10,10 +10,10 @@ enum class PaymentFor(val window: String) {
     companion object {
         fun getValueFromDisplay(display: String) : PaymentFor {
             return when(display) {
-                "TUITION" -> TUITION
-                "MOTORCYCLE PARKING_STICKER" -> MOTORCYCLE_PARKING_STICKER
-                "CAR PARKING STICKER" -> CAR_PARKING_STICKER
-                "OTHERS" -> OTHERS
+                "TUITION", "A" -> TUITION
+                "MOTORCYCLE PARKING_STICKER", "B" -> MOTORCYCLE_PARKING_STICKER
+                "CAR PARKING STICKER", "C" -> CAR_PARKING_STICKER
+                "OTHERS", "D" -> OTHERS
                 else -> NONE
             }
         }

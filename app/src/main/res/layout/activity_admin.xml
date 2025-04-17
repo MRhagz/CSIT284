@@ -193,7 +193,7 @@
         android:background="@color/black"
         android:layout_height="2dp"/>
 
-    <ListView
+    <view class="androidx.recyclerview.widget.RecyclerView"
         android:id="@+id/CustomAdminPanel"
         android:nestedScrollingEnabled="true"
         android:layout_width="match_parent"

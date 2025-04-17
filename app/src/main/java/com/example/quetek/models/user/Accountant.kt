@@ -11,7 +11,7 @@ class Accountant(
     password: String,
     firstName: String,
     lastName: String,
-    val window: Window = Window.NONE,
+    var window: Window = Window.NONE,
     userType: UserType = UserType.ACCOUNTANT,
 ) : User(id, password, firstName, lastName, userType ) {
 

@@ -19,10 +19,13 @@ import com.google.firebase.Timestamp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import showFullscreenLoadingDialog
 import java.time.temporal.TemporalAmount
+import java.util.Calendar
 
 class Database {
     val database = FirebaseDatabase.getInstance()
@@ -130,6 +133,71 @@ class Database {
             }
     }
 
+//    private fun generateTicketNumber(windowId: String, callback: (String) -> Unit) {
+//        val counterRef = FirebaseDatabase.getInstance()
+//            .getReference("counters")
+//            .child("ticket_number")
+//            .child(windowId)
+//
+//        counterRef.runTransaction(object : Transaction.Handler {
+//            override fun doTransaction(currentData: MutableData): Transaction.Result {
+//                var currentNumber = currentData.getValue(Int::class.java) ?: 0
+//                currentNumber += 1
+//                currentData.value = currentNumber
+//                return Transaction.success(currentData)
+//            }
+//
+//            override fun onComplete(
+//                error: DatabaseError?,
+//                committed: Boolean,
+//                currentData: DataSnapshot?
+//            ) {
+//                if (error != null || !committed) {
+//                    Log.e("TicketGen", "Failed to generate ticket number: ${error?.message}")
+//                    callback("ERR") // fallback
+//                } else {
+//                    val ticketNumber = currentData?.getValue(Int::class.java) ?: 0
+//                    val prefix = windowId.first().uppercaseChar() // e.g., 'E' from "Enrollment"
+//                    val formattedNumber = String.format("%03d", ticketNumber) // 001, 002, ...
+//                    callback("$prefix$formattedNumber") // E.g., "E001"
+//                }
+//            }
+//        })
+//    }
+
+    private fun generateTicketNumber(windowId: String, callback: (Int) -> Unit) {
+        val counterRef = FirebaseDatabase.getInstance()
+            .getReference("counters")
+            .child("ticket_number")
+            .child(windowId)
+
+        counterRef.runTransaction(object : Transaction.Handler {
+            override fun doTransaction(currentData: MutableData): Transaction.Result {
+                var currentNumber = currentData.getValue(Int::class.java) ?: 0
+                currentNumber += 1
+                currentData.value = currentNumber
+                return Transaction.success(currentData)
+            }
+
+            override fun onComplete(
+                error: DatabaseError?,
+                committed: Boolean,
+                currentData: DataSnapshot?
+            ) {
+                if (error != null || !committed) {
+                    Log.e("TicketGen", "Failed to generate ticket number: ${error?.message}")
+                    callback(0) // fallback
+                } else {
+                    val ticketNumber = currentData?.getValue(Int::class.java) ?: 0
+                    val formattedNumber = String.format("%02d", ticketNumber) // 01, 02, ..., 99
+                    callback(ticketNumber)
+                }
+            }
+        })
+    }
+
+
+
     fun addTicketSynchronized(
         activity: Activity,
         studentId: String,
@@ -150,21 +218,24 @@ class Database {
                             ticket.timestamp < newTimestamp
                 } + 1 // Include this ticket
 
-                val ticket = Ticket(
-                    timestamp = newTimestamp,
-                    position = position,
-                    number = 0, // generate this as needed
-                    studentId = studentId,
-                    paymentFor = paymentFor,
-                    amount = amount,
-                    status = Status.QUEUED
-                )
+                generateTicketNumber(paymentFor.window) {number ->
+                    val ticket = Ticket(
+                        timestamp = newTimestamp,
+                        position = position,
+                        number = number, // generate this as needed
+                        studentId = studentId,
+                        paymentFor = paymentFor,
+                        amount = amount,
+                        status = Status.QUEUED
+                    )
 
-                val key = ticketsRef.push().key ?: return
+                    val key = ticketsRef.push().key ?: return@generateTicketNumber
 
-                ticketsRef.child(key).setValue(ticket)
-                    .addOnSuccessListener { dialog.dismiss() }
-                    .addOnFailureListener { dialog.dismiss() }
+                    ticketsRef.child(key).setValue(ticket)
+                        .addOnSuccessListener { dialog.dismiss() }
+                        .addOnFailureListener { dialog.dismiss() }
+
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -202,9 +273,6 @@ class Database {
                 }
             })
     }
-
-
-
 
     fun listenToStudentTickets(
         studentId: String,
@@ -252,41 +320,103 @@ class Database {
     }
 
 
+//    fun serveNextTicketForWindow(windowId: String, onNoTicket: () -> Unit) {
+//        val ticketsRef = tickets
+//        Log.d("Debug", "Serving the current ticket")
+//        ticketsRef.orderByChild("paymentFor").equalTo(PaymentFor.getValueFromDisplay(windowId).name)
+//            .addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    var earliestTicket: DataSnapshot? = null
+//
+//                    for (ticketSnap in snapshot.children) {
+//                        val ticket = ticketSnap.getValue(Ticket::class.java)
+//                        if (ticket != null && ticket.status == Status.QUEUED) {
+//                            if (earliestTicket == null ||
+//                                ticket.timestamp.toLong() < (earliestTicket.child("timestamp")
+//                                    .getValue(Long::class.java) ?: Long.MAX_VALUE)
+//                            ) {
+//                                earliestTicket = ticketSnap
+//                            }
+//                        }
+//                    }
+//
+//                    if (earliestTicket != null) {
+//                        earliestTicket.ref.child("status").setValue("SERVED")
+//                    } else {
+//                        onNoTicket()
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {}
+//            })
+//    }
+
     fun serveNextTicketForWindow(windowId: String, onNoTicket: () -> Unit) {
-        val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
+        val db = FirebaseDatabase.getInstance()
+        val windowsRef = db.getReference("windows").child(windowId)
+        val ticketsRef = db.getReference("tickets")
 
-        ticketsRef.orderByChild("windowId").equalTo(windowId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    var earliestTicket: DataSnapshot? = null
+        // Step 1: Fetch currentTicket
+        windowsRef.child("currentTicket").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(currentTicketSnap: DataSnapshot) {
+                val currentTicketNumber = currentTicketSnap.getValue(Int::class.java)
+                Log.e("Debug", currentTicketNumber.toString())
 
-                    for (ticketSnap in snapshot.children) {
-                        val ticket = ticketSnap.getValue(Ticket::class.java)
-                        if (ticket != null && ticket.status == Status.QUEUED) {
-                            if (earliestTicket == null ||
-                                ticket.timestamp.toLong() < (earliestTicket.child("timestamp")
-                                    .getValue(Long::class.java) ?: Long.MAX_VALUE)
-                            ) {
-                                earliestTicket = ticketSnap
+                // Step 2: Fetch all tickets for this window
+                ticketsRef.orderByChild("paymentFor")
+                    .equalTo(PaymentFor.getValueFromDisplay(windowId).name)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            var nextTicketSnap: DataSnapshot? = null
+
+                            for (ticketSnap in snapshot.children) {
+                                val ticket = ticketSnap.getValue(Ticket::class.java)
+                                if (ticket != null && ticket.status == Status.QUEUED) {
+                                    if (currentTicketNumber == null) {
+                                        // No current ticket: serve the EARLIEST
+                                        val nextCandidate = nextTicketSnap?.getValue(Ticket::class.java)
+                                        if (nextCandidate == null || ticket.number < nextCandidate.number) {
+                                            nextTicketSnap = ticketSnap
+                                        }
+                                    } else {
+                                        // Normal flow: find ticket after current
+                                        if (ticket.number > currentTicketNumber) {
+                                            val nextCandidate = nextTicketSnap?.getValue(Ticket::class.java)
+                                            if (nextCandidate == null || ticket.number < nextCandidate.number) {
+                                                nextTicketSnap = ticketSnap
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (nextTicketSnap != null) {
+                                val nextTicket = nextTicketSnap.getValue(Ticket::class.java)
+                                nextTicketSnap.ref.child("status").setValue("SERVED")
+
+                                if (nextTicket != null) {
+                                    Log.e("Debug", "new current: ${nextTicket.number}")
+                                    windowsRef.child("currentTicket").setValue(nextTicket.number)
+                                }
+                            } else {
+                                onNoTicket()
                             }
                         }
-                    }
 
-                    if (earliestTicket != null) {
-                        earliestTicket.ref.child("status").setValue("SERVED")
-                    } else {
-                        onNoTicket()
-                    }
-                }
+                        override fun onCancelled(error: DatabaseError) {}
+                    })
+            }
 
-                override fun onCancelled(error: DatabaseError) {}
-            })
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
+
+
 
     fun listenToQueuedTickets(windowId: String, callback: (List<Ticket>) -> Unit) {
         val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
 
-        ticketsRef.orderByChild("windowId").equalTo(windowId)
+        ticketsRef.orderByChild("paymentFor").equalTo(PaymentFor.getValueFromDisplay(windowId).name)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val queuedTickets = mutableListOf<Ticket>()
@@ -304,6 +434,47 @@ class Database {
                     Log.e("AccountantListener", "Listener cancelled: ${error.message}")
                 }
             })
+    }
+
+    fun generateAndSaveUser(onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+        val yearPrefix = Calendar.getInstance().get(Calendar.YEAR).toString().takeLast(2)
+        val serialRef = FirebaseDatabase.getInstance().getReference("counters/user_serials/$yearPrefix")
+
+        Log.e("GenerateID", "Starting transaction for year: $yearPrefix")
+
+        serialRef.runTransaction(object : Transaction.Handler {
+            override fun doTransaction(currentData: MutableData): Transaction.Result {
+                var currentValue = currentData.getValue(Int::class.java) ?: 0
+                Log.e("GenerateID", "Current serial value: $currentValue")
+
+                if (currentValue >= 9999999) {
+                    Log.e("GenerateID", "Serial value exceeded max limit")
+                    return Transaction.abort()
+                }
+
+                currentData.value = currentValue + 1
+                Log.e("GenerateID", "Transaction updated value to: ${currentValue + 1}")
+                return Transaction.success(currentData)
+            }
+
+            override fun onComplete(
+                error: DatabaseError?, committed: Boolean, currentData: DataSnapshot?
+            ) {
+                if (committed) {
+                    val serial = currentData?.getValue(Int::class.java) ?: 0
+                    val left = serial / 1000
+                    val right = serial % 1000
+                    val formattedSerial = String.format("%04d-%03d", left, right)
+                    val newId = "$yearPrefix-$formattedSerial"
+
+                    Log.e("GenerateID", "Transaction committed, new ID: $newId")
+                    onSuccess(newId)
+                } else {
+                    Log.e("GenerateID", "Transaction failed or aborted")
+                    onFailure(error?.toException() ?: Exception("Transaction not committed"))
+                }
+            }
+        })
     }
 
 

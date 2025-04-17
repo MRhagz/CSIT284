@@ -55,6 +55,8 @@ dependencies {
 
 //    implementation("com.ericktijerou.koleton:koleton:0.7.8")
 //    implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
