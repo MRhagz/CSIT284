@@ -1,7 +1,9 @@
 package com.example.quetek.models
 
+import android.app.Activity
 import com.example.quetek.models.user.User
 import com.example.quetek.utils.simpleFormat
+import com.google.firebase.Timestamp
 import java.util.Date
 
 class Student(
@@ -9,7 +11,7 @@ class Student(
     password: String,
     firstName: String,
     lastName: String,
-    val program: Program = Program.NONE,
+    var program: Program = Program.NONE,
     userType: UserType = UserType.STUDENT,
 ) : User(id, password, firstName, lastName, userType) {
 

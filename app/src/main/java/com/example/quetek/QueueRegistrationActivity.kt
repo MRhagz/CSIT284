@@ -8,19 +8,26 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.compose.ui.res.stringArrayResource
 import com.example.quetek.app.DataManager
+import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityQueueRegistrationBinding
+import com.example.quetek.models.PaymentFor
+import com.example.quetek.models.Queue
 import com.example.quetek.models.Student
 
 class QueueRegistrationActivity : Activity() {
     private lateinit var binding: ActivityQueueRegistrationBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQueueRegistrationBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
+        val student = (application as DataManager).user_logged_in as Student
 
         val data = (application as DataManager)
         val user = data.user_logged_in as Student
@@ -41,9 +48,34 @@ class QueueRegistrationActivity : Activity() {
         }
 
         btnSubmit.setOnClickListener {
-            // TODO SAVE INFORMATION BEFORE NAVIGATING
+            // TODO:  ADD VALIDATIONS
+
+            // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
+            val paymentFor = PaymentFor.getValueFromDisplay(binding.sPaymentFor.selectedItem.toString())
+            Queue.enqueue(
+                this, student.id,
+                paymentFor,
+                binding.etAmount.text.toString().toDouble()
+            )
+//
+//            Database().listenToStudentTickets(
+//                studentId = student.id,
+//                onServed = { servedTicket ->
+//                    // Show alert, toast, or update UI
+////                    data.ticket = servedTicket
+////                    LandingActivity().position.text = servedTicket.position.toString()
+//                    Toast.makeText(this, "Your ticket ${servedTicket.number} was served!", Toast.LENGTH_LONG).show()
+//                },
+//                onQueueLengthUpdate = { queueLength ->
+//                    // Update UI showing queue length
+////                    LandingActivity().length.text = queueLength.toString()
+//                },
+//                paymentFor
+//            )
+
              Log.e("QueuRegistration", "Navigating to LandingActivity")
-             startActivity(Intent(this, TicketConfirmationActivity::class.java))
+//             startActivity(Intent(this, TicketConfirmationActivity::class.java))
+            startActivity(Intent(this, LandingActivity::class.java))
         }
         btnCancel.setOnClickListener {
             Log.e("QueuRegistration", "Navigating to LandingActivity")

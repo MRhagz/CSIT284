@@ -15,8 +15,8 @@
     <string-array name="payment_for_array">
         <item>Select payment for…</item>
         <item>TUITION</item>
-        <item>CAR_PARKING_STICKER</item>
-        <item>MOTORCYCLE_PARKING_STICKER</item>
+        <item>CAR PARKING STICKER</item>
+        <item>MOTORCYCLE PARKING STICKER</item>
         <item>OTHERS</item>
     </string-array>
 
@@ -42,5 +42,7 @@
         <item>C</item>
         <item>D</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 

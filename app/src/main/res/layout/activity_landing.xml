@@ -73,6 +73,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tvTicketId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
@@ -140,6 +141,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tvPosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00"
@@ -176,6 +178,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tvLength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00"
@@ -204,6 +207,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/tvWindow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00"

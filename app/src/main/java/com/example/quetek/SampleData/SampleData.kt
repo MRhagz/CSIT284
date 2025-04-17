@@ -2,7 +2,6 @@ package com.example.quetek.SampleData
 
 import com.example.quetek.models.Student
 import com.example.quetek.models.Ticket
-import com.example.quetek.utils.PaymentFor
 
 class SampleData {
     companion object {
@@ -16,13 +15,13 @@ class SampleData {
 //            Student("peterparker", "password123", "Peter", "", "Parker", "jane.doe@cit.edu", "32-819-127"),
         )
 
-        val ticketList = listOf(
-            Ticket(1, 12345, userList[0], PaymentFor.TUITION, 14000.0),
-            Ticket(2, 12345, userList[1], PaymentFor.TUITION, 1200.0),
-            Ticket(3, 12345, userList[2], PaymentFor.TUITION, 15000.0),
-            Ticket(4, 12345, userList[3], PaymentFor.TUITION, 18000.0),
-            Ticket(5, 12345, userList[4], PaymentFor.TUITION, 12_123.0),
-        )
+//        val ticketList = listOf(
+//            Ticket(1, 12345, userList[0], PaymentFor.TUITION, 14000.0),
+//            Ticket(2, 12345, userList[1], PaymentFor.TUITION, 1200.0),
+//            Ticket(3, 12345, userList[2], PaymentFor.TUITION, 15000.0),
+//            Ticket(4, 12345, userList[3], PaymentFor.TUITION, 18000.0),
+//            Ticket(5, 12345, userList[4], PaymentFor.TUITION, 12_123.0),
+//        )
     }
 
 }

@@ -19,13 +19,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import checkInput
+import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityRegisterBinding
 import com.example.quetek.models.Program
 import com.example.quetek.models.UserType
 import com.example.quetek.models.Window
 import com.example.quetek.util.UserFactory
-import com.example.quetek.utils.generateAndSaveUser
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.TimeoutCancellationException
@@ -121,7 +121,7 @@ class RegisterActivity : AppCompatActivity() {
             if (checkInputs()) {
                 val loadingDialog = showFullscreenLoadingDialog()
                 Log.e("Register", "Register button is clicked")
-                generateAndSaveUser(
+                Database().generateAndSaveUser(
                     onSuccess = { newId ->
                         val selectedUserType =
                             UserType.valueOf(spinUserType.selectedItem.toString())
@@ -138,7 +138,7 @@ class RegisterActivity : AppCompatActivity() {
                                 Window.valueOf(spinAddtl.selectedItem.toString())
                         )
 
-                        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                        val databaseReference = Database().users
                         val userKey = databaseReference.push().key ?: return@generateAndSaveUser
 
                         databaseReference.child(userKey).setValue(user)

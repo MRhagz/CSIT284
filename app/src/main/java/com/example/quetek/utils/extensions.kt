@@ -17,46 +17,7 @@ fun Date.simpleFormat(): String {
     return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(this)
 }
 
-fun generateAndSaveUser(onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
-    val yearPrefix = Calendar.getInstance().get(Calendar.YEAR).toString().takeLast(2)
-    val serialRef = FirebaseDatabase.getInstance().getReference("counters/user_serials/$yearPrefix")
 
-    Log.e("GenerateID", "Starting transaction for year: $yearPrefix")
-
-    serialRef.runTransaction(object : Transaction.Handler {
-        override fun doTransaction(currentData: MutableData): Transaction.Result {
-            var currentValue = currentData.getValue(Int::class.java) ?: 0
-            Log.e("GenerateID", "Current serial value: $currentValue")
-
-            if (currentValue >= 9999999) {
-                Log.e("GenerateID", "Serial value exceeded max limit")
-                return Transaction.abort()
-            }
-
-            currentData.value = currentValue + 1
-            Log.e("GenerateID", "Transaction updated value to: ${currentValue + 1}")
-            return Transaction.success(currentData)
-        }
-
-        override fun onComplete(
-            error: DatabaseError?, committed: Boolean, currentData: DataSnapshot?
-        ) {
-            if (committed) {
-                val serial = currentData?.getValue(Int::class.java) ?: 0
-                val left = serial / 1000
-                val right = serial % 1000
-                val formattedSerial = String.format("%04d-%03d", left, right)
-                val newId = "$yearPrefix-$formattedSerial"
-
-                Log.e("GenerateID", "Transaction committed, new ID: $newId")
-                onSuccess(newId)
-            } else {
-                Log.e("GenerateID", "Transaction failed or aborted")
-                onFailure(error?.toException() ?: Exception("Transaction not committed"))
-            }
-        }
-    })
-}
 
 
 

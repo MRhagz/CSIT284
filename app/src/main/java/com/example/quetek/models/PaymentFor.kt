@@ -1,9 +1,23 @@
 package com.example.quetek.models
 
-enum class PaymentFor(val int: Int) {
-    TUITION(1),
-    MOTORCYCLE_PARKING_STICKER(2),
-    CAR_PARKING_STICKER(3),
-    OTHERS(4);
+enum class PaymentFor(val window: String) {
+    NONE("/"),
+    TUITION("A"),
+    MOTORCYCLE_PARKING_STICKER("B"),
+    CAR_PARKING_STICKER("C"),
+    OTHERS("D");
+
+    companion object {
+        fun getValueFromDisplay(display: String) : PaymentFor {
+            return when(display) {
+                "TUITION", "A" -> TUITION
+                "MOTORCYCLE PARKING_STICKER", "B" -> MOTORCYCLE_PARKING_STICKER
+                "CAR PARKING STICKER", "C" -> CAR_PARKING_STICKER
+                "OTHERS", "D" -> OTHERS
+                else -> NONE
+            }
+        }
+    }
 }
+
 
