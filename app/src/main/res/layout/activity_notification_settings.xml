@@ -66,14 +66,18 @@
                 android:id="@+id/radioButtonOption1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="18sp"
+                android:buttonTint="@color/black"
                 android:text="Time-based" />
 
             <RadioButton
+                android:buttonTint="@color/black"
                 android:id="@+id/radioButtonOption2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
+                android:textColor="@color/black"
                 android:text="Queue position" />
         </RadioGroup>
 

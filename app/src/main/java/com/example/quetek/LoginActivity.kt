@@ -1,6 +1,8 @@
 package com.example.quetek
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,10 +17,12 @@ import android.widget.Toast
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Build
 import android.text.Spannable
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLoginBinding
+import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.Program
 import com.example.quetek.models.Student
 import com.example.quetek.models.UserType
@@ -134,6 +138,28 @@ class LoginActivity : Activity() {
         return sb
     }
 
+    private fun navigateToLandingPage(userType: UserType) {
+        val destination = when (userType) {
+            UserType.STUDENT -> LandingActivity::class.java
+            UserType.ACCOUNTANT -> AdminActivity::class.java
+            else -> LandingActivity::class.java
+        }
+
+        val intent = Intent(this, destination)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
+    }
+
+
+}
+
+
 //    private fun verifyLogin() {
 //        val data = (application as DataManager);
 //
@@ -158,28 +184,6 @@ class LoginActivity : Activity() {
 //            }
 //        }
 //    }
-
-    private fun navigateToLandingPage(userType: UserType) {
-        val destination = when (userType) {
-            UserType.STUDENT -> LandingActivity::class.java
-            UserType.ACCOUNTANT -> AdminActivity::class.java
-            else -> LandingActivity::class.java
-        }
-
-        val intent = Intent(this, destination)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun isNetworkConnected(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnected
-    }
-
-
-}
-
 
 //            val adminUser = "admin"
 //            val adminPass = "123"

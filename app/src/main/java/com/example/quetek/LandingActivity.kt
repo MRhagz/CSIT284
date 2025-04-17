@@ -1,8 +1,12 @@
 package com.example.quetek
 
+import NotificationHelper
 import android.app.Activity
 import android.app.Dialog
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Window
@@ -10,6 +14,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLandingBinding
@@ -43,6 +49,9 @@ class LandingActivity : Activity() {
         dialog.setContentView(R.layout.dialog_priority_lane)
         dialog.window?.setBackgroundDrawable(getDrawable(R.drawable.rectanglelogoutdialog))
 
+//        val notify = NotificationHelper(this)
+//        notify.showNotification()
+
         val btnDecline = dialog.findViewById<Button>(R.id.btnDecline)
         val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
         btnDecline.setOnClickListener { dialog.dismiss() }
@@ -54,14 +63,12 @@ class LandingActivity : Activity() {
 
         ibtnMenu.setOnClickListener {
             Log.e("QueTek", "Navigating to Menu")
-
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
         btnNotifyMe.setOnClickListener {
-            // TODO
-            toast("Feature under development")
+            startActivity(Intent(this, NotificationSettingsActivity::class.java))
         }
 
         btnJoinQueue.setOnClickListener {

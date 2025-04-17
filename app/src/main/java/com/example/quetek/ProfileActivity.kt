@@ -22,7 +22,7 @@ class ProfileActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_profile)
-        val backButton = findViewById<Button>(R.id.backButton)
+        val backButton = findViewById<Button>(R.id.btnBack)
         val editProfileButton = findViewById<Button>(R.id.editProfile)
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         val logoutButton = findViewById<Button>(R.id.logoutButton)

@@ -11,6 +11,8 @@
     <string name="login">Login</string>
     <string name="login_tagline">Smarter Queues for a Smoother Teknoy Experience!</string>
     <string name="id_number">ID Number</string>
+    <string name="channel_name">QueTek Update</string>
+    <string name="channel_description">Updates about your queue status.</string>
 
     <string-array name="payment_for_array">
         <item>Select payment for…</item>
