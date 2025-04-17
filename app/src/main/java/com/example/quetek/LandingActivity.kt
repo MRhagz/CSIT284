@@ -102,13 +102,12 @@ class LandingActivity : Activity() {
                         Toast.makeText(this, "Your ticket ${servedTicket.number} was served!", Toast.LENGTH_LONG).show()
                     },
                     onQueueLengthUpdate = { queueLength ->
-                        binding.tvPosition.text = ticket.position.toString()
                         binding.tvLength.text = queueLength.toString()
-
-
-
                         // Update UI showing queue length
     //                    LandingActivity().length.text = queueLength.toString()
+                    },
+                    onStudentPositionUpdate = {pos ->
+                        binding.tvPosition.text =  pos.toString()
                     },
                     ticket.paymentFor
                 )

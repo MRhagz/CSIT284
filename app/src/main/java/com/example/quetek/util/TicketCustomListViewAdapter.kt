@@ -6,15 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quetek.R
 import com.example.quetek.app.DataManager
 import com.example.quetek.models.Ticket
+import com.example.quetek.utils.TicketDiffCallback
 
 class TicketCustomListViewAdapter(
     private val context: Context,
     private val sizeTextView: TextView,
-    private var userList: MutableList<Ticket>,
+    private var tickets: MutableList<Ticket>,
     private val onClick: (String) -> Unit,
     private val onLongClick: (String) -> Unit
 ) : RecyclerView.Adapter<TicketCustomListViewAdapter.TicketViewHolder>() {
@@ -44,17 +46,22 @@ class TicketCustomListViewAdapter(
     }
 
     override fun onBindViewHolder(holder: TicketViewHolder, position: Int) {
-        val ticket = userList[position]
+        val ticket = tickets[position]
         holder.bind(ticket)
     }
 
     override fun getItemCount(): Int {
-        sizeTextView.text = "${userList.size}"  // Update size view
-        return userList.size
+        sizeTextView.text = "${tickets.size}"  // Update size view
+        return tickets.size
     }
 
     fun updateList(newList: List<Ticket>) {
-        userList = newList.toMutableList()
-        notifyDataSetChanged()
+        val diffCallback = TicketDiffCallback(tickets, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        tickets.clear()
+        tickets.addAll(newList)
+
+        diffResult.dispatchUpdatesTo(this)
     }
 }

@@ -194,7 +194,7 @@
         android:layout_height="2dp"/>
 
     <view class="androidx.recyclerview.widget.RecyclerView"
-        android:id="@+id/CustomAdminPanel"
+        android:id="@+id/recyclerView"
         android:nestedScrollingEnabled="true"
         android:layout_width="match_parent"
         android:layout_height="250dp"

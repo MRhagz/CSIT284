@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.renderscript.Sampler.Value
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import com.example.quetek.app.DataManager
 import com.example.quetek.models.PaymentFor
@@ -49,7 +50,8 @@ class Database {
                 isHandled = true
                 dialog.dismiss()
                 callback(null)
-                Toast.makeText(activity, "Request timed out. Please try again.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Request timed out. Please try again.", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         handler.postDelayed(timeoutRunnable, 15000) // 15 seconds
@@ -71,9 +73,14 @@ class Database {
                             if (idMatch) {
                                 val user = when (baseUser?.userType) {
                                     UserType.STUDENT -> {
-                                        val program = userSnap.child("program").getValue(String::class.java) ?: "NONE"
+                                        val program =
+                                            userSnap.child("program").getValue(String::class.java)
+                                                ?: "NONE"
                                         val programEnum = Program.valueOf(program)
-                                        Log.e("Program", "Fetched program: ${programEnum.displayName}")
+                                        Log.e(
+                                            "Program",
+                                            "Fetched program: ${programEnum.displayName}"
+                                        )
                                         Student(
                                             id = baseUser.id,
                                             password = baseUser.password,
@@ -85,7 +92,8 @@ class Database {
 
                                     UserType.ACCOUNTANT -> {
                                         val window = Window.valueOf(
-                                            userSnap.child("window").getValue(String::class.java) ?: "NONE"
+                                            userSnap.child("window").getValue(String::class.java)
+                                                ?: "NONE"
                                         )
                                         Accountant(
                                             id = baseUser.id,
@@ -199,7 +207,6 @@ class Database {
     }
 
 
-
     fun addTicketSynchronized(
         activity: Activity,
         studentId: String,
@@ -220,7 +227,7 @@ class Database {
                             ticket.timestamp < newTimestamp
                 } + 1 // Include this ticket
 
-                generateTicketNumber(paymentFor.window) {number ->
+                generateTicketNumber(paymentFor.window) { number ->
                     val ticket = Ticket(
                         timestamp = newTimestamp,
                         position = position,
@@ -280,6 +287,7 @@ class Database {
         studentId: String,
         onServed: (Ticket) -> Unit,
         onQueueLengthUpdate: (Int) -> Unit,
+        onStudentPositionUpdate: (Int) -> Unit,
         paymentFor: PaymentFor
     ) {
         val ticketsRef = tickets
@@ -287,35 +295,31 @@ class Database {
         // Listen for all ticket changes
         ticketsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var queueLength = 0
-                val queuedTickets = mutableListOf<DataSnapshot>()
+                val queuedTickets = snapshot.children
+                    .mapNotNull { it.getValue(Ticket::class.java) to it }
+                    .filter { it.first?.status == Status.QUEUED && it.first?.paymentFor == paymentFor }
+                    .sortedBy { it.first?.timestamp }
 
-                for (ticketSnap in snapshot.children) {
-                    val ticket = ticketSnap.getValue(Ticket::class.java)
+                var currentStudentPosition: Int? = null
+                var queueLength = queuedTickets.size
 
-                    if (ticket != null) {
-                        if (ticket.studentId == studentId && ticket.status == Status.SERVED) {
-                            onServed(ticket)
-                        }
+                queuedTickets.forEachIndexed { index, (ticket, snap) ->
+                    snap.ref.child("position").setValue(index + 1)
 
-                        if (ticket.status == Status.QUEUED && ticket.paymentFor == paymentFor) {
-                            queueLength++
-                            queuedTickets.add(ticketSnap)
-                        }
+                    if (ticket?.studentId == studentId) {
+                        currentStudentPosition = index + 1
                     }
                 }
 
-                // Optional: Update real-time position field
-                queuedTickets.sortBy {
-                    it.getValue(Ticket::class.java)?.timestamp
-                }
-
-                queuedTickets.forEachIndexed { index, snap ->
-                    snap.ref.child("position").setValue(index + 1)
-                }
-
+                // Callback with updated queue length
                 onQueueLengthUpdate(queueLength)
+
+                // Callback with student's current position
+                currentStudentPosition?.let {
+                    onStudentPositionUpdate(it)
+                }
             }
+
 
             override fun onCancelled(error: DatabaseError) {}
         })
@@ -354,17 +358,18 @@ class Database {
 //    }
 
     fun getCurrentTicket(window: Window, callback: (Int) -> Unit) {
-        windows.child(window.name).child("currentTicket").addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val curr = snapshot.getValue(Int::class.java) ?: -1
-                Log.e("Debug", "Current ticket: $curr")
-                callback(curr)
-            }
+        windows.child(window.name).child("currentTicket")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val curr = snapshot.getValue(Int::class.java) ?: -1
+                    Log.e("Debug", "Current ticket: $curr")
+                    callback(curr)
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     fun serveNextTicketForWindow(windowId: String, onNoTicket: () -> Unit) {
@@ -373,54 +378,55 @@ class Database {
         val ticketsRef = db.getReference("tickets")
 
         // Step 1: Get currentTicket
-        windowsRef.child("currentTicket").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(currentTicketSnap: DataSnapshot) {
-                val currentTicketNumber = currentTicketSnap.getValue(Int::class.java) ?: -1
+        windowsRef.child("currentTicket")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(currentTicketSnap: DataSnapshot) {
+                    val currentTicketNumber = currentTicketSnap.getValue(Int::class.java) ?: -1
 
-                if (currentTicketNumber == -1) {
-                    // No ticket is being served
-                    onNoTicket()
-                    return
+                    if (currentTicketNumber == -1) {
+                        // No ticket is being served
+                        onNoTicket()
+                        return
+                    }
+
+                    // Step 2: Find and serve the current ticket
+                    ticketsRef.orderByChild("paymentFor")
+                        .equalTo(PaymentFor.getValueFromDisplay(windowId).name)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val queuedTickets = snapshot.children.mapNotNull { snap ->
+                                    val ticket = snap.getValue(Ticket::class.java)
+                                    if (ticket != null) Pair(snap, ticket) else null
+                                }
+
+                                // Serve the current ticket
+                                val currentSnap =
+                                    queuedTickets.find { it.second.number == currentTicketNumber }?.first
+                                currentSnap?.ref?.child("status")?.setValue(Status.SERVED.name)
+
+                                // Step 3: Find the next QUEUED ticket
+                                val nextTicketPair = queuedTickets
+                                    .filter { it.second.status == Status.QUEUED && it.second.number > currentTicketNumber }
+                                    .minByOrNull { it.second.number }
+
+                                if (nextTicketPair != null) {
+                                    // Set new current ticket
+                                    windowsRef.child("currentTicket")
+                                        .setValue(nextTicketPair.second.number)
+                                } else {
+                                    // No more tickets left
+                                    windowsRef.child("currentTicket").setValue(-1)
+                                    onNoTicket()
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {}
+                        })
                 }
 
-                // Step 2: Find and serve the current ticket
-                ticketsRef.orderByChild("paymentFor")
-                    .equalTo(PaymentFor.getValueFromDisplay(windowId).name)
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val queuedTickets = snapshot.children.mapNotNull { snap ->
-                                val ticket = snap.getValue(Ticket::class.java)
-                                if (ticket != null) Pair(snap, ticket) else null
-                            }
-
-                            // Serve the current ticket
-                            val currentSnap = queuedTickets.find { it.second.number == currentTicketNumber }?.first
-                            currentSnap?.ref?.child("status")?.setValue(Status.SERVED.name)
-
-                            // Step 3: Find the next QUEUED ticket
-                            val nextTicketPair = queuedTickets
-                                .filter { it.second.status == Status.QUEUED && it.second.number > currentTicketNumber }
-                                .minByOrNull { it.second.number }
-
-                            if (nextTicketPair != null) {
-                                // Set new current ticket
-                                windowsRef.child("currentTicket").setValue(nextTicketPair.second.number)
-                            } else {
-                                // No more tickets left
-                                windowsRef.child("currentTicket").setValue(-1)
-                                onNoTicket()
-                            }
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {}
-                    })
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+                override fun onCancelled(error: DatabaseError) {}
+            })
     }
-
-
 
 
     fun listenToQueuedTickets(windowId: String, callback: (List<Ticket>) -> Unit) {
@@ -448,7 +454,8 @@ class Database {
 
     fun generateAndSaveUser(onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
         val yearPrefix = Calendar.getInstance().get(Calendar.YEAR).toString().takeLast(2)
-        val serialRef = FirebaseDatabase.getInstance().getReference("counters/user_serials/$yearPrefix")
+        val serialRef =
+            FirebaseDatabase.getInstance().getReference("counters/user_serials/$yearPrefix")
 
         Log.e("GenerateID", "Starting transaction for year: $yearPrefix")
 
@@ -487,13 +494,17 @@ class Database {
         })
     }
 
+    fun bindTextViewToDatabase(textView: TextView, path: String) {
+        database.getReference(path).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val value = snapshot.getValue(Int::class.java) ?: 0
+                textView.text = value.toString()
+            }
 
-
-
-
-
-
-
-
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FIREBASE", "Failed to read $path", error.toException())
+            }
+        })
+    }
 
 }
