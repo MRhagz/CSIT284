@@ -260,7 +260,7 @@ class Database {
         Log.e("Ticket", "Fetching Ticket")
 
         ticketRef.orderByChild("studentId").equalTo(studentId)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     dialog.dismiss()
                     if (snapshot.exists()) {
