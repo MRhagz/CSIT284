@@ -4,11 +4,15 @@ import NotificationHelper
 import android.app.Activity
 import android.app.Dialog
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageButton
@@ -108,6 +112,10 @@ class LandingActivity : Activity() {
                     },
                     onStudentPositionUpdate = {pos ->
                         binding.tvPosition.text =  pos.toString()
+                        if (pos == 1) {
+                            showTransactionDialog("test", "test")
+                            // TODO CLEAR THE LANDING PAGE TICKET DETAILS
+                        }
                     },
                     ticket.paymentFor
                 )
@@ -116,10 +124,38 @@ class LandingActivity : Activity() {
                 Log.e("Ticket", "No existing ticket")
             }
         }
+    }
 
-
+    private fun showTurnDialog() {
 
     }
+
+    private fun showTransactionDialog(windowName: String, transactionInfo: String) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_client_turn, null)
+
+//        val tvMessage = dialogView.findViewById<TextView>(R.id.tvMessage)
+//        val tvInstructions = dialogView.findViewById<TextView>(R.id.tvInstructions)
+//        val tvTransactionDetails = dialogView.findViewById<TextView>(R.id.tvTransactionDetails)
+
+        // Optional: Customize the texts
+//        tvMessage.text = "It's your turn, Teknoy!"
+//        tvInstructions.text = "Please proceed to $windowName and show this screen to the assigned accountant."
+//        tvTransactionDetails.text = "Transaction Details:\n$transactionInfo"
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.btnDismiss).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
 
     private fun toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()

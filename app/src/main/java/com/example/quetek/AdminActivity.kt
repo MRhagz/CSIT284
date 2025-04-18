@@ -71,6 +71,8 @@ class AdminActivity : Activity() {
                 Database().serveNextTicketForWindow(accountant.window.name) {
                     Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
                 }
+
+
             } else {
                 binding.btnStart.text = "Done"
                 binding.btnCancel.visibility = View.VISIBLE
@@ -94,23 +96,34 @@ class AdminActivity : Activity() {
 //
 //        }
 //
-//        btnStop.setOnClickListener { // TODO and prepend "binding" on views
-//            btnStart.setText("Start")
-//            btnCancel.visibility = View.GONE
-//            btnStop.visibility = View.GONE
-//            queueLength.text =  "00"
-//            windowNumber.text = "00"
-//            servingNumber.text = "00"
+        binding.btnStop.setOnClickListener { // TODO and prepend "binding" on views
+            binding.btnStart.setText("Start")
+            binding.btnCancel.visibility = View.GONE
+            binding.btnStop.visibility = View.GONE
+            binding.QueueLength.text =  "00"
+            binding.windowNumber.text = "00"
+            binding.servingNumber.text = "00"
 //            userList.clear()
 //            users.clear()
 //            listAdapter.notifyDataSetChanged()
-//        }
+
+            Database().setWindowOpen(
+                accountant.window,
+                isOpen = false,
+                onSuccess = {
+
+                },
+                onError = {
+
+                }
+            )
+        }
 //
     }
 
     private fun setQueueState() { // WON"T WORK AS WHAT IT"S SUPPOSED TO
-        Database().getCurrentTicket(accountant.window) { curr ->
-            if (curr != -1) {
+        Database().isWindowOpen(accountant.window) { isOpen ->
+            if (isOpen) {
                 runOnUiThread {
                     Log.e("DEBUG", "INSIDE")
                     binding.btnStart.text = "Done"
@@ -121,4 +134,6 @@ class AdminActivity : Activity() {
         }
 
     }
+
+
 }

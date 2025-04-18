@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_border"
+        android:padding="20dp">
+
+        <TextView
+            android:text="🎉 It's your turn, Teknoy!"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/client_turn"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Transaction Details:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/window"
+            android:text="Sample: "
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/id"
+            android:text="Sample: "
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/name"
+            android:text="Sample: "
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/paymentFor"
+            android:text="Sample: "
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/amount"
+            android:text="Sample: "
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnDismiss"
+            android:text="Dismiss"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/blackbutton"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+</LinearLayout>

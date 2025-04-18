@@ -20,6 +20,7 @@ import com.example.quetek.models.user.User
 import com.google.firebase.Timestamp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.MutableData
 import com.google.firebase.database.Transaction
@@ -325,38 +326,6 @@ class Database {
         })
     }
 
-
-//    fun serveNextTicketForWindow(windowId: String, onNoTicket: () -> Unit) {
-//        val ticketsRef = tickets
-//        Log.d("Debug", "Serving the current ticket")
-//        ticketsRef.orderByChild("paymentFor").equalTo(PaymentFor.getValueFromDisplay(windowId).name)
-//            .addListenerForSingleValueEvent(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    var earliestTicket: DataSnapshot? = null
-//
-//                    for (ticketSnap in snapshot.children) {
-//                        val ticket = ticketSnap.getValue(Ticket::class.java)
-//                        if (ticket != null && ticket.status == Status.QUEUED) {
-//                            if (earliestTicket == null ||
-//                                ticket.timestamp.toLong() < (earliestTicket.child("timestamp")
-//                                    .getValue(Long::class.java) ?: Long.MAX_VALUE)
-//                            ) {
-//                                earliestTicket = ticketSnap
-//                            }
-//                        }
-//                    }
-//
-//                    if (earliestTicket != null) {
-//                        earliestTicket.ref.child("status").setValue("SERVED")
-//                    } else {
-//                        onNoTicket()
-//                    }
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {}
-//            })
-//    }
-
     fun getCurrentTicket(window: Window, callback: (Int) -> Unit) {
         windows.child(window.name).child("currentTicket")
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -493,6 +462,42 @@ class Database {
             }
         })
     }
+
+    fun isWindowOpen(window: Window, open: (Boolean) -> Unit) {
+        val isOpenRef = windows.child(window.name).child("isOpen")
+
+        isOpenRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val isOpen = snapshot.getValue(Boolean::class.java) ?: false
+                open(isOpen)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    fun setWindowOpen(
+        window: Window,
+        isOpen: Boolean,
+        onSuccess: () -> Unit,
+        onError: (DatabaseError) -> Unit
+    ) {
+        val isOpenRef = windows.child(window.name).child("isOpen")
+
+        isOpenRef.setValue(isOpen, object : DatabaseReference.CompletionListener {
+            override fun onComplete(error: DatabaseError?, ref: DatabaseReference) {
+                if (error == null) {
+                    onSuccess()
+                } else {
+                    onError(error)
+                }
+            }
+        })
+    }
+
+
 
     fun bindTextViewToDatabase(textView: TextView, path: String) {
         database.getReference(path).addValueEventListener(object : ValueEventListener {

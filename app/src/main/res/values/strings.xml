@@ -44,6 +44,13 @@
         <item>C</item>
         <item>D</item>
     </string-array>
+
+    <string name="client_turn">Please proceed to the designated window for your transaction.
+Show this screen as proof to the assigned accountant.</string>
+
+    <string name="pref_id">com.example.quetek_PREF_ID</string>
+    <string name="saved_id_key">com.example.quetek.saved_id</string>
+    <string name="saved_password_key">com.example.quetek.saved_password</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

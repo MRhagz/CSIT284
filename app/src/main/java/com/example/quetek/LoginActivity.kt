@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
+import showFullscreenLoadingDialog
 
 class LoginActivity : Activity() {
     lateinit var etUsername: EditText
@@ -43,9 +44,11 @@ class LoginActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
         val view = binding.root
         setContentView(view)
 
+//        checkAutoLogin()
         etUsername = binding.etIdNumber
         val etPassword = binding.etPassword
         val btnGuest = binding.btnGuest
@@ -73,6 +76,8 @@ class LoginActivity : Activity() {
                         (application as DataManager).user_logged_in = user
                         Toast.makeText(this, "Welcome ${user.firstName}", Toast.LENGTH_SHORT).show()
                         navigateToLandingPage(user.userType)
+//                        dialog.dismiss()
+                        saveLogin() // TODO ADD A TOGGLE BUTTON "REMEMBER ME"
                     }
                     else {
                         tvLoginFeedback.setText("Incorrect ID or password.")
@@ -93,6 +98,7 @@ class LoginActivity : Activity() {
         btnForgetPassword.setOnClickListener {
             Toast.makeText(this, "Feature underdevelopment.", Toast.LENGTH_LONG).show()
         }
+
     }
 
     private fun setUsernameListner() {
@@ -156,6 +162,34 @@ class LoginActivity : Activity() {
         return activeNetwork != null && activeNetwork.isConnected
     }
 
+    private fun saveLogin() {
+        val sharedPref = getSharedPreferences(getString(R.string.pref_id), Context.MODE_PRIVATE)
+        with (sharedPref.edit()) {
+            putString(getString(R.string.saved_id_key), binding.etIdNumber.text.toString())
+            putString(getString(R.string.saved_password_key), binding.etPassword.text.toString())
+            commit()
+        }
+    }
+
+    private fun login(id: String) {
+        Database().getUser(this, id) { user ->
+            if (user != null) {
+                (application as DataManager).user_logged_in = user
+                Toast.makeText(this, "Welcome ${user.firstName}", Toast.LENGTH_SHORT).show()
+                navigateToLandingPage(user.userType)
+            }
+        }
+    }
+
+    private fun checkAutoLogin() {
+        val sharedPref = getSharedPreferences(getString(R.string.pref_id), Context.MODE_PRIVATE)
+        val savedId = sharedPref.getString(getString(R.string.saved_id_key), null)
+        val savedPassword = sharedPref.getString(getString(R.string.saved_password_key), null)
+
+        if (!savedId.isNullOrEmpty() && !savedPassword.isNullOrEmpty()) {
+            login(savedId)
+        }
+    }
 
 }
 
