@@ -47,6 +47,7 @@
             android:id="@+id/ibtnMenu"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/profile_icon"
             android:background="@null"
             android:scaleType="fitCenter"
@@ -61,105 +62,125 @@
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:padding="12dp"
-            android:background="@drawable/rounded_border"
+            android:id="@+id/queueLengthLinear"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:orientation="vertical"
-            android:gravity="center"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:layout_margin="5dp">
+            android:background="@drawable/rounded_border"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView
-
-                android:textColor="@color/black"
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerQueueLength"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Queue Length:"
-                android:layout_gravity="center"
-                android:textSize="18dp"
-                android:textStyle="bold"/>
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1500">
 
-            <TextView
-                android:textColor="@color/black"
-                android:id="@+id/QueueLength"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00"
-                android:layout_gravity="center"
-                android:textSize="42sp"
-                android:textStyle="bold"
-                android:layout_weight="1"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Queue Length:"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/QueueLength"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:text="00"
+                    android:textColor="@color/black"
+                    android:textSize="42sp"
+                    android:textStyle="bold" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
         </LinearLayout>
 
         <LinearLayout
-            android:padding="12dp"
-            android:background="@drawable/rounded_border"
+            android:id="@+id/windowNumberLinear"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:orientation="vertical"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:layout_margin="5dp">
+            android:background="@drawable/rounded_border"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <TextView
-
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Window no.:"
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerWindow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:textSize="18dp"
-                android:textStyle="bold"/>
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="15dp"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1500">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Window no.:"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/windowNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/black"
-                android:text="00"
-                android:layout_gravity="center"
-                android:textSize="42sp"
-                android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/windowNumber"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black"
+                    android:textColor="@color/black"
+                    android:text="00"
+                    android:layout_gravity="center"
+                    android:textSize="42sp"
+                    android:textStyle="bold"/>
+            </com.facebook.shimmer.ShimmerFrameLayout>
         </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
-        android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:layout_margin="5dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/rounded_border"
-        android:layout_margin="5dp">
+        android:background="@drawable/rounded_border">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
-
-            <TextView
-
-                android:textColor="@color/black"
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerServing"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Now Serving:"
+                android:layout_height="match_parent"
+                app:shimmer_auto_start="true"
                 android:layout_gravity="center"
-                android:textSize="24dp"
-                android:textStyle="bold"/>
+                app:shimmer_duration="1500">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Now Serving:"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="24dp"
+                    android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/servingNumber"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00"
-                android:layout_gravity="center"
-                android:textSize="64dp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/servingNumber"
+                    android:layout_width="140dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black"
+                    android:textColor="@color/black"
+                    android:text="00"
+                    android:layout_gravity="center"
+                    android:textSize="64dp"
+                    android:textStyle="bold"/>
+            </com.facebook.shimmer.ShimmerFrameLayout>
     </FrameLayout>
 
     <Button

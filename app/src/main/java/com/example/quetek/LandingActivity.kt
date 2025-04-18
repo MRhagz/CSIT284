@@ -11,6 +11,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Window
@@ -27,6 +29,7 @@ import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityQueueRegistrationBinding
 import com.example.quetek.models.Status
 import org.w3c.dom.Text
+import textReturn
 
 
 class LandingActivity : Activity() {
@@ -48,6 +51,12 @@ class LandingActivity : Activity() {
         val btnPriorityQueue = binding.btnPriorityLane
         val ibtnMenu = binding.ibtnMenu
 
+        val shimmerTickerId = binding.shimmerTicketId
+        val shimmerServingTime = binding.shimmerServingTime
+        val shimmerWindowNumber = binding.shimmerWindowNumber
+        val shimmerQueueLength = binding.shimmerQueueLength
+        val shimmerQueuePosition = binding.shimmerQueuePosition
+
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_priority_lane)
@@ -55,6 +64,22 @@ class LandingActivity : Activity() {
 
 //        val notify = NotificationHelper(this)
 //        notify.showNotification()
+
+        shimmerTickerId.startShimmer()
+        shimmerServingTime.startShimmer()
+        shimmerWindowNumber.startShimmer()
+        shimmerQueueLength.startShimmer()
+        shimmerQueuePosition.startShimmer()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.tvTicketId.textReturn(shimmerTickerId)
+            binding.tvLength.textReturn(shimmerQueueLength)
+            binding.tvWindow.textReturn(shimmerWindowNumber)
+            binding.tvPosition.textReturn(shimmerQueuePosition)
+            binding.tvTime.textReturn(shimmerServingTime)
+        }, 3000)
+
+        binding.tvTime.setText("00:00:00") // temporary for now
 
         val btnDecline = dialog.findViewById<Button>(R.id.btnDecline)
         val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
