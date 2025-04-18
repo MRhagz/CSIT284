@@ -21,13 +21,18 @@ class TicketCustomListViewAdapter(
     private val onLongClick: (String) -> Unit
 ) : RecyclerView.Adapter<TicketCustomListViewAdapter.TicketViewHolder>() {
 
+    private var isLoading = true
+    private var shimmerItem = 5
+
     inner class TicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ticketNumber: TextView = itemView.findViewById(R.id.ticket_number)
-        val ticketStatus: TextView = itemView.findViewById(R.id.ticket_status)
+        val ticketPaymentFor: TextView = itemView.findViewById(R.id.ticket_status)
+        val ticketAmount: TextView = itemView.findViewById(R.id.payment_amount)
 
         fun bind(ticket: Ticket) {
             ticketNumber.text = ticket.number.toString()
-            ticketStatus.text = ticket.status.name
+            ticketPaymentFor.text = ticket.paymentFor.toString()
+            ticketAmount.text = ticket.amount.toString()
 
             itemView.setOnClickListener {
                 onClick(ticket.number.toString())
@@ -41,19 +46,25 @@ class TicketCustomListViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TicketViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.ticket_item, parent, false)
+        val layoutId = if (viewType == 0) R.layout.shimmer_ticket_item else R.layout.ticket_item
+        val view = LayoutInflater.from(context).inflate(layoutId, parent, false)
         return TicketViewHolder(view)
     }
 
+
     override fun onBindViewHolder(holder: TicketViewHolder, position: Int) {
-        val ticket = tickets[position]
-        holder.bind(ticket)
+        if (!isLoading) {
+            val ticket = tickets[position]
+            holder.bind(ticket)
+        }
     }
 
     override fun getItemCount(): Int {
-        sizeTextView.text = "${tickets.size}"  // Update size view
-        return tickets.size
+        val count = if (isLoading) shimmerItem else tickets.size
+        sizeTextView.text = "$count"
+        return count
     }
+
 
     fun updateList(newList: List<Ticket>) {
         val diffCallback = TicketDiffCallback(tickets, newList)
@@ -64,4 +75,15 @@ class TicketCustomListViewAdapter(
 
         diffResult.dispatchUpdatesTo(this)
     }
+
+    fun showLoading (isLoading : Boolean){
+        this.isLoading = isLoading
+        notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (isLoading) 0 else 1
+    }
+
+
 }

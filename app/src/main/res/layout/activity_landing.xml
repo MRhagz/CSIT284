@@ -50,38 +50,47 @@
     </LinearLayout>
 
     <FrameLayout
-        android:padding="12dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/rounded_border"
         android:layout_margin="5dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_gravity="center">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerTicketId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:shimmer_auto_start="true"
+                android:layout_marginTop="10dp"
+                app:shimmer_duration="1500">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ticket ID:"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="24dp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvTicketId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black"
+                android:layout_marginTop="40dp"
                 android:textColor="@color/black"
                 android:text="00"
-                android:layout_gravity="center"
-                android:textSize="64dp"
+                android:textSize="54dp"
                 android:textStyle="bold"/>
 
+            </com.facebook.shimmer.ShimmerFrameLayout>
         </LinearLayout>
     </FrameLayout>
 
@@ -92,7 +101,6 @@
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:padding="12dp"
             android:background="@drawable/rounded_border"
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -101,29 +109,37 @@
             android:layout_weight="1"
             android:layout_margin="5dp">
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerServingTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:shimmer_auto_start="true"
+                android:layout_marginTop="10dp"
+                app:shimmer_duration="1500">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:text="Serving Time:"
-                android:layout_gravity="center"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
             <TextView
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tvTime"
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black"
+                android:layout_marginTop="40dp"
                 android:textColor="@color/black"
-                android:text="00:00:00"
-                android:layout_gravity="center"
                 android:textSize="24dp"
                 android:textStyle="bold"
                 android:layout_weight="1"/>
+            </com.facebook.shimmer.ShimmerFrameLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:padding="12dp"
             android:background="@drawable/rounded_border"
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -131,24 +147,35 @@
             android:layout_weight="1"
             android:layout_margin="5dp">
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerQueuePosition"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:shimmer_auto_start="true"
+                android:layout_marginTop="10dp"
+                app:shimmer_duration="1500">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Queue Position:"
                 android:textColor="@color/black"
-                android:layout_gravity="center"
                 android:textSize="16dp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvPosition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black"
+                android:layout_marginTop="40dp"
                 android:text="00"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="42dp"
                 android:textStyle="bold"/>
+            </com.facebook.shimmer.ShimmerFrameLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -160,36 +187,45 @@
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:padding="12dp"
             android:background="@drawable/rounded_border"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="120dp"
             android:orientation="vertical"
             android:layout_margin="5dp">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerQueueLength"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:shimmer_auto_start="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                app:shimmer_duration="1500">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Queue Length:"
                 android:textColor="@color/black"
-                android:layout_gravity="center"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvLength"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black"
+                android:layout_marginTop="40dp"
                 android:text="00"
-                android:layout_gravity="center"
                 android:textSize="42dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
-        </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+            </LinearLayout>
 
         <LinearLayout
-            android:padding="12dp"
             android:background="@drawable/rounded_border"
             android:layout_width="match_parent"
             android:layout_weight="1"
@@ -197,24 +233,35 @@
             android:orientation="vertical"
             android:layout_margin="5dp">
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerWindowNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:shimmer_auto_start="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                app:shimmer_duration="1500">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Window no.:"
-                android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvWindow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black"
+                android:layout_marginTop="40dp"
                 android:text="00"
-                android:layout_gravity="center"
                 android:textSize="42dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
+            </com.facebook.shimmer.ShimmerFrameLayout>
         </LinearLayout>
     </LinearLayout>
 

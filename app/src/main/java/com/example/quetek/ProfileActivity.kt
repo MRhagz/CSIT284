@@ -1,5 +1,6 @@
 package com.example.quetek
 
+import android.accounts.Account
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -13,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quetek.app.DataManager
 import com.example.quetek.models.Student
+import com.example.quetek.models.UserType
+import com.example.quetek.models.user.Accountant
 import com.google.android.material.imageview.ShapeableImageView
 import intentPutExtra
 import showToast
@@ -28,13 +31,18 @@ class ProfileActivity : Activity() {
         val logoutButton = findViewById<Button>(R.id.logoutButton)
         val usernameDisplay = findViewById<TextView>(R.id.usernameDisplay)
         val idDisplay = findViewById<TextView>(R.id.idNumberDisplay)
-
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.activity_logout)
         dialog.window?.setBackgroundDrawable(getDrawable(R.drawable.rectanglelogoutdialog))
 
-        val data = ((application as DataManager).user_logged_in as Student)
+        val data = when ((application as DataManager).user_logged_in.userType) {
+            UserType.STUDENT -> ((application as DataManager).user_logged_in as Student)
+            UserType.ACCOUNTANT -> ((application as DataManager).user_logged_in as Accountant)
+            UserType.NONE -> ((application as DataManager).user_logged_in as Accountant)
+            UserType.ADMIN -> ((application as DataManager).user_logged_in as Accountant)
+        }
+
         usernameDisplay.text = data.firstName + " " + data.lastName
         idDisplay.text = data.id
 
@@ -53,9 +61,25 @@ class ProfileActivity : Activity() {
         }
 
         backButton.setOnClickListener {
-            Log.e("ProfileActivity", "Navigating to Landing Activity")
-            showToast("will go back to my partner's page")
-            startActivity(Intent(this, LandingActivity::class.java))
+            when ((application as DataManager).user_logged_in.userType)  {
+                UserType.STUDENT -> {
+                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+                    startActivity(Intent(this, LandingActivity::class.java))
+                }
+                UserType.NONE -> {
+                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+                    startActivity(Intent(this, AdminActivity::class.java))
+                }
+                UserType.ACCOUNTANT -> {
+                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+                    startActivity(Intent(this, AdminActivity::class.java))
+                }
+                UserType.ADMIN -> {
+                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+                    startActivity(Intent(this, AdminActivity::class.java))
+                }
+            }
+
         }
 
         editProfileButton.setOnClickListener {

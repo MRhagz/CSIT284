@@ -38,7 +38,7 @@ class SettingsActivity : Activity() {
         ibtnBack.setOnClickListener {
             Log.e("Quetek", "Navigating to LandingActivity")
 
-            val intent = Intent(this, LandingActivity::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 

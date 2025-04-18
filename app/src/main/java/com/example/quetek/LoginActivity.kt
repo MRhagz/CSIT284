@@ -60,7 +60,7 @@ class LoginActivity : Activity() {
             Log.e("Button", "Login button clicked with id: $enteredId")
 
             if (enteredId.isEmpty() || enteredPassword.isEmpty()) {
-                Toast.makeText(this, "Username and Password cannot be empty.", Toast.LENGTH_LONG).show()
+                tvLoginFeedback.setText("Username and password required.")
                 return@setOnClickListener
             } else if (!isNetworkConnected()) {
                 tvLoginFeedback.setText("No internet connecion available.")
@@ -78,7 +78,7 @@ class LoginActivity : Activity() {
                         tvLoginFeedback.setText("Incorrect ID or password.")
                     }
                 } else {
-                    Toast.makeText(this, "ID or password incorrect", Toast.LENGTH_SHORT).show()
+                    tvLoginFeedback.setText("ID or password incorrect")
                 }
             }
 

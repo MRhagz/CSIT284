@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,13 +14,13 @@
 
     <ImageView
         android:id="@+id/userImage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
         android:src="@drawable/user"
         android:layout_marginStart="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ticket_number"
-        app:layout_constraintBottom_toBottomOf="@id/ticket_status"/>
+        app:layout_constraintBottom_toBottomOf="@id/lblpayment_amount"/>
 
         <TextView
             android:id="@+id/lblTicketNumber"
@@ -41,31 +42,49 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/lblTicketNumber"/>
+        app:layout_constraintStart_toStartOf="@id/ticket_status"/>
 
         <TextView
             android:id="@+id/lblticket_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User status:"
+            android:text="Payment For:"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@id/ticket_number"
-            app:layout_constraintEnd_toEndOf="@id/lblTicketNumber"/>
+            app:layout_constraintStart_toStartOf="@id/lblTicketNumber"/>
 
     <TextView
         android:id="@+id/ticket_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="status"
+        android:text="payment"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:layout_marginStart="10dp"
         app:layout_constraintTop_toBottomOf="@id/ticket_number"
         app:layout_constraintStart_toEndOf="@id/lblticket_status"/>
+
+        <TextView
+            android:id="@+id/lblpayment_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amount:"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/ticket_status"
+            app:layout_constraintStart_toStartOf="@id/lblTicketNumber"/>
+
+        <TextView
+            android:id="@+id/payment_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="amount"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/ticket_status"
+            app:layout_constraintStart_toStartOf="@id/ticket_status"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

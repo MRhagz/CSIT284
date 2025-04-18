@@ -1,32 +1,66 @@
 package com.example.quetek
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityAdminBinding
 import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
 import com.example.quetek.util.TicketCustomListViewAdapter
+import com.google.firebase.database.values
+import stopShimmerNull
+import textReturn
 
 class AdminActivity : Activity() {
     lateinit var accountant: Accountant
     private lateinit var binding: ActivityAdminBinding
-
+    private lateinit var queueLength: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAdminBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        val shimmerQueue = binding.shimmerQueueLength
+        val shimmerWindow = binding.shimmerWindow
+        val shimmerServing = binding.shimmerServing
+        val btnMenu = binding.ibtnMenu
+
 
         val data = (application as DataManager)
-        val userList : MutableList<String> = mutableListOf()
-        val users : MutableList<User>  = mutableListOf()
+        val userList: MutableList<String> = mutableListOf()
+        val users: MutableList<User> = mutableListOf()
+        queueLength = findViewById(R.id.QueueLength)
+        val windowNumber = findViewById<TextView>(R.id.windowNumber)
+        val servingNumber = findViewById<TextView>(R.id.servingNumber)
+        val btnStart = findViewById<Button>(R.id.btnStart)
+        val btnCancel = findViewById<Button>(R.id.btnCancel)
+        val btnStop = findViewById<Button>(R.id.btnStop)
+
+        shimmerQueue.startShimmer();
+        shimmerWindow.startShimmer();
+        shimmerServing.startShimmer();
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            queueLength.textReturn(shimmerQueue)
+            windowNumber.textReturn(shimmerWindow)
+            servingNumber.textReturn(shimmerServing)
+        }, 3000)
+
+        btnMenu.setOnClickListener{
+            startActivity(Intent(this,ProfileActivity::class.java))
+        }
 
         accountant = (application as DataManager).user_logged_in as Accountant
 
@@ -41,13 +75,17 @@ class AdminActivity : Activity() {
                 Toast.makeText(this, ticketId, Toast.LENGTH_SHORT).show()
             }
         )
-
+        adapter.showLoading(true)
         var isStarted = false // indicator if the accountant started the queue
         binding.windowNumber.text = accountant.window.name
         var firstTicket = -1
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            adapter.showLoading(false)
+        }, 3000)
 
         Database().listenToQueuedTickets(accountant.window.name) { updatedTickets ->
             adapter.updateList(updatedTickets)
@@ -79,7 +117,7 @@ class AdminActivity : Activity() {
             }
         }
 //
-//        btnCancel.setOnClickListener { // TODO and prepend "binding" on views
+//        btnCancel.setOnClickListener {
 //            if(removedUser.isNotEmpty()){
 //                userList.add(0,removedUser[removedUser.lastIndex].toString())
 //                users.add(0,removedUser[removedUser.lastIndex])
@@ -94,7 +132,7 @@ class AdminActivity : Activity() {
 //
 //        }
 //
-//        btnStop.setOnClickListener { // TODO and prepend "binding" on views
+//        btnStop.setOnClickListener {
 //            btnStart.setText("Start")
 //            btnCancel.visibility = View.GONE
 //            btnStop.visibility = View.GONE
@@ -109,6 +147,7 @@ class AdminActivity : Activity() {
     }
 
     private fun setQueueState() { // WON"T WORK AS WHAT IT"S SUPPOSED TO
+        var currentTicket = -1
         Database().getCurrentTicket(accountant.window) { curr ->
             if (curr != -1) {
                 runOnUiThread {

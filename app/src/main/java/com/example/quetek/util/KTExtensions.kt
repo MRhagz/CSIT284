@@ -9,17 +9,24 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
-import androidx.compose.ui.graphics.Color
+import android.graphics.Color
+import android.view.Gravity
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.example.quetek.R
+import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.Job
+import android.widget.LinearLayout
 
 // Activity
 fun Activity.showToast(msg : String){
@@ -37,6 +44,43 @@ fun EditText.getTextOrMessage(message: String): String {
     return if (input.isEmpty()) message else input
 }
 fun EditText.clearText() { this.text.clear() }
+
+fun ShimmerFrameLayout.stopShimmerNull(){
+    this.stopShimmer()
+    this.setShimmer(null)
+}
+
+fun TextView.textReturn(frame : ShimmerFrameLayout) {
+    frame.stopShimmerNull()
+    val topMarginInDp = 5
+    val startMarginInDp = 0
+
+    val topMarginInPx = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        topMarginInDp.toFloat(),
+        resources.displayMetrics
+    ).toInt()
+
+    val startMarginInPx = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        startMarginInDp.toFloat(),
+        resources.displayMetrics
+    ).toInt()
+
+    val params = FrameLayout.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+
+    params.topMargin = topMarginInPx
+    params.marginStart = startMarginInPx
+
+    params.gravity = Gravity.CENTER
+    this.layoutParams = params
+
+    this.setBackgroundColor(Color.WHITE)
+    this.textAlignment = View.TEXT_ALIGNMENT_CENTER
+}
 
 
 // BUTTON
