@@ -57,21 +57,6 @@ class QueueRegistrationActivity : Activity() {
                 paymentFor,
                 binding.etAmount.text.toString().toDouble()
             )
-//
-//            Database().listenToStudentTickets(
-//                studentId = student.id,
-//                onServed = { servedTicket ->
-//                    // Show alert, toast, or update UI
-////                    data.ticket = servedTicket
-////                    LandingActivity().position.text = servedTicket.position.toString()
-//                    Toast.makeText(this, "Your ticket ${servedTicket.number} was served!", Toast.LENGTH_LONG).show()
-//                },
-//                onQueueLengthUpdate = { queueLength ->
-//                    // Update UI showing queue length
-////                    LandingActivity().length.text = queueLength.toString()
-//                },
-//                paymentFor
-//            )
 
              Log.e("QueuRegistration", "Navigating to LandingActivity")
 //             startActivity(Intent(this, TicketConfirmationActivity::class.java))

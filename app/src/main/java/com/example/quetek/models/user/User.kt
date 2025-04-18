@@ -24,4 +24,8 @@ open class User(
             return User(id, password, firstName, lastName, userType)
         }
     }
+
+    override fun toString(): String {
+        return "${id}, ${password}, ${firstName}, ${userType}"
+    }
 }

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -114,7 +115,9 @@ class LandingActivity : Activity() {
     }
 
     private fun showTicket() {
-        Database().getTicket(this, data.user_logged_in.id) {ticket ->
+//        val sharedPref = getSharedPreferences(getString(R.string.pref_id), Context.MODE_PRIVATE)
+//        val savedId = sharedPref.getString(getString(R.string.saved_id_key), null) ?: "asdf"
+        Database().getTicket(this, data.user_logged_in.id) { ticket ->
             if (ticket != null) {
                 Log.e("Ticket", ticket.number.toString())
                 data.ticket = ticket
@@ -126,17 +129,21 @@ class LandingActivity : Activity() {
                     studentId = data.user_logged_in.id,
                     onServed = { servedTicket ->
                         // Show alert, toast, or update UI
-    //                    data.ticket = servedTicket
-    //                    LandingActivity().position.text = servedTicket.position.toString()
-                        Toast.makeText(this, "Your ticket ${servedTicket.number} was served!", Toast.LENGTH_LONG).show()
+                        //                    data.ticket = servedTicket
+                        //                    LandingActivity().position.text = servedTicket.position.toString()
+                        Toast.makeText(
+                            this,
+                            "Your ticket ${servedTicket.number} was served!",
+                            Toast.LENGTH_LONG
+                        ).show()
                     },
                     onQueueLengthUpdate = { queueLength ->
                         binding.tvLength.text = queueLength.toString()
                         // Update UI showing queue length
-    //                    LandingActivity().length.text = queueLength.toString()
+                        //                    LandingActivity().length.text = queueLength.toString()
                     },
-                    onStudentPositionUpdate = {pos ->
-                        binding.tvPosition.text =  pos.toString()
+                    onStudentPositionUpdate = { pos ->
+                        binding.tvPosition.text = pos.toString()
                         if (pos == 1) {
                             showTransactionDialog("test", "test")
                             // TODO CLEAR THE LANDING PAGE TICKET DETAILS
@@ -144,15 +151,10 @@ class LandingActivity : Activity() {
                     },
                     ticket.paymentFor
                 )
-            }
-            else {
+            } else {
                 Log.e("Ticket", "No existing ticket")
             }
         }
-    }
-
-    private fun showTurnDialog() {
-
     }
 
     private fun showTransactionDialog(windowName: String, transactionInfo: String) {

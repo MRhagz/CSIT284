@@ -17,4 +17,8 @@ class Student(
 
     constructor() : this("", "", "", "", Program.NONE, UserType.STUDENT)
     constructor(id: String, password: String, firstname: String, lastname: String, program: Program) : this(id, password, firstname, lastname, program, UserType.STUDENT)
+
+    override fun toString(): String {
+        return super.toString()
+    }
 }

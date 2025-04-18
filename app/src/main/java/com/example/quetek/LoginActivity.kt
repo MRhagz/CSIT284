@@ -74,10 +74,11 @@ class LoginActivity : Activity() {
                 if (user != null) {
                     if (user.password == enteredPassword) {
                         (application as DataManager).user_logged_in = user
+                        Log.e("DEBUG", user.toString())
                         Toast.makeText(this, "Welcome ${user.firstName}", Toast.LENGTH_SHORT).show()
                         navigateToLandingPage(user.userType)
 //                        dialog.dismiss()
-                        saveLogin() // TODO ADD A TOGGLE BUTTON "REMEMBER ME"
+//                        saveLogin() // TODO ADD A TOGGLE BUTTON "REMEMBER ME"
                     }
                     else {
                         tvLoginFeedback.setText("Incorrect ID or password.")
@@ -188,6 +189,7 @@ class LoginActivity : Activity() {
 
         if (!savedId.isNullOrEmpty() && !savedPassword.isNullOrEmpty()) {
             login(savedId)
+
         }
     }
 
