@@ -60,8 +60,9 @@ class TicketCustomListViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        val count = if (isLoading) shimmerItem else tickets.size
-        sizeTextView.text = "$count"
+//        val count = if (isLoading) shimmerItem else tickets.size
+        val count = tickets.size
+//        sizeTextView.text = "$count"
         return count
     }
 

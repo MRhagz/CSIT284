@@ -32,6 +32,7 @@ class AdminActivity : Activity() {
         binding = ActivityAdminBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
         val shimmerQueue = binding.shimmerQueueLength
         val shimmerWindow = binding.shimmerWindow
         val shimmerServing = binding.shimmerServing
