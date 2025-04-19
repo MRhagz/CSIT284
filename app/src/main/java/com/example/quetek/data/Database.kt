@@ -1,10 +1,14 @@
 package com.example.quetek.data
 
+import android.R
 import android.app.Activity
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.renderscript.Sampler.Value
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.example.quetek.app.DataManager
@@ -293,6 +297,8 @@ class Database {
     ) {
         val ticketsRef = tickets
 
+        var studTicket: Ticket? = null
+
         // Listen for all ticket changes
         ticketsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -484,6 +490,7 @@ class Database {
             }
         })
     }
+
 
     fun isWindowOpen(window: Window, open: (Boolean) -> Unit) {
         val isOpenRef = windows.child(window.name).child("isOpen")

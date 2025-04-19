@@ -43,6 +43,7 @@
         android:src="@drawable/user"
         android:scaleType="centerCrop"
         android:layout_gravity="center"
+        app:strokeColor="@color/black"
         app:shapeAppearanceOverlay="@style/roundedImageView"
         android:layout_marginBottom="5dp"/>
 

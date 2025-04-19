@@ -40,6 +40,7 @@ class LandingActivity : Activity() {
     private lateinit var data: DataManager
     private lateinit var binding: ActivityLandingBinding
     val notification = NotificationHelper(this)
+    private var hasShownTurn = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLandingBinding.inflate(layoutInflater)
@@ -48,7 +49,7 @@ class LandingActivity : Activity() {
 //        position = findViewById(R.id.tvPosition)
 //        length = findViewById(R.id.tvLength)
         data = application as DataManager
-        showTicket()
+
         val btnNotifyMe = findViewById<Button>(R.id.btnNotifyMe)
         val btnJoinQueue = binding.btnJoinQueue
         val btnPriorityQueue = binding.btnPriorityLane
@@ -90,7 +91,9 @@ class LandingActivity : Activity() {
         btnConfirm.setOnClickListener {
             data.isPriority = true
             Log.e("LandingActivity", "Navigating to Queue Registration Activity")
-            startActivity(Intent(this, QueueRegistrationActivity::class.java))
+            startActivity(Intent(this, QueueRegistrationActivity::class.java).apply {
+                putExtra("isPriority", true)
+            })
         }
 
         ibtnMenu.setOnClickListener {
@@ -106,7 +109,9 @@ class LandingActivity : Activity() {
         btnJoinQueue.setOnClickListener {
             Log.e("QueTek", "Navigating to QueueRegistration")
 
-            val intent = Intent(this, QueueRegistrationActivity::class.java)
+            val intent = Intent(this, QueueRegistrationActivity::class.java).apply {
+                putExtra("isPriority", false)
+            }
             startActivity(intent)
         }
 
@@ -114,6 +119,7 @@ class LandingActivity : Activity() {
             dialog.show()
         }
 
+        showTicket()
     }
 
     private fun showTicket() {
@@ -128,6 +134,8 @@ class LandingActivity : Activity() {
                 Database().listenToStudentTickets(
                     studentId = data.user_logged_in.id,
                     onServed = { servedTicket ->
+                        // this does not work
+                        clearTicket()
                         Toast.makeText(
                             this,
                             "Your ticket ${servedTicket.number} was served!",
@@ -135,12 +143,16 @@ class LandingActivity : Activity() {
                         ).show()
                     },
                     onQueueLengthUpdate = { queueLength ->
-                        binding.tvLength.text = queueLength.toString()
+                        if (!hasShownTurn) {
+                            binding.tvLength.text = queueLength.toString()
+                        }
                     },
                     onStudentPositionUpdate = { pos ->
                         binding.tvPosition.text = pos.toString()
-                        if (pos == 1) {
-                            showTransactionDialog("test", "test")
+                        if (pos == 1 && !hasShownTurn) {
+                            hasShownTurn = true
+                            showTransactionDialog()
+                            return@listenToStudentTickets
                             // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                         }
 
@@ -159,21 +171,34 @@ class LandingActivity : Activity() {
         }
     }
 
-    private fun showTransactionDialog(windowName: String, transactionInfo: String) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_client_turn, null)
+    private fun showTransactionDialog() {
+        if (!this.isFinishing && !this.isDestroyed) {
+            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_client_turn, null)
 
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .create()
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+//        val dialog = Dialog(this)
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        dialog.setContentView(R.layout.dialog_client_turn)
 
-        dialogView.findViewById<Button>(R.id.btnDismiss).setOnClickListener {
-            dialog.dismiss()
+            dialogView.findViewById<Button>(R.id.btnDismiss)?.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            dialog.setCancelable(false)
+            dialog.show()
         }
+    }
 
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        dialog.setCancelable(false)
-        dialog.show()
+    private fun clearTicket() {
+        binding.tvPosition.text = "/"
+        binding.tvWindow.text = "/"
+        binding.tvTicketId.text = "/"
+        binding.tvTime.text = "/"
+        binding.tvLength.text = "/"
     }
 
 

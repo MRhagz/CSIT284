@@ -11,7 +11,7 @@ enum class PaymentFor(val window: String) {
         fun getValueFromDisplay(display: String) : PaymentFor {
             return when(display) {
                 "TUITION", "A" -> TUITION
-                "MOTORCYCLE PARKING_STICKER", "B" -> MOTORCYCLE_PARKING_STICKER
+                "MOTORCYCLE PARKING STICKER", "B" -> MOTORCYCLE_PARKING_STICKER
                 "CAR PARKING STICKER", "C" -> CAR_PARKING_STICKER
                 "OTHERS", "D" -> OTHERS
                 else -> NONE

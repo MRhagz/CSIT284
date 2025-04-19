@@ -5,5 +5,14 @@ enum class Window {
     A,
     B,
     C,
-    D,
+    D;
+
+    fun toDisplayString(): String = when (this) {
+        Window.A -> "TUITION"
+        Window.B -> "MOTORCYCLE PARKING STICKER"
+        Window.C -> "CAR PARKING STICKER"
+        Window.D -> "OTHERS"
+        else -> "NONE"
+    }
+
 }
