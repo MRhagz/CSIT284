@@ -1,6 +1,7 @@
 package com.example.quetek
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import com.example.quetek.databinding.ActivityQueueRegistrationBinding
 import com.example.quetek.models.PaymentFor
 import com.example.quetek.models.Queue
 import com.example.quetek.models.Student
+import com.example.quetek.models.Window
 
 class QueueRegistrationActivity : Activity() {
     private lateinit var binding: ActivityQueueRegistrationBinding
@@ -38,14 +40,16 @@ class QueueRegistrationActivity : Activity() {
         val btnSubmit: Button = findViewById(R.id.btnSubmit)
         val btnCancel: Button = findViewById(R.id.btnCancel)
 
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.payment_for_array,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.sPaymentFor.adapter = adapter
-        }
+        loadAvailablePaymentOptions(this, binding.sPaymentFor)
+
+//        ArrayAdapter.createFromResource(
+//            this,
+//            R.array.payment_for_array,
+//            android.R.layout.simple_spinner_item
+//        ).also { adapter ->
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            binding.sPaymentFor.adapter = adapter
+//        }
 
         btnSubmit.setOnClickListener {
             // TODO:  ADD VALIDATIONS
@@ -65,6 +69,44 @@ class QueueRegistrationActivity : Activity() {
         btnCancel.setOnClickListener {
             Log.e("QueuRegistration", "Navigating to LandingActivity")
             startActivity(Intent(this, LandingActivity::class.java))
+        }
+    }
+
+    private fun loadAvailablePaymentOptions(context: Context, spinner: Spinner) {
+        val allWindows = listOf(Window.A, Window.B, Window.C, Window.D)
+        val openOptions = mutableListOf<String>()
+
+        var checked = 0
+        for (window in allWindows) {
+            Database().isWindowOpen(window) { isOpen ->
+                if (isOpen) {
+                    openOptions.add(window.toDisplayString())
+                }
+
+                checked++
+                if (checked == allWindows.size) {
+                    // Build filtered spinner list
+                    val originalOptions = context.resources.getStringArray(R.array.payment_for_array)
+
+                    val filtered = mutableListOf<String>()
+                    filtered.add(originalOptions[0]) // Keep "Select payment for..."
+
+                    for (option in originalOptions.drop(1)) {
+                        if (openOptions.contains(option)) {
+                            filtered.add(option)
+                        }
+                    }
+
+                    val adapter = ArrayAdapter(
+                        context,
+                        android.R.layout.simple_spinner_item,
+                        filtered
+                    ).also {
+                        it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spinner.adapter = it
+                    }
+                }
+            }
         }
     }
 
