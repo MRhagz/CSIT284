@@ -246,7 +246,8 @@ class Database {
                     val key = ticketsRef.push().key ?: return@generateTicketNumber
 
                     ticketsRef.child(key).setValue(ticket)
-                        .addOnSuccessListener { dialog.dismiss() }
+                        .addOnSuccessListener {
+                            dialog.dismiss() }
                         .addOnFailureListener { dialog.dismiss() }
 
                 }

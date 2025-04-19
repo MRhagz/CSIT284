@@ -1,10 +1,12 @@
 package com.example.quetek
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -44,20 +46,29 @@ class QueueRegistrationActivity : Activity() {
 
 //        val isPriority = intent?.extras.getBoolean("isPriority")
 
+
         btnSubmit.setOnClickListener {
             // TODO:  ADD VALIDATIONS
 
             // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
             val paymentFor = PaymentFor.getValueFromDisplay(binding.sPaymentFor.selectedItem.toString())
-            Queue.enqueue(
-                this, student.id,
-                paymentFor,
-                binding.etAmount.text.toString().toDouble()
-            )
 
-             Log.e("QueuRegistration", "Navigating to LandingActivity")
-//             startActivity(Intent(this, TicketConfirmationActivity::class.java))
-            startActivity(Intent(this, LandingActivity::class.java))
+            Database().isWindowOpen(Window.valueOf(paymentFor.window)) { res ->
+                if (!res) {
+                    Toast.makeText(this, "Category is closed.", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    Queue.enqueue(
+                        this, student.id,
+                        paymentFor,
+                        binding.etAmount.text.toString().toDouble()
+                    )
+                    Log.e("QueuRegistration", "Navigating to LandingActivity")
+                    startActivity(Intent(this, LandingActivity::class.java))
+                }
+            }
+
+
         }
         btnCancel.setOnClickListener {
             Log.e("QueuRegistration", "Navigating to LandingActivity")
@@ -102,5 +113,7 @@ class QueueRegistrationActivity : Activity() {
             }
         }
     }
+
+
 
 }

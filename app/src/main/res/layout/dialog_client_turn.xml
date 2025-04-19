@@ -2,14 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_border"
         android:padding="20dp">
 
         <TextView
@@ -45,60 +43,171 @@
             android:lineSpacingExtra="5dp"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/window"
-            android:text="Sample: "
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/id"
-            android:text="Sample: "
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/name"
-            android:text="Sample: "
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/paymentFor"
-            android:text="Sample: "
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/amount"
-            android:text="Sample: "
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:minWidth="112dp"
+                    android:id="@+id/label_window"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Window:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/window"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:maxWidth="180dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/label_window"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:minWidth="112dp"
+                    android:id="@+id/label_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="ID:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:maxWidth="180dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/label_id"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:minWidth="112dp"
+                    android:id="@+id/label_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Name:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:maxWidth="180dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/label_name"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:minWidth="112dp"
+                    android:id="@+id/label_payment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Payment for:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/paymentFor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:maxWidth="180dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/label_payment"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:minWidth="112dp"
+                    android:id="@+id/label_amount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Amount:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:maxWidth="180dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toEndOf="@id/label_amount"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/btnDismiss"
-            android:text="Dismiss"
+            android:text="Done"
             android:textSize="16sp"
             android:textColor="@color/white"
             android:layout_width="100dp"

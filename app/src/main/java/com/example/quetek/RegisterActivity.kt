@@ -1,5 +1,6 @@
 package com.example.quetek
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -146,7 +148,7 @@ class RegisterActivity : AppCompatActivity() {
                                 loadingDialog.dismiss()
 //                                Toast.makeText(this, "User added successfully!", Toast.LENGTH_SHORT)
 //                                    .show()
-                                finish()
+                                showID(user.id)
                             }
                             .addOnFailureListener { error ->
                                 loadingDialog.dismiss()
@@ -258,5 +260,32 @@ class RegisterActivity : AppCompatActivity() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
         return activeNetwork != null && activeNetwork.isConnected
+    }
+
+    private fun showID(id: String) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_registration_id, null)
+        dialogView.findViewById<TextView>(R.id.id).text = id
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        val btnOkay = dialogView.findViewById<Button>(R.id.btnOkay)
+
+        dialog.window?.setBackgroundDrawable(getDrawable(R.drawable.rectanglelogoutdialog))
+
+
+
+        dialog.setCancelable(false)
+        dialog.show()
+        btnOkay.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+
+            dialog.dismiss()
+            finish()
+        }
+
+
+
     }
 }

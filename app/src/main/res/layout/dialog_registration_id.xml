@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:text="You are now registered!"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Please take note of your ID which will be used for log in."
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Your ID:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/id"
+            android:text="Sample: "
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:lineSpacingExtra="5dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnOkay"
+            android:text="Noted"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/blackbutton"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+</LinearLayout>
