@@ -53,5 +53,6 @@ Show this screen as proof to the assigned accountant.</string>
     <string name="saved_password_key">com.example.quetek.saved_password</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="history_empty">The queue history is currently empty.</string>
 </resources>
 

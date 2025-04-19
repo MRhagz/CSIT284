@@ -19,6 +19,8 @@ import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
 import com.example.quetek.util.TicketCustomListViewAdapter
 import com.google.firebase.database.values
+import setVisibilityGone
+import setVisibilityVisible
 import stopShimmerNull
 import textReturn
 
@@ -37,7 +39,7 @@ class AdminActivity : Activity() {
         val shimmerWindow = binding.shimmerWindow
         val shimmerServing = binding.shimmerServing
         val btnMenu = binding.ibtnMenu
-
+        val lblQueueEmpty = binding.lblQueueEmpty
 
         val data = (application as DataManager)
         val userList: MutableList<String> = mutableListOf()
@@ -91,9 +93,11 @@ class AdminActivity : Activity() {
         Database().listenToQueuedTickets(accountant.window.name) { updatedTickets ->
             adapter.updateList(updatedTickets)
             if (updatedTickets.isEmpty()) {
+//                lblQueueEmpty.setVisibilityVisible()
                 Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
                 return@listenToQueuedTickets
             }
+//            lblQueueEmpty.setVisibilityGone()
             binding.QueueLength.text = updatedTickets.size.toString()
             Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
             firstTicket = updatedTickets.first().number

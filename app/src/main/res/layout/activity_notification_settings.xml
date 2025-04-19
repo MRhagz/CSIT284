@@ -24,9 +24,8 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="20dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center" />
 
         <!-- Back Button (Stacked on Top Left) -->
         <Button
@@ -118,17 +117,18 @@
 
     <LinearLayout
         android:id="@+id/positionInput"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="10dp"
+        android:visibility="gone"
         android:background="@color/white">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User's Queue Position: "
+            android:layout_gravity="center_vertical"
             android:textStyle="bold"
             android:textSize="20sp"
             android:layout_marginEnd="5dp"
@@ -138,13 +138,12 @@
             android:id="@+id/etPosition"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:padding="15dp"
-            android:importantForAccessibility="no"
             android:layout_marginVertical="5dp"
+            android:background="@drawable/less_rounded_border"
+            android:importantForAccessibility="no"
             android:inputType="number"
-            android:background="@drawable/less_rounded_border"/>
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
 
 
     </LinearLayout>

@@ -28,6 +28,7 @@ import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLandingBinding
 import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityQueueRegistrationBinding
+import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.Status
 import org.w3c.dom.Text
 import textReturn
@@ -38,6 +39,7 @@ class LandingActivity : Activity() {
 //    lateinit var length: TextView
     private lateinit var data: DataManager
     private lateinit var binding: ActivityLandingBinding
+    val notification = NotificationHelper(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLandingBinding.inflate(layoutInflater)
@@ -81,7 +83,7 @@ class LandingActivity : Activity() {
         }, 3000)
 
         binding.tvTime.setText("00:00:00") // temporary for now
-
+        notification.notificationPermission()
         val btnDecline = dialog.findViewById<Button>(R.id.btnDecline)
         val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
         btnDecline.setOnClickListener { dialog.dismiss() }
@@ -140,6 +142,13 @@ class LandingActivity : Activity() {
                         if (pos == 1) {
                             showTransactionDialog("test", "test")
                             // TODO CLEAR THE LANDING PAGE TICKET DETAILS
+                        }
+
+                        binding.tvPosition.text =  pos.toString()
+                        if(data.notifPref == NotificationSetting.DEFAULT ||
+                            data.notifPref == NotificationSetting.POSITIONBASED
+                            && pos <= data.positionValue){
+                            notification.showNotification("You're now at position $pos in the queue. Please get ready!")
                         }
                     },
                     ticket.paymentFor

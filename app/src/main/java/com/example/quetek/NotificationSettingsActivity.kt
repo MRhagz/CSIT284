@@ -46,6 +46,7 @@ class NotificationSettingsActivity : Activity() {
         val radioGroup = binding.radioGroup
         val btnSave = binding.btnSave
         val btnCancel = binding.btnCancel
+        val btnBack = binding.btnBack
 
         radioGroup.setOnCheckedChangeListener{_, checkedId ->
             val selectedRadioButton = findViewById<RadioButton>(checkedId)
@@ -76,6 +77,12 @@ class NotificationSettingsActivity : Activity() {
 //            notificationHelper.showNotification()
         }
 
+        btnBack.setOnClickListener {
+            startActivity(Intent(this, LandingActivity::class.java))
+            Log.e("QueTek","Cancel button clicked" )
+//            notificationHelper.showNotification()
+        }
+
     }
 
     override fun onRequestPermissionsResult(
@@ -84,7 +91,7 @@ class NotificationSettingsActivity : Activity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        notificationHelper.onRequestPermissionsResult(requestCode, grantResults)
+        notificationHelper.onRequestPermissionsResult(requestCode, grantResults, "It's almost your turn. Be ready")
     }
     private fun userInputDisplay(str : String){
         when (str){

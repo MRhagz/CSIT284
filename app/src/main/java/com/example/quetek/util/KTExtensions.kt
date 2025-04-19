@@ -51,6 +51,22 @@ fun ShimmerFrameLayout.stopShimmerNull(){
     this.setShimmer(null)
 }
 
+fun View.setVisibilityVisible(){
+    this.visibility = View.VISIBLE
+}
+
+fun View.setVisibilityToggle(){
+    if(this.visibility == View.GONE || this.visibility == View.INVISIBLE){
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
+}
+
+fun View.setVisibilityGone(){
+    this.visibility = View.GONE
+}
+
 fun TextView.textReturn(frame : ShimmerFrameLayout) {
     frame.stopShimmerNull()
     val topMarginInDp = 5

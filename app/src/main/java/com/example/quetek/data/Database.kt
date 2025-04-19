@@ -421,6 +421,28 @@ class Database {
             })
     }
 
+    fun listenToServedTickets(windowId: String, callback: (List<Ticket>) -> Unit) {
+        val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
+
+        ticketsRef.orderByChild("paymentFor").equalTo(PaymentFor.getValueFromDisplay(windowId).name)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val queuedTickets = mutableListOf<Ticket>()
+                    for (ticketSnap in snapshot.children) {
+                        val ticket = ticketSnap.getValue(Ticket::class.java)
+                        if (ticket?.status == Status.SERVED) {
+                            queuedTickets.add(ticket)
+                        }
+                    }
+                    callback(queuedTickets)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("AccountantListener", "Listener cancelled: ${error.message}")
+                }
+            })
+    }
+
     fun generateAndSaveUser(onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
         val yearPrefix = Calendar.getInstance().get(Calendar.YEAR).toString().takeLast(2)
         val serialRef =

@@ -103,6 +103,34 @@
         android:layout_marginBottom="10dp"
         />
 
+    <LinearLayout
+        android:id="@+id/history"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/historyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Queue History"
+            android:drawableRight="@drawable/buttonarrow"
+            android:drawablePadding="16dp"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"
+            android:layout_marginStart="10dp"
+            android:gravity="start|center_vertical"
+            android:textAllCaps="false" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"
+            android:layout_marginBottom="10dp"
+            />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

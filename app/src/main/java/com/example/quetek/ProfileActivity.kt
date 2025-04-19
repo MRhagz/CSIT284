@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.example.quetek.models.UserType
 import com.example.quetek.models.user.Accountant
 import com.google.android.material.imageview.ShapeableImageView
 import intentPutExtra
+import setVisibilityToggle
 import showToast
 
 class ProfileActivity : Activity() {
@@ -31,6 +33,8 @@ class ProfileActivity : Activity() {
         val logoutButton = findViewById<Button>(R.id.logoutButton)
         val usernameDisplay = findViewById<TextView>(R.id.usernameDisplay)
         val idDisplay = findViewById<TextView>(R.id.idNumberDisplay)
+        val history = findViewById<LinearLayout>(R.id.history)
+        val historyButton = findViewById<Button>(R.id.historyButton)
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.activity_logout)
@@ -42,6 +46,8 @@ class ProfileActivity : Activity() {
             UserType.NONE -> ((application as DataManager).user_logged_in as Accountant)
             UserType.ADMIN -> ((application as DataManager).user_logged_in as Accountant)
         }
+
+        if(data.userType == UserType.STUDENT){history.setVisibilityToggle()}
 
         usernameDisplay.text = data.firstName + " " + data.lastName
         idDisplay.text = data.id
@@ -59,6 +65,11 @@ class ProfileActivity : Activity() {
             dialog.dismiss()
             finish()
 
+        }
+
+        historyButton.setOnClickListener {
+            Log.e("ProfileActivity", "Navigating to Queue History Activity")
+            startActivity(Intent(this,QueueHistoryActivity::class.java))
         }
 
         backButton.setOnClickListener {
