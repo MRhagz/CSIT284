@@ -89,7 +89,9 @@ class LandingActivity : Activity() {
         btnConfirm.setOnClickListener {
             data.isPriority = true
             Log.e("LandingActivity", "Navigating to Queue Registration Activity")
-            startActivity(Intent(this, QueueRegistrationActivity::class.java))
+            startActivity(Intent(this, QueueRegistrationActivity::class.java).apply {
+                putExtra("isPriority", true)
+            })
         }
 
         ibtnMenu.setOnClickListener {
@@ -105,7 +107,9 @@ class LandingActivity : Activity() {
         btnJoinQueue.setOnClickListener {
             Log.e("QueTek", "Navigating to QueueRegistration")
 
-            val intent = Intent(this, QueueRegistrationActivity::class.java)
+            val intent = Intent(this, QueueRegistrationActivity::class.java).apply {
+                putExtra("isPriority", false)
+            }
             startActivity(intent)
         }
 

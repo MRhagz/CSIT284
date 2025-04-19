@@ -42,14 +42,7 @@ class QueueRegistrationActivity : Activity() {
 
         loadAvailablePaymentOptions(this, binding.sPaymentFor)
 
-//        ArrayAdapter.createFromResource(
-//            this,
-//            R.array.payment_for_array,
-//            android.R.layout.simple_spinner_item
-//        ).also { adapter ->
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            binding.sPaymentFor.adapter = adapter
-//        }
+//        val isPriority = intent?.extras.getBoolean("isPriority")
 
         btnSubmit.setOnClickListener {
             // TODO:  ADD VALIDATIONS
