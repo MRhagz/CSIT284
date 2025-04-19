@@ -115,8 +115,6 @@ class LandingActivity : Activity() {
     }
 
     private fun showTicket() {
-//        val sharedPref = getSharedPreferences(getString(R.string.pref_id), Context.MODE_PRIVATE)
-//        val savedId = sharedPref.getString(getString(R.string.saved_id_key), null) ?: "asdf"
         Database().getTicket(this, data.user_logged_in.id) { ticket ->
             if (ticket != null) {
                 Log.e("Ticket", ticket.number.toString())
@@ -128,9 +126,6 @@ class LandingActivity : Activity() {
                 Database().listenToStudentTickets(
                     studentId = data.user_logged_in.id,
                     onServed = { servedTicket ->
-                        // Show alert, toast, or update UI
-                        //                    data.ticket = servedTicket
-                        //                    LandingActivity().position.text = servedTicket.position.toString()
                         Toast.makeText(
                             this,
                             "Your ticket ${servedTicket.number} was served!",
@@ -139,8 +134,6 @@ class LandingActivity : Activity() {
                     },
                     onQueueLengthUpdate = { queueLength ->
                         binding.tvLength.text = queueLength.toString()
-                        // Update UI showing queue length
-                        //                    LandingActivity().length.text = queueLength.toString()
                     },
                     onStudentPositionUpdate = { pos ->
                         binding.tvPosition.text = pos.toString()
@@ -159,15 +152,6 @@ class LandingActivity : Activity() {
 
     private fun showTransactionDialog(windowName: String, transactionInfo: String) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_client_turn, null)
-
-//        val tvMessage = dialogView.findViewById<TextView>(R.id.tvMessage)
-//        val tvInstructions = dialogView.findViewById<TextView>(R.id.tvInstructions)
-//        val tvTransactionDetails = dialogView.findViewById<TextView>(R.id.tvTransactionDetails)
-
-        // Optional: Customize the texts
-//        tvMessage.text = "It's your turn, Teknoy!"
-//        tvInstructions.text = "Please proceed to $windowName and show this screen to the assigned accountant."
-//        tvTransactionDetails.text = "Transaction Details:\n$transactionInfo"
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)

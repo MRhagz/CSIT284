@@ -17,8 +17,8 @@
     <string-array name="payment_for_array">
         <item>Select payment for…</item>
         <item>TUITION</item>
-        <item>CAR PARKING STICKER</item>
         <item>MOTORCYCLE PARKING STICKER</item>
+        <item>CAR PARKING STICKER</item>
         <item>OTHERS</item>
     </string-array>
 

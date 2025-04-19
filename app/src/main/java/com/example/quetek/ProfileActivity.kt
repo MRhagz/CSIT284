@@ -23,8 +23,8 @@ import showToast
 class ProfileActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_profile)
+
         val backButton = findViewById<Button>(R.id.btnBack)
         val editProfileButton = findViewById<Button>(R.id.editProfile)
         val settingsButton = findViewById<Button>(R.id.settingsButton)
@@ -56,6 +56,7 @@ class ProfileActivity : Activity() {
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+            dialog.dismiss()
             finish()
 
         }
