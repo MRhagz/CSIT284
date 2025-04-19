@@ -138,7 +138,8 @@ class LandingActivity : Activity() {
                     onStudentPositionUpdate = { pos ->
                         binding.tvPosition.text = pos.toString()
                         if (pos == 1) {
-                            showTransactionDialog("test", "test")
+                            showTransactionDialog(this) // HERE ANG MAKA ERROR
+                            return@listenToStudentTickets
                             // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                         }
                     },
@@ -150,14 +151,14 @@ class LandingActivity : Activity() {
         }
     }
 
-    private fun showTransactionDialog(windowName: String, transactionInfo: String) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_client_turn, null)
+    private fun showTransactionDialog(context: Context) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_client_turn, null)
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(context)
             .setView(dialogView)
             .create()
 
-        dialogView.findViewById<Button>(R.id.btnDismiss).setOnClickListener {
+        dialogView.findViewById<Button>(R.id.btnDismiss)?.setOnClickListener {
             dialog.dismiss()
         }
 
@@ -166,6 +167,7 @@ class LandingActivity : Activity() {
         dialog.setCancelable(false)
         dialog.show()
     }
+
 
 
     private fun toast(message: String) {
