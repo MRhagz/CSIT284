@@ -405,28 +405,37 @@ class Database {
     }
 
 
-    fun listenToQueuedTickets(windowId: String, callback: (List<Ticket>) -> Unit) {
+    fun listenToQueuedTickets(
+        windowId: String,
+        callback: (List<Ticket>) -> Unit
+    ): Pair<DatabaseReference, ValueEventListener> {
         val ticketsRef = FirebaseDatabase.getInstance().getReference("tickets")
 
-        ticketsRef.orderByChild("paymentFor").equalTo(PaymentFor.getValueFromDisplay(windowId).name)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val queuedTickets = mutableListOf<Ticket>()
-                    for (ticketSnap in snapshot.children) {
-                        val ticket = ticketSnap.getValue(Ticket::class.java)
-                        if (ticket?.status == Status.QUEUED) {
-                            queuedTickets.add(ticket)
-                        }
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val queuedTickets = mutableListOf<Ticket>()
+                for (ticketSnap in snapshot.children) {
+                    val ticket = ticketSnap.getValue(Ticket::class.java)
+                    if (ticket?.status == Status.QUEUED) {
+                        queuedTickets.add(ticket)
                     }
-                    // Return the current list of QUEUED tickets for this window
-                    callback(queuedTickets)
                 }
+                callback(queuedTickets)
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("AccountantListener", "Listener cancelled: ${error.message}")
-                }
-            })
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("AccountantListener", "Listener cancelled: ${error.message}")
+            }
+        }
+
+        ticketsRef
+            .orderByChild("paymentFor")
+            .equalTo(PaymentFor.getValueFromDisplay(windowId).name)
+            .addValueEventListener(listener)
+
+        return Pair(ticketsRef, listener)
     }
+
 
     fun generateAndSaveUser(onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
         val yearPrefix = Calendar.getInstance().get(Calendar.YEAR).toString().takeLast(2)
