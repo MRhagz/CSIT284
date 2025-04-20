@@ -58,16 +58,31 @@ class QueueHistoryActivity : Activity() {
         }, 3000)
 
         val accountant = (application as DataManager).user_logged_in as Accountant
-        Database().listenToServedTickets(accountant.window.name){ updatedTickets ->
-            adapter.updateList(updatedTickets)
-            if (updatedTickets.isEmpty()) {
-                binding.lblQueueEmpty.setVisibilityVisible()
-                Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
-                return@listenToServedTickets
+
+        if(accountant.isPriority){
+            Database().listenToServedPriorityLane { updatedTickets ->
+                adapter.updateList(updatedTickets)
+                if (updatedTickets.isEmpty()) {
+                    Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
+                    return@listenToServedPriorityLane
+                }
+                binding.lblQueueEmpty.setVisibilityGone()
+                binding.lengthValue.text = updatedTickets.size.toString()
+                Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
             }
-            binding.lblQueueEmpty.setVisibilityGone()
-            binding.lengthValue.text = updatedTickets.size.toString()
-            Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
+        } else {
+            Database().listenToServedTickets(accountant.window.name){ updatedTickets ->
+                adapter.updateList(updatedTickets)
+                if (updatedTickets.isEmpty()) {
+                    binding.lblQueueEmpty.setVisibilityVisible()
+                    Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
+                    return@listenToServedTickets
+                }
+                binding.lblQueueEmpty.setVisibilityGone()
+                binding.lengthValue.text = updatedTickets.size.toString()
+                Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
+            }
         }
+
     }
 }

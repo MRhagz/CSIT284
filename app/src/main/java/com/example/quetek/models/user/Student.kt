@@ -13,10 +13,11 @@ class Student(
     lastName: String,
     var program: Program = Program.NONE,
     userType: UserType = UserType.STUDENT,
-) : User(id, password, firstName, lastName, userType) {
+    isPriority : Boolean
+) : User(id, password, firstName, lastName, userType, isPriority) {
 
-    constructor() : this("", "", "", "", Program.NONE, UserType.STUDENT)
-    constructor(id: String, password: String, firstname: String, lastname: String, program: Program) : this(id, password, firstname, lastname, program, UserType.STUDENT)
+    constructor() : this("", "", "", "", Program.NONE, UserType.STUDENT, false)
+    constructor(id: String, password: String, firstname: String, lastname: String, program: Program, isPriority: Boolean) : this(id, password, firstname, lastname, program, UserType.STUDENT, isPriority)
 
     override fun toString(): String {
         return super.toString()

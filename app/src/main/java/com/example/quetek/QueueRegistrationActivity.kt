@@ -42,9 +42,21 @@ class QueueRegistrationActivity : Activity() {
         val btnSubmit: Button = findViewById(R.id.btnSubmit)
         val btnCancel: Button = findViewById(R.id.btnCancel)
 
-        loadAvailablePaymentOptions(this, binding.sPaymentFor)
+        var priority = intent.getBooleanExtra("isPriority", false)
 
-//        val isPriority = intent?.extras.getBoolean("isPriority")
+        if(!priority){
+            loadAvailablePaymentOptions(this, binding.sPaymentFor)
+        } else {
+            val allOptions = resources.getStringArray(R.array.payment_for_array)
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                allOptions
+            ).also {
+                it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                binding.sPaymentFor.adapter = it
+            }
+        }
 
 
         btnSubmit.setOnClickListener {
@@ -52,24 +64,35 @@ class QueueRegistrationActivity : Activity() {
 
             // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
             val paymentFor = PaymentFor.getValueFromDisplay(binding.sPaymentFor.selectedItem.toString())
-
-            Database().isWindowOpen(Window.valueOf(paymentFor.window)) { res ->
-                if (!res) {
-                    Toast.makeText(this, "Category is closed.", Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    Queue.enqueue(
-                        this, student.id,
-                        paymentFor,
-                        binding.etAmount.text.toString().toDouble()
-                    )
-                    Log.e("QueuRegistration", "Navigating to LandingActivity")
-                    startActivity(Intent(this, LandingActivity::class.java))
+            if(priority){
+                Queue.enqueuePriority(
+                    binding.etAmount.text.toString().toDouble(),
+                    this, student.id,
+                    paymentFor,
+                    data
+                )
+            } else {
+                Database().isWindowOpen(Window.valueOf(paymentFor.window)) { res ->
+                    if (!res) {
+                        Toast.makeText(this, "Category is closed.", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Queue.enqueue(
+                            this, student.id,
+                            paymentFor, data,
+                            binding.etAmount.text.toString().toDouble(),
+                        )
+                        Log.e("QueuRegistration", "Navigating to LandingActivity")
+                        startActivity(Intent(this, LandingActivity::class.java))
+                    }
                 }
             }
 
-
+             Log.e("QueuRegistration", "Navigating to LandingActivity")
+//             startActivity(Intent(this, TicketConfirmationActivity::class.java))
+            startActivity(Intent(this, LandingActivity::class.java))
         }
+
         btnCancel.setOnClickListener {
             Log.e("QueuRegistration", "Navigating to LandingActivity")
             startActivity(Intent(this, LandingActivity::class.java))
@@ -113,7 +136,5 @@ class QueueRegistrationActivity : Activity() {
             }
         }
     }
-
-
-
 }
+

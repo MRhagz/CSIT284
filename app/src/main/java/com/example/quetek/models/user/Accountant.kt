@@ -13,8 +13,9 @@ class Accountant(
     lastName: String,
     var window: Window = Window.NONE,
     userType: UserType = UserType.ACCOUNTANT,
-) : User(id, password, firstName, lastName, userType ) {
+    isPriority : Boolean
+) : User(id, password, firstName, lastName, userType, isPriority ) {
 
-    constructor() : this("", "", "", "", Window.NONE, UserType.ACCOUNTANT)
-    constructor(id: String, password: String, firstname: String, lastname: String, window: Window) : this(id, password, firstname, lastname, window, UserType.ACCOUNTANT)
+    constructor() : this("", "", "", "", Window.NONE, UserType.ACCOUNTANT, false)
+    constructor(id: String, password: String, firstname: String, lastname: String, window: Window, isPriority: Boolean) : this(id, password, firstname, lastname, window, UserType.ACCOUNTANT, isPriority)
 }

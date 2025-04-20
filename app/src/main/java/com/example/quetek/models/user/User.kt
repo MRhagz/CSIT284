@@ -16,6 +16,7 @@ open class User(
     var firstName: String,
     var lastName: String,
     var userType: UserType = UserType.NONE,
+    var isPriority : Boolean = false
 ) {
     constructor() : this("", "", "", "", UserType.NONE)
 

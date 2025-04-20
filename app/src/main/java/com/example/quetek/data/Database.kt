@@ -39,6 +39,7 @@ class Database {
     val users = database.getReference("users")
     val tickets = database.getReference("tickets")
     val windows = database.getReference("windows")
+    val priority_lane = database.getReference("priority_lane")
     fun getUser(
         activity: Activity,
         enteredId: String,
@@ -91,7 +92,8 @@ class Database {
                                             password = baseUser.password,
                                             firstName = baseUser.firstName,
                                             lastName = baseUser.lastName,
-                                            program = programEnum
+                                            program = programEnum,
+                                            isPriority = baseUser.isPriority
                                         )
                                     }
 
@@ -105,7 +107,8 @@ class Database {
                                             password = baseUser.password,
                                             firstName = baseUser.firstName,
                                             lastName = baseUser.lastName,
-                                            window = window
+                                            window = window,
+                                            isPriority = baseUser.isPriority
                                         )
                                     }
 
@@ -212,6 +215,51 @@ class Database {
     }
 
 
+    fun addPrioirtyLaneSynchronized(
+        amount: Double,
+        activity: Activity,
+        studentId: String,
+        paymentFor: PaymentFor,
+    ) {
+        val dialog = activity.showFullscreenLoadingDialog()
+        val newTimestamp = System.currentTimeMillis()
+
+        // Step 1: Query all tickets
+        priority_lane.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val position = snapshot.children.count { ticketSnap ->
+                    val ticket = ticketSnap.getValue(Ticket::class.java)
+                    ticket?.status == Status.QUEUED &&
+                            ticket.paymentFor == paymentFor &&
+                            ticket.timestamp < newTimestamp
+                } + 1 // Include this ticket
+
+                generateTicketNumber(paymentFor.window) { number ->
+                    val ticket = Ticket(
+                        timestamp = newTimestamp,
+                        position = position,
+                        number = number, // generate this as needed
+                        studentId = studentId,
+                        paymentFor = paymentFor,
+                        amount = amount,
+                        status = Status.QUEUED
+                    )
+
+                    val key = priority_lane.push().key ?: return@generateTicketNumber
+
+                    priority_lane.child(key).setValue(ticket)
+                        .addOnSuccessListener { dialog.dismiss() }
+                        .addOnFailureListener { dialog.dismiss() }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                dialog.dismiss()
+            }
+        })
+    }
+
     fun addTicketSynchronized(
         activity: Activity,
         studentId: String,
@@ -287,6 +335,75 @@ class Database {
                     onTicketFetched(null)
                 }
             })
+    }
+
+    fun getPriorityTicket(studentId: String, activity: Activity,  onTicketFetched: (Ticket?) -> Unit) {
+        val dialog = activity.showFullscreenLoadingDialog()
+        Log.e("Ticket", "Fetching Ticket")
+
+        priority_lane.orderByChild("studentId").equalTo(studentId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    dialog.dismiss()
+                    if (snapshot.exists()) {
+                        for (ticketSnap in snapshot.children) {
+                            val ticket = ticketSnap.getValue(Ticket::class.java)
+                            if (ticket?.studentId == studentId && ticket.status != Status.SERVED) {
+                                Log.e("Ticket", ticket.toString())
+                                onTicketFetched(ticket)
+                                return
+                            }
+                        }
+                    }
+                    onTicketFetched(null)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("Firebase", "Error fetching ticket: ${error.message}")
+                    dialog.dismiss()
+                    onTicketFetched(null)
+                }
+            })
+    }
+
+    fun listenToPriorityTickets(
+        onServed: (Ticket) -> Unit,
+        studentId: String,
+        onQueueLengthUpdate: (Int) -> Unit,
+        onStudentPositionUpdate: (Int) -> Unit,
+        paymentFor: PaymentFor
+    ) {
+
+        // Listen for all ticket changes
+        priority_lane.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val queuedTickets = snapshot.children
+                    .mapNotNull { it.getValue(Ticket::class.java) to it }
+                    .filter { it.first?.status == Status.QUEUED && it.first?.paymentFor == paymentFor }
+                    .sortedBy { it.first?.timestamp }
+
+                var currentStudentPosition: Int? = null
+                var queueLength = queuedTickets.size
+
+                queuedTickets.forEachIndexed { index, (ticket, snap) ->
+                    snap.ref.child("position").setValue(index + 1)
+
+                    if (ticket?.studentId == studentId) {
+                        currentStudentPosition = index + 1
+                    }
+                }
+
+                // Callback with updated queue length
+                onQueueLengthUpdate(queueLength)
+
+                // Callback with student's current position
+                currentStudentPosition?.let {
+                    onStudentPositionUpdate(it)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     fun listenToStudentTickets(
@@ -404,6 +521,86 @@ class Database {
             })
     }
 
+    fun NextPriorityLaneWindow(onNoTicket: () -> Unit) {
+        val db = FirebaseDatabase.getInstance()
+        val windowsRef = db.getReference("windows").child("NONE")
+        val priorityLaneRef = db.getReference("priority_lane")
+
+        // Step 1: Get currentTicket
+        windowsRef.child("currentTicket")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(currentTicketSnap: DataSnapshot) {
+                    val currentTicketNumber = currentTicketSnap.getValue(Int::class.java) ?: -1
+
+                    if (currentTicketNumber == -1) {
+                        // No ticket is being served
+                        onNoTicket()
+                        return
+                    }
+
+                    // Step 2: Find and serve the current ticket
+                    priorityLaneRef.orderByChild("timestamp")
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val queuedTickets = snapshot.children.mapNotNull { snap ->
+                                    val ticket = snap.getValue(Ticket::class.java)
+                                    if (ticket != null) Pair(snap, ticket) else null
+                                }
+
+                                // Serve the current ticket
+                                val currentSnap =
+                                    queuedTickets.find { it.second.number == currentTicketNumber }?.first
+                                currentSnap?.ref?.child("status")?.setValue(Status.SERVED.name)
+
+                                // Step 3: Find the next QUEUED ticket
+                                val nextTicketPair = queuedTickets
+                                    .filter { it.second.status == Status.QUEUED && it.second.number > currentTicketNumber }
+                                    .minByOrNull { it.second.number }
+
+                                if (nextTicketPair != null) {
+                                    // Set new current ticket
+                                    windowsRef.child("currentTicket")
+                                        .setValue(nextTicketPair.second.number)
+                                } else {
+                                    // No more tickets left
+                                    windowsRef.child("currentTicket").setValue(-1)
+                                    onNoTicket()
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {}
+                        })
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+    fun listenToPriorityLane(windowId: String, callback: (List<Ticket>) -> Unit): Pair<DatabaseReference, ValueEventListener> {
+        val ticketsRef = FirebaseDatabase.getInstance().getReference("priority_lane")
+
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val queuedTickets = mutableListOf<Ticket>()
+                for (ticketSnap in snapshot.children) {
+                    val ticket = ticketSnap.getValue(Ticket::class.java)
+                    if (ticket?.status == Status.QUEUED) {
+                        queuedTickets.add(ticket)
+                    }
+                }
+                callback(queuedTickets)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("AccountantListener", "Listener cancelled: ${error.message}")
+            }
+        }
+
+        ticketsRef
+            .orderByChild("paymentFor")
+            .addValueEventListener(listener)
+
+        return Pair(ticketsRef, listener)
+    }
 
     fun listenToQueuedTickets(
         windowId: String,
@@ -450,7 +647,29 @@ class Database {
                             queuedTickets.add(ticket)
                         }
                     }
-                    callback(queuedTickets)
+                    val sortedTickets = queuedTickets.sortedByDescending { it.timestamp }
+                    callback(sortedTickets)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("AccountantListener", "Listener cancelled: ${error.message}")
+                }
+            })
+    }
+
+    fun listenToServedPriorityLane(callback: (List<Ticket>) -> Unit) {
+        priority_lane.orderByChild("timestamp")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val queuedTickets = mutableListOf<Ticket>()
+                    for (ticketSnap in snapshot.children) {
+                        val ticket = ticketSnap.getValue(Ticket::class.java)
+                        if (ticket?.status == Status.SERVED) {
+                            queuedTickets.add(ticket)
+                        }
+                    }
+                    val sortedTickets = queuedTickets.sortedByDescending { it.timestamp }
+                    callback(sortedTickets)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -536,7 +755,23 @@ class Database {
         })
     }
 
+    fun setPriorityWindowOpen(
+        isOpen: Boolean,
+        onSuccess: () -> Unit,
+        onError: (DatabaseError) -> Unit
+    ) {
+        val isOpenRef = windows.child("NONE").child("isOpen")
 
+        isOpenRef.setValue(isOpen, object : DatabaseReference.CompletionListener {
+            override fun onComplete(error: DatabaseError?, ref: DatabaseReference) {
+                if (error == null) {
+                    onSuccess()
+                } else {
+                    onError(error)
+                }
+            }
+        })
+    }
 
     fun bindTextViewToDatabase(textView: TextView, path: String) {
         database.getReference(path).addValueEventListener(object : ValueEventListener {

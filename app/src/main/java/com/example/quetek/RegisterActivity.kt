@@ -19,26 +19,15 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import checkInput
 import com.example.quetek.data.Database
-import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityRegisterBinding
 import com.example.quetek.models.Program
 import com.example.quetek.models.UserType
 import com.example.quetek.models.Window
 import com.example.quetek.util.UserFactory
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withTimeout
-import org.w3c.dom.Text
 import showFullscreenLoadingDialog
 //import showLoadingDialog
-import showToast
-import java.util.zip.Inflater
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -110,7 +99,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         if (!isNetworkConnected()) {
-            showToast("No internet connection available.")
+            if (showFeedback) tvInputFeedback.text = "No internet connection available."
+            tvInputFeedback.visibility = if (showFeedback) View.VISIBLE else View.GONE
             return false;
         }
 
@@ -135,10 +125,10 @@ class RegisterActivity : AppCompatActivity() {
                             lastName = etLastName.text.toString().trim(),
                             userType = selectedUserType,
                             programOrWindow = if (selectedUserType == UserType.STUDENT)
-                                Program.fromDisplayName(spinAddtl.selectedItem.toString())
-                            else
-                                Window.valueOf(spinAddtl.selectedItem.toString())
-                        )
+                                Program.fromDisplayName(spinAddtl.selectedItem.toString()) else
+                                Window.valueOf(spinAddtl.selectedItem.toString()),
+                            isPriority = false
+                            )
 
                         val databaseReference = Database().users
                         val userKey = databaseReference.push().key ?: return@generateAndSaveUser

@@ -93,7 +93,6 @@ class LandingActivity : Activity() {
         val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
         btnDecline.setOnClickListener { dialog.dismiss() }
         btnConfirm.setOnClickListener {
-            data.isPriority = true
             Log.e("LandingActivity", "Navigating to Queue Registration Activity")
             startActivity(Intent(this, QueueRegistrationActivity::class.java).apply {
                 putExtra("isPriority", true)
@@ -123,7 +122,11 @@ class LandingActivity : Activity() {
             dialog.show()
         }
 
-        showTicket()
+        if(data.user_logged_in.isPriority || data.isPriority){
+            showPriorityTicket()
+        } else {
+            showTicket()
+        }
     }
 
     private fun showTicket() {
@@ -157,6 +160,54 @@ class LandingActivity : Activity() {
                             hasShownTurn = true
                             showTransactionDialog(ticket)
                             return@listenToStudentTickets
+                            // TODO CLEAR THE LANDING PAGE TICKET DETAILS
+                        }
+
+                        binding.tvPosition.text =  pos.toString()
+                        if(data.notifPref == NotificationSetting.DEFAULT ||
+                            data.notifPref == NotificationSetting.POSITIONBASED
+                            && pos <= data.positionValue){
+                            notification.showNotification("You're now at position $pos in the queue. Please get ready!")
+                        }
+                    },
+                    ticket.paymentFor
+                )
+            } else {
+                Log.e("Ticket", "No existing ticket")
+            }
+        }
+    }
+
+    private fun showPriorityTicket(){
+        Database().getPriorityTicket(data.user_logged_in.id, this) { ticket ->
+            if (ticket != null) {
+                Log.e("Ticket", ticket.number.toString())
+                data.ticket = ticket
+                binding.tvTicketId.text = ticket.number.toString()
+                binding.tvWindow.text = "PL"
+                binding.tvPosition.text = ticket.position.toString()
+
+                Database().listenToPriorityTickets(
+                    onServed = { servedTicket ->
+                        // this does not work
+                        clearTicket()
+                        Toast.makeText(
+                            this,
+                            "Your ticket ${servedTicket.number} was served!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }, studentId = data.user_logged_in.id,
+                    onQueueLengthUpdate = { queueLength ->
+                        if (!hasShownTurn) {
+                            binding.tvLength.text = queueLength.toString()
+                        }
+                    },
+                    onStudentPositionUpdate = { pos ->
+                        binding.tvPosition.text = pos.toString()
+                        if (pos == 1 && !hasShownTurn) {
+                            hasShownTurn = true
+                            showTransactionDialog(ticket)
+                            return@listenToPriorityTickets
                             // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                         }
 
@@ -218,9 +269,4 @@ class LandingActivity : Activity() {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun onResume(){
-        super.onResume()
-        val data = (application as DataManager)
-        data.isPriority = false
-    }
 }

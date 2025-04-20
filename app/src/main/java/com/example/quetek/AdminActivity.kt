@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -35,6 +36,8 @@ class AdminActivity : Activity() {
     lateinit var accountant: Accountant
     private lateinit var binding: ActivityAdminBinding
     private lateinit var queueLength: TextView
+    private var firstTicket = -1
+    private lateinit var adapter : TicketCustomListViewAdapter
     private lateinit var ticketRef: DatabaseReference
     private lateinit var queueListener: ValueEventListener
     private lateinit var tickets: List<Ticket>
@@ -56,15 +59,11 @@ class AdminActivity : Activity() {
         val btnMenu = binding.ibtnMenu
         val lblQueueEmpty = binding.lblQueueEmpty
 
-        val data = (application as DataManager)
         val userList: MutableList<String> = mutableListOf()
         val users: MutableList<User> = mutableListOf()
         queueLength = findViewById(R.id.QueueLength)
         val windowNumber = findViewById<TextView>(R.id.windowNumber)
         val servingNumber = findViewById<TextView>(R.id.servingNumber)
-        val btnStart = findViewById<Button>(R.id.btnStart)
-        val btnCancel = findViewById<Button>(R.id.btnCancel)
-        val btnStop = findViewById<Button>(R.id.btnStop)
 
         shimmerQueue.startShimmer();
         shimmerWindow.startShimmer();
@@ -81,8 +80,7 @@ class AdminActivity : Activity() {
         }
 
         accountant = (application as DataManager).user_logged_in as Accountant
-
-        val adapter = TicketCustomListViewAdapter(
+        adapter = TicketCustomListViewAdapter(
             context = this,
             binding.QueueLength,
             tickets = mutableListOf(),
@@ -93,10 +91,8 @@ class AdminActivity : Activity() {
                 Toast.makeText(this, ticketId, Toast.LENGTH_SHORT).show()
             }
         )
-        adapter.showLoading(true)
-        var isStarted = false // indicator if the accountant started the queue
-        binding.windowNumber.text = accountant.window.name
 
+        adapter.showLoading(true)
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -105,6 +101,38 @@ class AdminActivity : Activity() {
             adapter.showLoading(false)
         }, 3000)
 
+        if(accountant.isPriority){
+            windowNumber.text = "PL"
+        } else {
+            windowNumber.text = accountant.window.name
+        }
+        setQueueState(adapter)
+        setToggleWindowListener(adapter)
+        setButtonServeListener()
+
+    }
+
+    private fun listenPriorityLane(){
+        Database().listenToPriorityLane("NONE") { updatedTickets ->
+            adapter.updateList(updatedTickets)
+            if (updatedTickets.isEmpty()) {
+//                lblQueueEmpty.setVisibilityVisible()
+                Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
+                return@listenToPriorityLane
+            }
+//            lblQueueEmpty.setVisibilityGone()
+            binding.QueueLength.text = updatedTickets.size.toString()
+            Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
+            firstTicket = updatedTickets.first().number
+            binding.servingNumber.text = firstTicket.toString()
+        }
+
+        setQueueState(adapter)
+        setToggleWindowListener(adapter)
+        setButtonServeListener()
+    }
+
+    private fun listenQueueTickets (){
         Database().listenToQueuedTickets(accountant.window.name) { updatedTickets ->
             adapter.updateList(updatedTickets)
             if (updatedTickets.isEmpty()) {
@@ -124,18 +152,18 @@ class AdminActivity : Activity() {
 
         val removedUser : MutableList<User>  = mutableListOf()
         val removedUserString : MutableList<String>  = mutableListOf()
-        binding.btnStart.setOnClickListener {
-            if(binding.btnStart.text.equals("Done")){
-                Database().serveNextTicketForWindow(accountant.window.name) {
-                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                binding.btnStart.text = "Done"
-                binding.btnCancel.visibility = View.VISIBLE
-                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
-                binding.btnStop.visibility = View.VISIBLE
-            }
-        }
+//        binding.btnStart.setOnClickListener {
+//            if(binding.btnStart.text.equals("Done")){
+//                Database().serveNextTicketForWindow(accountant.window.name) {
+//                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+//                }
+//            } else {
+//                binding.btnStart.text = "Done"
+//                binding.btnCancel.visibility = View.VISIBLE
+//                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
+//                binding.btnStop.visibility = View.VISIBLE
+//            }
+//        }
 
         setToggleWindowListener(adapter)
         setButtonServeListener()
@@ -168,10 +196,19 @@ class AdminActivity : Activity() {
 //    }
 
     private fun setButtonServeListener() {
-        binding.btnServe.setOnClickListener {
-            Log.e("Button", "Serve Button Clicked")
-            Database().serveNextTicketForWindow(accountant.window.name) {
-                Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+        if(accountant.isPriority){
+            binding.btnServe.setOnClickListener {
+                Log.e("Button", "Serve Button Clicked")
+                Database().NextPriorityLaneWindow {
+                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            binding.btnServe.setOnClickListener {
+                Log.e("Button", "Serve Button Clicked")
+                Database().serveNextTicketForWindow(accountant.window.name) {
+                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -185,32 +222,71 @@ class AdminActivity : Activity() {
                 binding.btnToggleWindow.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimaryDark)
                 isWindowOpen = true
                 binding.btnToggleWindow.text = "close window"
-                addListener(adapter)
 
-                Database().setWindowOpen(
-                    accountant.window,
-                    true,
-                    onSuccess = {
-                        Toast.makeText(this, "Window opened", Toast.LENGTH_SHORT).show()
-                    },
-                    onError = {
+                if(accountant.isPriority){
+                    addPriorityListener(adapter)
+                    accountant.window = com.example.quetek.models.Window.NONE
+                    Database().setPriorityWindowOpen(
+                        true,
+                        onSuccess = {
+                            Toast.makeText(this, "Window opened", Toast.LENGTH_SHORT).show()
+                        },
+                        onError = {
 
+                        }
+                    )
+
+//                    Database().NextPriorityLaneWindow() {
+//                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+//                    }
+                } else {
+                    addListener(adapter)
+                    Database().setWindowOpen(
+                        accountant.window,
+                        true,
+                        onSuccess = {
+                            Toast.makeText(this, "Window opened", Toast.LENGTH_SHORT).show()
+                        },
+                        onError = {
+
+                        }
+                    )
+
+                    Database().serveNextTicketForWindow(accountant.window.name) {
+                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
                     }
-                )
+                }
             } else {
                 binding.btnToggleWindow.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorAccent)
                 binding.btnToggleWindow.text = "open window"
-                Database().setWindowOpen(
-                    accountant.window,
-                    false,
-                    onSuccess = {
-                        Toast.makeText(this, "Window closed", Toast.LENGTH_SHORT).show()
-                    },
-                    onError = {
 
-                    }
-                )
-                removeListener()
+                if(accountant.isPriority){
+                    addPriorityListener(adapter)
+                    Database().setPriorityWindowOpen(
+                        false,
+                        onSuccess = {
+                            Toast.makeText(this, "Window closed", Toast.LENGTH_SHORT).show()
+                        },
+                        onError = {
+
+                        }
+                    )
+                    removeListener()
+                } else {
+                    addListener(adapter)
+                    Database().setWindowOpen(
+                        accountant.window,
+                        false,
+                        onSuccess = {
+                            Toast.makeText(this, "Window closed", Toast.LENGTH_SHORT).show()
+                        },
+                        onError = {
+
+                        }
+                    )
+                    removeListener()
+                }
+
             }
         }
     }
@@ -251,6 +327,38 @@ class AdminActivity : Activity() {
         queueListener = listener
     }
 
+    private fun addPriorityListener(adapter: TicketCustomListViewAdapter) {
+        var firstTicket = -1
+        val (ref, listener) = Database().listenToPriorityLane("priority_lane") { updatedTickets ->
+            tickets = updatedTickets
+            adapter.updateList(updatedTickets)
+            if (updatedTickets.isEmpty()) {
+                binding.btnServe.isEnabled = false
+                binding.btnServe.alpha = 0.5f // 50% opacity
+
+                Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
+                Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
+                clearDashboard()
+
+                if (!isWindowOpen) {
+                    removeListener()
+                }
+                return@listenToPriorityLane
+            }
+            else {
+                binding.btnServe.isEnabled = true
+                binding.btnServe.alpha = 1f // fully opaque
+
+                binding.QueueLength.text = updatedTickets.size.toString()
+                firstTicket = updatedTickets.first().number
+                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
+                binding.servingNumber.text = firstTicket.toString()
+            }
+        }
+        ticketRef = ref
+        queueListener = listener
+    }
+
     private fun removeListener() {
         Log.e("DEBUG", "QUEUE LISTENER REMOVED")
         isWindowOpen = false
@@ -260,19 +368,38 @@ class AdminActivity : Activity() {
     }
 
     private fun setQueueState(adapter: TicketCustomListViewAdapter) {
-        Database().isWindowOpen(accountant.window) { isOpen ->
-            isWindowOpen = isOpen
+        if(accountant.isPriority){
+            accountant.window = com.example.quetek.models.Window.NONE
+            Database().isWindowOpen(accountant.window) { isOpen ->
+                isWindowOpen = isOpen
 
-            Database().getCurrentTicket(accountant.window, callback = { curr ->
-                if (curr != -1) {
+                Database().getCurrentTicket(accountant.window, callback = { curr ->
+                    if (curr != -1) {
+                        addListener(adapter)
+                    }
+                })
+
+                if (isOpen) {
+                    binding.btnToggleWindow.text = "close window"
+                    binding.btnToggleWindow.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimaryDark)
                     addListener(adapter)
                 }
-            })
+            }
+        } else {
+            Database().isWindowOpen(accountant.window) { isOpen ->
+                isWindowOpen = isOpen
 
-            if (isOpen) {
-                binding.btnToggleWindow.text = "close window"
-                binding.btnToggleWindow.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimaryDark)
-                addListener(adapter)
+                Database().getCurrentTicket(accountant.window, callback = { curr ->
+                    if (curr != -1) {
+                        addListener(adapter)
+                    }
+                })
+
+                if (isOpen) {
+                    binding.btnToggleWindow.text = "close window"
+                    binding.btnToggleWindow.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimaryDark)
+                    addListener(adapter)
+                }
             }
         }
 
@@ -280,3 +407,22 @@ class AdminActivity : Activity() {
 
 
 }
+
+//        binding.btnToggleWindow.setOnClickListener {
+//            if(binding.btnStart.text.equals("Done")){
+//                if(binding.windowNumber.text.equals("PL")){
+//                    Database().NextPriorityLaneWindow() {
+//                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+//                    }
+//                } else {
+//                    Database().serveNextTicketForWindow(accountant.window.name) {
+//                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            } else {
+//                binding.btnStart.text = "Done"
+//                binding.btnCancel.visibility = View.VISIBLE
+//                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
+//                binding.btnStop.visibility = View.VISIBLE
+//            }
+//        }

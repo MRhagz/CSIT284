@@ -56,7 +56,6 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

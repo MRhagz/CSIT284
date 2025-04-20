@@ -14,11 +14,12 @@ object UserFactory {
         firstName: String,
         lastName: String,
         userType: UserType,
-        programOrWindow: Enum<*>? = null // Either Program or Window
+        programOrWindow: Enum<*>? = null, // Either Program or Window
+        isPriority: Boolean
     ): User {
         return when (userType) {
-            UserType.STUDENT -> Student(id, password, firstName, lastName, programOrWindow as Program)
-            UserType.ACCOUNTANT -> Accountant(id, password, firstName, lastName, programOrWindow as Window)
+            UserType.STUDENT -> Student(id, password, firstName, lastName, programOrWindow as Program,isPriority)
+            UserType.ACCOUNTANT -> Accountant(id, password, firstName, lastName, programOrWindow as Window,isPriority)
             else -> throw IllegalArgumentException("Unsupported user type: $userType")
         }
     }
