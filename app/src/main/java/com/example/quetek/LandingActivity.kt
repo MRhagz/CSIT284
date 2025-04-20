@@ -10,11 +10,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.shapes.Shape
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Window
 import android.widget.Button
@@ -30,6 +33,7 @@ import com.example.quetek.databinding.ActivityLoginBinding
 import com.example.quetek.databinding.ActivityQueueRegistrationBinding
 import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.Status
+import com.example.quetek.models.Ticket
 import org.w3c.dom.Text
 import textReturn
 
@@ -151,7 +155,7 @@ class LandingActivity : Activity() {
                         binding.tvPosition.text = pos.toString()
                         if (pos == 1 && !hasShownTurn) {
                             hasShownTurn = true
-                            showTransactionDialog()
+                            showTransactionDialog(ticket)
                             return@listenToStudentTickets
                             // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                         }
@@ -171,9 +175,15 @@ class LandingActivity : Activity() {
         }
     }
 
-    private fun showTransactionDialog() {
+    private fun showTransactionDialog(ticket: Ticket) {
         if (!this.isFinishing && !this.isDestroyed) {
             val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_client_turn, null)
+
+            dialogView.findViewById<TextView>(R.id.window).text = ticket.paymentFor.window
+            dialogView.findViewById<TextView>(R.id.id).text = ticket.studentId
+            dialogView.findViewById<TextView>(R.id.name).text = "${data.user_logged_in.firstName} ${data.user_logged_in.lastName}"
+            dialogView.findViewById<TextView>(R.id.paymentFor).text = ticket.paymentFor.name
+            dialogView.findViewById<TextView>(R.id.amount).text = "₱%.2f".format(ticket.amount)
 
             val dialog = AlertDialog.Builder(this)
                 .setView(dialogView)
@@ -186,7 +196,9 @@ class LandingActivity : Activity() {
                 dialog.dismiss()
             }
 
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val drawable = ContextCompat.getDrawable(this, R.drawable.rectanglelogoutdialog)
+
+            dialog.window?.setBackgroundDrawable(drawable)
 
             dialog.setCancelable(false)
             dialog.show()

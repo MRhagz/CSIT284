@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<LinearLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -184,30 +181,31 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/btnStart"
+        android:id="@+id/btnToggleWindow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start"
+        android:text="open window"
         android:textColor="@color/white"
         android:textSize="20dp"
-        android:layout_marginTop = "20dp"
+        android:layout_marginVertical="5dp"
         android:layout_marginStart = "20dp"
         android:layout_marginEnd = "20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/blackbutton"/>
+        android:backgroundTint="@color/colorAccent"
+        android:background="@drawable/admin_button"/>
 
     <Button
-        android:id="@+id/btnCancel"
+        android:id="@+id/btnServe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Undo"
-        android:visibility="gone"
+        android:text="serve"
+        android:textColor="@color/white"
         android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginStart = "20dp"
         android:layout_marginEnd = "20dp"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:background="@drawable/rectangle"/>
+        android:backgroundTint="@color/black"
+        android:background="@drawable/admin_button"/>
 
     <View
         android:layout_width="match_parent"
@@ -230,22 +228,7 @@
         android:id="@+id/recyclerView"
         android:nestedScrollingEnabled="true"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="180dp"
         android:layout_marginTop="20dp"/>
 
-    <Button
-        android:id="@+id/btnStop"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:layout_marginTop = "20dp"
-        android:layout_marginStart = "20dp"
-        android:layout_marginEnd = "20dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/blackbutton"/>
-
 </LinearLayout>
-</androidx.core.widget.NestedScrollView>
