@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,7 +26,8 @@ import com.example.quetek.models.Window
 
 class QueueRegistrationActivity : Activity() {
     private lateinit var binding: ActivityQueueRegistrationBinding
-
+    private lateinit var paymentForDrawable: GradientDrawable
+    private lateinit var amountDrawable: GradientDrawable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQueueRegistrationBinding.inflate(layoutInflater)
@@ -41,6 +44,9 @@ class QueueRegistrationActivity : Activity() {
 
         val btnSubmit: Button = findViewById(R.id.btnSubmit)
         val btnCancel: Button = findViewById(R.id.btnCancel)
+
+        paymentForDrawable = binding.sPaymentFor.background.mutate() as GradientDrawable
+        amountDrawable = binding.etAmount.background.mutate() as GradientDrawable
 
         var priority = intent.getBooleanExtra("isPriority", false)
 
@@ -61,6 +67,9 @@ class QueueRegistrationActivity : Activity() {
 
         btnSubmit.setOnClickListener {
             // TODO:  ADD VALIDATIONS
+            if (!validateInputs()) {
+                return@setOnClickListener
+            }
 
             // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
             val paymentFor = PaymentFor.getValueFromDisplay(binding.sPaymentFor.selectedItem.toString())
@@ -135,6 +144,25 @@ class QueueRegistrationActivity : Activity() {
                 }
             }
         }
+    }
+
+    private fun validateInputs() : Boolean {
+        val strokeWidthInPx = (1 * resources.displayMetrics.density).toInt()
+        var res: Boolean = true
+
+        if (binding.etAmount.text.isNullOrBlank()) {
+            amountDrawable.setStroke(strokeWidthInPx, Color.RED)
+            res = false
+        }
+
+        val nullString = resources.getStringArray(R.array.payment_for_array)[0]
+
+        if (binding.sPaymentFor.selectedItem == nullString) {
+            paymentForDrawable.setStroke(strokeWidthInPx, Color.RED)
+            res = false
+        }
+
+        return res
     }
 }
 
