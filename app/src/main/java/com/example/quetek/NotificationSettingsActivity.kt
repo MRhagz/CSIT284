@@ -68,18 +68,21 @@ class NotificationSettingsActivity : Activity() {
             } else if (data.notifPref == NotificationSetting.TIMEBASED) {
                 data.timeValue = (time as EditText).text.toString().toInt()
             }
-            startActivity(Intent(this, LandingActivity::class.java))
+//            startActivity(Intent(this, LandingActivity::class.java))
+            finish()
         }
 
         btnCancel.setOnClickListener {
-            startActivity(Intent(this, LandingActivity::class.java))
+//            startActivity(Intent(this, LandingActivity::class.java))
             Log.e("QueTek","Cancel button clicked" )
+            finish()
 //            notificationHelper.showNotification()
         }
 
         btnBack.setOnClickListener {
-            startActivity(Intent(this, LandingActivity::class.java))
+//            startActivity(Intent(this, LandingActivity::class.java))
             Log.e("QueTek","Cancel button clicked" )
+            finish()
 //            notificationHelper.showNotification()
         }
 

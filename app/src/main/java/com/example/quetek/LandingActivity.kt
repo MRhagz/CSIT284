@@ -212,8 +212,8 @@ class LandingActivity : Activity() {
                         }
 
                         binding.tvPosition.text =  pos.toString()
-                        if(data.notifPref == NotificationSetting.DEFAULT ||
-                            data.notifPref == NotificationSetting.POSITIONBASED
+                        if( (data.notifPref == NotificationSetting.DEFAULT ||
+                            data.notifPref == NotificationSetting.POSITIONBASED)
                             && pos <= data.positionValue){
                             notification.showNotification("You're now at position $pos in the queue. Please get ready!")
                         }

@@ -99,12 +99,14 @@ class QueueRegistrationActivity : Activity() {
 
              Log.e("QueuRegistration", "Navigating to LandingActivity")
 //             startActivity(Intent(this, TicketConfirmationActivity::class.java))
-            startActivity(Intent(this, LandingActivity::class.java))
+//            startActivity(Intent(this, LandingActivity::class.java))
+            finish()
         }
 
         btnCancel.setOnClickListener {
             Log.e("QueuRegistration", "Navigating to LandingActivity")
-            startActivity(Intent(this, LandingActivity::class.java))
+//            startActivity(Intent(this, LandingActivity::class.java))
+            finish()
         }
     }
 

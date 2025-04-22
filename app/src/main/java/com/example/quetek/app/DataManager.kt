@@ -16,7 +16,7 @@ class DataManager : Application() {
     var isPriority : Boolean = false
     var notifPref = NotificationSetting.DEFAULT
     var timeValue : Int = 0;
-    var positionValue : Int = 5;
+    var positionValue : Int = 3;
 
     override fun onCreate() {
         super.onCreate()

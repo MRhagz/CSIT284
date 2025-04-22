@@ -73,25 +73,25 @@ class ProfileActivity : Activity() {
         }
 
         backButton.setOnClickListener {
-            when ((application as DataManager).user_logged_in.userType)  {
-                UserType.STUDENT -> {
-                    Log.e("ProfileActivity", "Navigating to Landing Activity")
-                    startActivity(Intent(this, LandingActivity::class.java))
-                }
-                UserType.NONE -> {
-                    Log.e("ProfileActivity", "Navigating to Landing Activity")
-                    startActivity(Intent(this, AdminActivity::class.java))
-                }
-                UserType.ACCOUNTANT -> {
-                    Log.e("ProfileActivity", "Navigating to Landing Activity")
-                    startActivity(Intent(this, AdminActivity::class.java))
-                }
-                UserType.ADMIN -> {
-                    Log.e("ProfileActivity", "Navigating to Landing Activity")
-                    startActivity(Intent(this, AdminActivity::class.java))
-                }
-            }
-
+//            when ((application as DataManager).user_logged_in.userType)  {
+//                UserType.STUDENT -> {
+//                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+//                    startActivity(Intent(this, LandingActivity::class.java))
+//                }
+//                UserType.NONE -> {
+//                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+//                    startActivity(Intent(this, AdminActivity::class.java))
+//                }
+//                UserType.ACCOUNTANT -> {
+//                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+//                    startActivity(Intent(this, AdminActivity::class.java))
+//                }
+//                UserType.ADMIN -> {
+//                    Log.e("ProfileActivity", "Navigating to Landing Activity")
+//                    startActivity(Intent(this, AdminActivity::class.java))
+//                }
+//            }
+            finish()
         }
 
         editProfileButton.setOnClickListener {

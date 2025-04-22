@@ -35,7 +35,8 @@ class QueueHistoryActivity : Activity() {
 
         btnBack.setOnClickListener {
             Log.e("Queue History Activity", "Navigating to Admin Page")
-            startActivity(Intent(this,AdminActivity::class.java))
+//            startActivity(Intent(this,AdminActivity::class.java))
+            finish()
         }
 
         val adapter = TicketCustomListViewAdapter(
