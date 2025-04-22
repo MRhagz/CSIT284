@@ -24,11 +24,13 @@ class TicketCustomListViewAdapter(
 
     inner class TicketViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ticketNumber: TextView = itemView.findViewById(R.id.ticket_number)
+        private val studentId: TextView = itemView.findViewById(R.id.id)
         private val ticketPaymentFor: TextView = itemView.findViewById(R.id.ticket_status)
         private val ticketAmount: TextView = itemView.findViewById(R.id.payment_amount)
 
         fun bind(ticket: Ticket) {
             ticketNumber.text = ticket.number.toString()
+            studentId.text = ticket.studentId
             ticketPaymentFor.text = ticket.paymentFor.toString()
             ticketAmount.text = ticket.amount.toString()
 
