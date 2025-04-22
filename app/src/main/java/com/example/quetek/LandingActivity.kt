@@ -35,6 +35,8 @@ import com.example.quetek.databinding.ActivityQueueRegistrationBinding
 import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.Status
 import com.example.quetek.models.Ticket
+import disableButton
+import enableButoon
 import org.w3c.dom.Text
 import textReturn
 import java.sql.Time
@@ -140,7 +142,11 @@ class LandingActivity : Activity() {
 
     private fun showTicket() {
         Database().getTicket(this, data.user_logged_in.id) { ticket ->
+            Log.e("Debug", "ticket ticket")
             if (ticket != null) {
+                disableButton(button = binding.btnJoinQueue)
+
+
                 this.ticket = ticket
                 Log.e("Ticket", ticket.number.toString())
                 data.ticket = ticket
@@ -191,6 +197,7 @@ class LandingActivity : Activity() {
                 )
             } else {
                 Log.e("Ticket", "No existing ticket")
+                enableButoon(binding.btnJoinQueue)
             }
         }
     }

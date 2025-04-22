@@ -167,6 +167,18 @@ fun Activity.showFullscreenLoadingDialog(): Dialog {
     return dialog
 }
 
+fun Activity.disableButton(button: Button) {
+    button.isEnabled = false;
+    button.alpha = .5F
+}
+
+fun Activity.enableButoon(button: Button) {
+    button.isEnabled = true
+    button.alpha = 1F
+}
+
+
+
 
 
 
