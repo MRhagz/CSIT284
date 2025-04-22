@@ -14,6 +14,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.shapes.Shape
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -36,6 +37,9 @@ import com.example.quetek.models.Status
 import com.example.quetek.models.Ticket
 import org.w3c.dom.Text
 import textReturn
+import java.sql.Time
+import java.util.concurrent.TimeUnit
+import kotlin.system.measureTimeMillis
 
 
 class LandingActivity : Activity() {
@@ -45,6 +49,11 @@ class LandingActivity : Activity() {
     private lateinit var binding: ActivityLandingBinding
     val notification = NotificationHelper(this)
     private var hasShownTurn = false
+    private var ticket: Ticket? = null
+
+    private var timeEstimator: CountDownTimer? = null
+    private var notified: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLandingBinding.inflate(layoutInflater)
@@ -132,11 +141,13 @@ class LandingActivity : Activity() {
     private fun showTicket() {
         Database().getTicket(this, data.user_logged_in.id) { ticket ->
             if (ticket != null) {
+                this.ticket = ticket
                 Log.e("Ticket", ticket.number.toString())
                 data.ticket = ticket
                 binding.tvTicketId.text = ticket.number.toString()
                 binding.tvWindow.text = ticket.paymentFor.window
                 binding.tvPosition.text = ticket.position.toString()
+                setTImer(ticket.position)
 
                 Database().listenToStudentTickets(
                     studentId = data.user_logged_in.id,
@@ -155,20 +166,26 @@ class LandingActivity : Activity() {
                         }
                     },
                     onStudentPositionUpdate = { pos ->
-                        binding.tvPosition.text = pos.toString()
-                        if (pos == 1 && !hasShownTurn) {
-                            hasShownTurn = true
-                            showTransactionDialog(ticket)
-                            return@listenToStudentTickets
-                            // TODO CLEAR THE LANDING PAGE TICKET DETAILS
+                        if (!hasShownTurn) {
+                            Log.e("Position", "position: ${pos}")
+                            binding.tvPosition.text = pos.toString()
+                            if (pos == 1) {
+                                hasShownTurn = true
+                                timeEstimator?.cancel()
+                                showTransactionDialog(ticket)
+                                return@listenToStudentTickets
+                                // TODO CLEAR THE LANDING PAGE TICKET DETAILS
+                            }
+
+                            binding.tvPosition.text =  pos.toString()
+                            if(!notified && pos == data.positionValue && (data.notifPref == NotificationSetting.DEFAULT ||
+                                data.notifPref == NotificationSetting.POSITIONBASED)){
+                                notified = true
+                                Log.e("Notification", "Notified at ${pos}")
+                                notification.showNotification("You're now at position $pos in the queue. Please get ready!")
+                            }
                         }
 
-                        binding.tvPosition.text =  pos.toString()
-                        if(data.notifPref == NotificationSetting.DEFAULT ||
-                            data.notifPref == NotificationSetting.POSITIONBASED
-                            && pos <= data.positionValue){
-                            notification.showNotification("You're now at position $pos in the queue. Please get ready!")
-                        }
                     },
                     ticket.paymentFor
                 )
@@ -203,19 +220,24 @@ class LandingActivity : Activity() {
                         }
                     },
                     onStudentPositionUpdate = { pos ->
-                        binding.tvPosition.text = pos.toString()
-                        if (pos == 1 && !hasShownTurn) {
-                            hasShownTurn = true
-                            showTransactionDialog(ticket)
-                            return@listenToPriorityTickets
-                            // TODO CLEAR THE LANDING PAGE TICKET DETAILS
-                        }
+                        if (!hasShownTurn) {
+                            binding.tvPosition.text = pos.toString()
+                            setTImer(pos)
+                            Log.e("Position", "position: ${pos}")
+                            if (pos == 1) {
+                                hasShownTurn = true
+                                showTransactionDialog(ticket)
+                                return@listenToPriorityTickets
+                                // TODO CLEAR THE LANDING PAGE TICKET DETAILS
+                            }
 
-                        binding.tvPosition.text =  pos.toString()
-                        if(data.notifPref == NotificationSetting.DEFAULT ||
-                            data.notifPref == NotificationSetting.POSITIONBASED
-                            && pos <= data.positionValue){
-                            notification.showNotification("You're now at position $pos in the queue. Please get ready!")
+                            binding.tvPosition.text = pos.toString()
+                            if (data.notifPref == NotificationSetting.DEFAULT ||
+                                data.notifPref == NotificationSetting.POSITIONBASED
+                                && pos <= data.positionValue
+                            ) {
+                                notification.showNotification("You're now at position $pos in the queue. Please get ready!")
+                            }
                         }
                     },
                     ticket.paymentFor
@@ -239,12 +261,10 @@ class LandingActivity : Activity() {
             val dialog = AlertDialog.Builder(this)
                 .setView(dialogView)
                 .create()
-//        val dialog = Dialog(this)
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        dialog.setContentView(R.layout.dialog_client_turn)
 
             dialogView.findViewById<Button>(R.id.btnDismiss)?.setOnClickListener {
                 dialog.dismiss()
+                clearTicket()
             }
 
             val drawable = ContextCompat.getDrawable(this, R.drawable.rectanglelogoutdialog)
@@ -262,6 +282,32 @@ class LandingActivity : Activity() {
         binding.tvTicketId.text = "/"
         binding.tvTime.text = "/"
         binding.tvLength.text = "/"
+    }
+
+    private fun setTImer(pos: Int) {
+        timeEstimator?.cancel()
+        if (!hasShownTurn) {
+            val minsInMill = pos * 60_000L
+
+            timeEstimator = object : CountDownTimer(minsInMill, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
+                    val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60
+                    val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
+
+                    binding.tvTime.text = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                }
+
+                override fun onFinish() {
+                    if (pos != 1) {
+                        timeEstimator?.start()
+                    }
+                    binding.tvTime.setText("YOUR TURN!")
+                }
+            }
+
+            timeEstimator?.start()
+        }
     }
 
 
