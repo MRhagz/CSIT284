@@ -324,6 +324,7 @@ class Database {
                             if (ticket?.studentId == studentId && ticket.status != Status.SERVED) {
                                 Log.e("Ticket", ticket.toString())
                                 onTicketFetched(ticket)
+                                callback.onFetchFinish()
                                 return
                             }
                         }
