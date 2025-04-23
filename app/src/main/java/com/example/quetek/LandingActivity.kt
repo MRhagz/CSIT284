@@ -3,45 +3,29 @@ package com.example.quetek
 import NotificationHelper
 import android.app.Activity
 import android.app.Dialog
-import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.shapes.Shape
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Window
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLandingBinding
-import com.example.quetek.databinding.ActivityLoginBinding
-import com.example.quetek.databinding.ActivityQueueRegistrationBinding
 import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.Status
 import com.example.quetek.models.Ticket
 import disableButton
-import enableButoon
-import org.w3c.dom.Text
+import enableButton
 import textReturn
-import java.sql.Time
 import java.util.concurrent.TimeUnit
-import kotlin.system.measureTimeMillis
 
 
 class LandingActivity : Activity() {
@@ -142,7 +126,7 @@ class LandingActivity : Activity() {
 
     private fun showTicket() {
         Database().getTicket(this, data.user_logged_in.id) { ticket ->
-            Log.e("Debug", "ticket ticket")
+            Log.e("Debug", "showing ticket...")
             if (ticket != null) {
                 disableButton(button = binding.btnJoinQueue)
 
@@ -159,7 +143,7 @@ class LandingActivity : Activity() {
                     studentId = data.user_logged_in.id,
                     onServed = { servedTicket ->
                         // this does not work
-                        clearTicket()
+//                        clearTicket()
                         Toast.makeText(
                             this,
                             "Your ticket ${servedTicket.number} was served!",
@@ -178,6 +162,7 @@ class LandingActivity : Activity() {
                             if (pos == 1) {
                                 hasShownTurn = true
                                 timeEstimator?.cancel()
+                                timeEstimator?.onFinish()
                                 showTransactionDialog(ticket)
                                 return@listenToStudentTickets
                                 // TODO CLEAR THE LANDING PAGE TICKET DETAILS
@@ -197,7 +182,8 @@ class LandingActivity : Activity() {
                 )
             } else {
                 Log.e("Ticket", "No existing ticket")
-                enableButoon(binding.btnJoinQueue)
+                enableButton(binding.btnJoinQueue)
+                clearTicket()
             }
         }
     }
@@ -271,7 +257,7 @@ class LandingActivity : Activity() {
 
             dialogView.findViewById<Button>(R.id.btnDismiss)?.setOnClickListener {
                 dialog.dismiss()
-                clearTicket()
+//                clearTicket()
             }
 
             val drawable = ContextCompat.getDrawable(this, R.drawable.rectanglelogoutdialog)
@@ -284,17 +270,18 @@ class LandingActivity : Activity() {
     }
 
     private fun clearTicket() {
-        binding.tvPosition.text = "/"
-        binding.tvWindow.text = "/"
-        binding.tvTicketId.text = "/"
-        binding.tvTime.text = "/"
-        binding.tvLength.text = "/"
-        enableButoon(binding.btnJoinQueue)
+        Log.e("Debug", "Clearing ticket")
+        binding.tvPosition.text = "00"
+        binding.tvWindow.text = "00"
+        binding.tvTicketId.text = "00"
+        binding.tvTime.text = "00:00:00"
+        binding.tvLength.text = "00"
     }
 
     private fun setTImer(pos: Int) {
         timeEstimator?.cancel()
         if (!hasShownTurn) {
+            Log.e("Debug", "Timer starts")
             val minsInMill = pos * 60_000L
 
             timeEstimator = object : CountDownTimer(minsInMill, 1000) {
@@ -311,6 +298,7 @@ class LandingActivity : Activity() {
                         timeEstimator?.start()
                     }
                     binding.tvTime.setText("YOUR TURN!")
+                    Log.e("Debug", "times up. YOur turn!")
                 }
             }
 

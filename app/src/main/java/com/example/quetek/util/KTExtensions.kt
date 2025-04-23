@@ -1,6 +1,5 @@
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -23,11 +22,8 @@ import android.graphics.Color
 import android.view.Gravity
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import com.example.quetek.LoginActivity
 import com.example.quetek.R
 import com.facebook.shimmer.ShimmerFrameLayout
-import kotlinx.coroutines.Job
-import android.widget.LinearLayout
 
 // Activity
 fun Activity.showToast(msg : String){
@@ -172,7 +168,7 @@ fun Activity.disableButton(button: Button) {
     button.alpha = .5F
 }
 
-fun Activity.enableButoon(button: Button) {
+fun Activity.enableButton(button: Button) {
     button.isEnabled = true
     button.alpha = 1F
 }
