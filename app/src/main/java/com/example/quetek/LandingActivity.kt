@@ -28,7 +28,7 @@ import textReturn
 import java.util.concurrent.TimeUnit
 
 
-class LandingActivity : Activity() {
+class LandingActivity : Activity(), FetchDataCallback {
 //    lateinit var position: TextView
 //    lateinit var length: TextView
     private lateinit var data: DataManager
@@ -39,6 +39,7 @@ class LandingActivity : Activity() {
 
     private var timeEstimator: CountDownTimer? = null
     private var notified: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,12 +55,6 @@ class LandingActivity : Activity() {
         val btnPriorityQueue = binding.btnPriorityLane
         val ibtnMenu = binding.ibtnMenu
 
-        val shimmerTickerId = binding.shimmerTicketId
-        val shimmerServingTime = binding.shimmerServingTime
-        val shimmerWindowNumber = binding.shimmerWindowNumber
-        val shimmerQueueLength = binding.shimmerQueueLength
-        val shimmerQueuePosition = binding.shimmerQueuePosition
-
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_priority_lane)
@@ -68,19 +63,6 @@ class LandingActivity : Activity() {
 //        val notify = NotificationHelper(this)
 //        notify.showNotification()
 
-        shimmerTickerId.startShimmer()
-        shimmerServingTime.startShimmer()
-        shimmerWindowNumber.startShimmer()
-        shimmerQueueLength.startShimmer()
-        shimmerQueuePosition.startShimmer()
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.tvTicketId.textReturn(shimmerTickerId)
-            binding.tvLength.textReturn(shimmerQueueLength)
-            binding.tvWindow.textReturn(shimmerWindowNumber)
-            binding.tvPosition.textReturn(shimmerQueuePosition)
-            binding.tvTime.textReturn(shimmerServingTime)
-        }, 3000)
 
         binding.tvTime.setText("00:00:00") // temporary for now
         notification.notificationPermission()
@@ -125,7 +107,7 @@ class LandingActivity : Activity() {
     }
 
     private fun showTicket() {
-        Database().getTicket(this, data.user_logged_in.id) { ticket ->
+        Database().getTicket(this, data.user_logged_in.id,  { ticket ->
             Log.e("Debug", "showing ticket...")
             if (ticket != null) {
                 disableButton(button = binding.btnJoinQueue)
@@ -185,7 +167,8 @@ class LandingActivity : Activity() {
                 enableButton(binding.btnJoinQueue)
                 clearTicket()
             }
-        }
+        },
+            this)
     }
 
     private fun showPriorityTicket(){
@@ -306,6 +289,28 @@ class LandingActivity : Activity() {
         }
     }
 
+    override fun onFetchStart() {
+        startShimmer()
+    }
+    override fun onFetchFinish() {
+        stopShimmer()
+    }
+
+    private fun startShimmer() {
+        binding.shimmerTicketId.startShimmer()
+        binding.shimmerServingTime.startShimmer()
+        binding.shimmerWindowNumber.startShimmer()
+        binding.shimmerQueueLength.startShimmer()
+        binding.shimmerQueuePosition.startShimmer()
+    }
+
+    private fun stopShimmer() {
+        binding.tvTicketId.textReturn(binding.shimmerTicketId)
+        binding.tvLength.textReturn(binding.shimmerQueueLength)
+        binding.tvWindow.textReturn(binding.shimmerWindowNumber)
+        binding.tvPosition.textReturn(binding.shimmerQueuePosition)
+        binding.tvTime.textReturn(binding.shimmerServingTime)
+    }
 
     private fun toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()

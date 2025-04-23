@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import com.example.quetek.FetchDataCallback
 import com.example.quetek.app.DataManager
 import com.example.quetek.models.PaymentFor
 import com.example.quetek.models.Program
@@ -307,9 +308,10 @@ class Database {
         })
     }
 
-    fun getTicket(activity: Activity, studentId: String, onTicketFetched: (Ticket?) -> Unit) {
+    fun getTicket(activity: Activity, studentId: String, onTicketFetched: (Ticket?) -> Unit, callback: FetchDataCallback) {
         val dialog = activity.showFullscreenLoadingDialog()
         val ticketRef = tickets
+        callback.onFetchStart()
         Log.e("Ticket", "Fetching Ticket")
 
         ticketRef.orderByChild("studentId").equalTo(studentId)
@@ -327,12 +329,14 @@ class Database {
                         }
                     }
                     onTicketFetched(null) // No valid ticket found
+                    callback.onFetchFinish()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("Firebase", "Error fetching ticket: ${error.message}")
                     dialog.dismiss()
                     onTicketFetched(null)
+                    callback.onFetchFinish()
                 }
             })
     }
