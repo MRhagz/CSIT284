@@ -28,7 +28,7 @@ import textReturn
 import java.util.concurrent.TimeUnit
 
 
-class LandingActivity : Activity(), FetchDataCallback {
+class LandingActivity : Activity() {
 //    lateinit var position: TextView
 //    lateinit var length: TextView
     private lateinit var data: DataManager

@@ -48,7 +48,8 @@ class EditProfileActivity : Activity() {
 
         backProfileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+//            startActivity(intent)
+            finish()
         }
 
         val data = when ((application as DataManager).user_logged_in.userType) {
@@ -83,7 +84,8 @@ class EditProfileActivity : Activity() {
                             usersnapshot.ref.child("password").setValue(password.getTextValue())
                         }
                         val intent = Intent(applicationContext, ProfileActivity::class.java)
-                        startActivity(intent)
+//                        startActivity(intent)
+                        finish()
                     }
                 }
 

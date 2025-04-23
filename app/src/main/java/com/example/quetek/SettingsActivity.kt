@@ -39,7 +39,8 @@ class SettingsActivity : Activity() {
             Log.e("Quetek", "Navigating to LandingActivity")
 
             val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+//            startActivity(intent)
+            finish()
         }
 
         flATD.setOnClickListener {
