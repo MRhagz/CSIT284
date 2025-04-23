@@ -289,6 +289,7 @@ class LandingActivity : Activity() {
         binding.tvTicketId.text = "/"
         binding.tvTime.text = "/"
         binding.tvLength.text = "/"
+        enableButoon(binding.btnJoinQueue)
     }
 
     private fun setTImer(pos: Int) {

@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -23,6 +25,7 @@ import com.example.quetek.models.PaymentFor
 import com.example.quetek.models.Queue
 import com.example.quetek.models.Student
 import com.example.quetek.models.Window
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 
 class QueueRegistrationActivity : Activity() {
     private lateinit var binding: ActivityQueueRegistrationBinding
@@ -50,6 +53,16 @@ class QueueRegistrationActivity : Activity() {
 
         var priority = intent.getBooleanExtra("isPriority", false)
 
+        val defaultSelection = listOf(resources.getStringArray(R.array.payment_for_array)[0])
+
+        val defaultAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            defaultSelection
+        )
+
+        binding.sPaymentFor.adapter = defaultAdapter
+
         if(!priority){
             loadAvailablePaymentOptions(this, binding.sPaymentFor)
         } else {
@@ -64,10 +77,14 @@ class QueueRegistrationActivity : Activity() {
             }
         }
 
+        binding.tvInputFeedback.visibility = View.GONE
+
 
         btnSubmit.setOnClickListener {
             // TODO:  ADD VALIDATIONS
             if (!validateInputs()) {
+                binding.tvInputFeedback.text = "All fields must not be empty."
+                binding.tvInputFeedback.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
@@ -111,6 +128,7 @@ class QueueRegistrationActivity : Activity() {
     private fun loadAvailablePaymentOptions(context: Context, spinner: Spinner) {
         val allWindows = listOf(Window.A, Window.B, Window.C, Window.D)
         val openOptions = mutableListOf<String>()
+
 
         var checked = 0
         for (window in allWindows) {
