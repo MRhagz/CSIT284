@@ -296,8 +296,13 @@ class Database {
 
                     ticketsRef.child(key).setValue(ticket)
                         .addOnSuccessListener {
-                            dialog.dismiss() }
-                        .addOnFailureListener { dialog.dismiss() }
+                            dialog.dismiss()
+                            activity.finish()
+                        }
+                        .addOnFailureListener {
+                            dialog.dismiss()
+                            activity.finish()
+                        }
 
                 }
             }
