@@ -1,11 +1,16 @@
 package com.example.quetek
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.DatePicker
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -20,21 +25,27 @@ import com.example.quetek.databinding.ActivityQueueHistoryBinding
 import com.example.quetek.models.Ticket
 import com.example.quetek.models.user.Accountant
 import com.example.quetek.util.TicketCustomListViewAdapter
+import isSameDay
 import isThisMonth
 import isThisWeek
 import isToday
 import setVisibilityGone
 import setVisibilityToggle
 import setVisibilityVisible
+import java.util.Calendar
 
 class QueueHistoryActivity : AppCompatActivity() {
     private lateinit var binding : ActivityQueueHistoryBinding
     private lateinit var queueLength : TextView
     private lateinit var tickets: List<Ticket>
+    private lateinit var emptyState: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityQueueHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        emptyState = binding.emptyStateView.inflate()
+        emptyState.visibility = View.GONE
 
         val recyclerView = binding.histotyRecyclerList
 
@@ -64,9 +75,10 @@ class QueueHistoryActivity : AppCompatActivity() {
                 adapter.updateList(updatedTickets)
                 if (updatedTickets.isEmpty()) {
                     Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
+                    emptyState.visibility = View.VISIBLE
                     return@listenToServedPriorityLane
                 }
-                binding.lblQueueEmpty.setVisibilityGone()
+                emptyState.visibility = View.GONE
                 binding.lengthValue.text = updatedTickets.size.toString()
                 Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
             }
@@ -75,11 +87,11 @@ class QueueHistoryActivity : AppCompatActivity() {
                 adapter.updateList(updatedTickets)
                 tickets = updatedTickets
                 if (updatedTickets.isEmpty()) {
-                    binding.lblQueueEmpty.setVisibilityVisible()
+                    emptyState.visibility = View.VISIBLE
                     Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
                     return@listenToServedTickets
                 }
-                binding.lblQueueEmpty.setVisibilityGone()
+                emptyState.visibility = View.GONE
                 binding.lengthValue.text = updatedTickets.size.toString()
                 Log.d("DEBUG", "Tickets received: ${updatedTickets.size}")
             }
@@ -99,31 +111,85 @@ class QueueHistoryActivity : AppCompatActivity() {
             popup.menuInflater.inflate(R.menu.date_filter_menu, popup.menu)
 
             popup.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
+                val filteredTickets = when (item.itemId) {
                     R.id.filter_none -> {
-                        adapter.updateList(tickets)
                         Toast.makeText(this, "Filtering: None", Toast.LENGTH_SHORT).show()
-                        true
+                        tickets
                     }
                     R.id.filter_today -> {
-                        adapter.updateList(tickets.filter { isToday(it.timestamp) })
                         Toast.makeText(this, "Filtering: Today", Toast.LENGTH_SHORT).show()
-                        true
+                        tickets.filter { isToday(it.timestamp) }
                     }
                     R.id.filter_this_week -> {
-                        adapter.updateList(tickets.filter { isThisWeek(it.timestamp) })
                         Toast.makeText(this, "Filtering: This Week", Toast.LENGTH_SHORT).show()
-                        true
+                        tickets.filter { isThisWeek(it.timestamp) }
                     }
                     R.id.filter_this_month -> {
-                        adapter.updateList(tickets.filter { isThisMonth(it.timestamp) })
                         Toast.makeText(this, "Filtering: This Month", Toast.LENGTH_SHORT).show()
-                        true
+                        tickets.filter { isThisMonth(it.timestamp) }
                     }
-                    else -> false
+                    R.id.filter_custom_date -> {
+                        showDatePickerDialog(adapter) // handles its own update
+                        return@setOnMenuItemClickListener true
+                    }
+                    else -> return@setOnMenuItemClickListener false
                 }
+
+                if (filteredTickets.isEmpty()) {
+                    emptyState.visibility = View.VISIBLE
+                } else {
+                    emptyState.visibility = View.GONE
+                }
+
+                adapter.updateList(filteredTickets)
+                true
             }
             popup.show()
         }
+    }
+
+    private fun showDatePickerDialog(adapter: TicketCustomListViewAdapter) {
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_date_picker, null)
+        val datePicker = dialogView.findViewById<DatePicker>(R.id.datePicker)
+
+        val calendar = Calendar.getInstance()
+        datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(
+            Calendar.DAY_OF_MONTH), null)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Select Date")
+            .setView(dialogView)
+            .setPositiveButton("OK") { _, _ ->
+                val day = datePicker.dayOfMonth
+                val month = datePicker.month + 1 // Month is 0-based
+                val year = datePicker.year
+
+                val calendar = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, year)
+                    set(Calendar.MONTH, month - 1) // month is 1-based from DatePicker, Calendar needs 0-based
+                    set(Calendar.DAY_OF_MONTH, day)
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val selectedTimestamp = calendar.timeInMillis
+
+                val filtered = tickets.filter { isSameDay(selectedTimestamp, it.timestamp) }
+                if (filtered.isEmpty()) {
+                    emptyState.visibility = View.VISIBLE
+                }
+                else {
+                    emptyState.visibility = View.GONE
+                }
+                adapter.updateList(filtered)
+
+                Toast.makeText(this, "Filtering: On $day/$month/$year", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.show()
     }
 }

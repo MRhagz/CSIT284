@@ -4,4 +4,5 @@
     <item android:id="@+id/filter_today" android:title="Today" />
     <item android:id="@+id/filter_this_week" android:title="This Week" />
     <item android:id="@+id/filter_this_month" android:title="This Month" />
+    <item android:id="@+id/filter_custom_date" android:title="Custom" />
 </menu>

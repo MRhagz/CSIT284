@@ -238,6 +238,14 @@ fun isThisMonth(timestamp: Long): Boolean {
     return timestamp in start.timeInMillis..end.timeInMillis
 }
 
+fun isSameDay(timestamp1: Long, timestamp2: Long): Boolean {
+    val cal1 = Calendar.getInstance().apply { timeInMillis = timestamp1 }
+    val cal2 = Calendar.getInstance().apply { timeInMillis = timestamp2 }
+
+    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+}
+
 
 
 
