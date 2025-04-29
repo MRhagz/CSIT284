@@ -101,7 +101,6 @@ class QueueRegistrationActivity : Activity() {
                 Database().isWindowOpen(Window.valueOf(paymentFor.window)) { res ->
                     if (!res) {
                         Toast.makeText(this, "Category is closed.", Toast.LENGTH_SHORT).show()
-                        return@isWindowOpen
                     }
                     else {
                         Queue.enqueue(
@@ -109,9 +108,11 @@ class QueueRegistrationActivity : Activity() {
                             paymentFor, data,
                             binding.etAmount.text.toString().toDouble(),
                         )
+                        Log.e("QueuRegistration", "Navigating to LandingActivity")
                     }
                 }
             }
+
              Log.e("QueuRegistration", "Navigating to LandingActivity")
         }
 

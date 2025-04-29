@@ -84,7 +84,7 @@ class LoginActivity : Activity() {
                         tvLoginFeedback.setText("Incorrect ID or password.")
                     }
                 } else {
-                    tvLoginFeedback.setText("ID or password incorrect")
+//                    tvLoginFeedback.setText("ID or password incorrect")
                 }
             }
 

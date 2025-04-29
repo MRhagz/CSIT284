@@ -159,6 +159,14 @@ fun Activity.showFullscreenLoadingDialog(): Dialog {
     // Start changing colors
     handler.post(colorChanger)
 
+    dialog.setOnDismissListener {
+        Log.e("Debug", "Dismissing loading dialog")
+    }
+
+    dialog.setOnShowListener {
+        Log.e("Debug", "Showing loading dialog")
+    }
+
     dialog.show()
     return dialog
 }
