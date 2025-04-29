@@ -6,91 +6,124 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsActivity"
-    android:padding="20dp"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <FrameLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:padding="10dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp">
 
-        <!-- Settings Text (Always Centered) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:paddingEnd="16dp">
+
+            <!-- Back Button -->
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_margin="10dp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:background="@color/white"
+                android:src="@drawable/backbutton"
+                android:contentDescription="Back"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Queue History"
+                android:background="@color/white"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true" />
+
+            <!-- Filter Button -->
+            <ImageButton
+                android:id="@+id/filter_button"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:background="@color/white"
+                android:src="@drawable/filter_icon"
+                android:layout_margin="12dp"
+                android:contentDescription="Filter"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <TextView
+            android:id="@+id/queueLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Queue History"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginStart="10dp"
-            android:layout_gravity="center" />
-
-        <!-- Back Button (Stacked on Top Left) -->
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/backbutton"
-            android:importantForAccessibility="no"
-            />
-
-    </FrameLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/queueLength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="History Length: "
-        android:layout_marginVertical="10dp"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:layout_marginStart="5dp"
-        android:layout_gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-        <TextView
-            android:id="@+id/lengthValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:importantForAccessibility="no"
+            android:text="History Length: "
             android:layout_marginVertical="10dp"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:textColor="@color/black"
             android:layout_marginStart="5dp"
             android:layout_gravity="center"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/queueLength"/>
+            app:layout_constraintStart_toStartOf="parent"/>
 
-        <TextView
-            android:id="@+id/lblQueueEmpty"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/history_empty"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="@+id/queueLength"
-            app:layout_constraintTop_toBottomOf="@+id/queueLength"/>
+            <TextView
+                android:id="@+id/lengthValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:importantForAccessibility="no"
+                android:layout_marginVertical="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="5dp"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/queueLength"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/histotyRecyclerList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginVertical="10dp"
-            android:layout_marginStart="5dp"
-            app:layout_constraintStart_toStartOf="@+id/lblQueueEmpty"
-            app:layout_constraintTop_toBottomOf="@+id/lblQueueEmpty" />
+            <TextView
+                android:id="@+id/lblQueueEmpty"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/history_empty"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="@+id/queueLength"
+                app:layout_constraintTop_toBottomOf="@+id/queueLength"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/histotyRecyclerList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginVertical="10dp"
+                android:layout_marginStart="5dp"
+                app:layout_constraintStart_toStartOf="@+id/lblQueueEmpty"
+                app:layout_constraintTop_toBottomOf="@+id/lblQueueEmpty" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 </LinearLayout>

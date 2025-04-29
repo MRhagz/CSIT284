@@ -24,6 +24,7 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.example.quetek.R
 import com.facebook.shimmer.ShimmerFrameLayout
+import java.util.Calendar
 
 // Activity
 fun Activity.showToast(msg : String){
@@ -180,6 +181,63 @@ fun Activity.enableButton(button: Button) {
     button.isEnabled = true
     button.alpha = 1F
 }
+
+fun isToday(timestamp: Long): Boolean {
+    val now = Calendar.getInstance()
+    val start = now.clone() as Calendar
+    start.set(Calendar.HOUR_OF_DAY, 0)
+    start.set(Calendar.MINUTE, 0)
+    start.set(Calendar.SECOND, 0)
+    start.set(Calendar.MILLISECOND, 0)
+
+    val end = now.clone() as Calendar
+    end.set(Calendar.HOUR_OF_DAY, 23)
+    end.set(Calendar.MINUTE, 59)
+    end.set(Calendar.SECOND, 59)
+    end.set(Calendar.MILLISECOND, 999)
+
+    return timestamp in start.timeInMillis..end.timeInMillis
+}
+
+fun isThisWeek(timestamp: Long): Boolean {
+    val now = Calendar.getInstance()
+    val start = now.clone() as Calendar
+    start.set(Calendar.DAY_OF_WEEK, start.firstDayOfWeek)
+    start.set(Calendar.HOUR_OF_DAY, 0)
+    start.set(Calendar.MINUTE, 0)
+    start.set(Calendar.SECOND, 0)
+    start.set(Calendar.MILLISECOND, 0)
+
+    val end = start.clone() as Calendar
+    end.add(Calendar.DAY_OF_WEEK, 6)
+    end.set(Calendar.HOUR_OF_DAY, 23)
+    end.set(Calendar.MINUTE, 59)
+    end.set(Calendar.SECOND, 59)
+    end.set(Calendar.MILLISECOND, 999)
+
+    return timestamp in start.timeInMillis..end.timeInMillis
+}
+
+fun isThisMonth(timestamp: Long): Boolean {
+    val now = Calendar.getInstance()
+    val start = now.clone() as Calendar
+    start.set(Calendar.DAY_OF_MONTH, 1)
+    start.set(Calendar.HOUR_OF_DAY, 0)
+    start.set(Calendar.MINUTE, 0)
+    start.set(Calendar.SECOND, 0)
+    start.set(Calendar.MILLISECOND, 0)
+
+    val end = start.clone() as Calendar
+    end.add(Calendar.MONTH, 1)
+    end.add(Calendar.DAY_OF_MONTH, -1)
+    end.set(Calendar.HOUR_OF_DAY, 23)
+    end.set(Calendar.MINUTE, 59)
+    end.set(Calendar.SECOND, 59)
+    end.set(Calendar.MILLISECOND, 999)
+
+    return timestamp in start.timeInMillis..end.timeInMillis
+}
+
 
 
 
