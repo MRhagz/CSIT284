@@ -36,10 +36,6 @@ class QueueHistoryActivity : AppCompatActivity() {
         binding = ActivityQueueHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
-
         val recyclerView = binding.histotyRecyclerList
 
         val adapter = TicketCustomListViewAdapter(
@@ -106,6 +102,7 @@ class QueueHistoryActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.filter_none -> {
                         adapter.updateList(tickets)
+                        Toast.makeText(this, "Filtering: None", Toast.LENGTH_SHORT).show()
                         true
                     }
                     R.id.filter_today -> {
