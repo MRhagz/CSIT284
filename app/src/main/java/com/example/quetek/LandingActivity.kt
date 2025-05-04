@@ -172,7 +172,8 @@ class LandingActivity : Activity(), FetchDataCallback {
     }
 
     private fun showPriorityTicket(){
-        Database().getPriorityTicket(data.user_logged_in.id, this) { ticket ->
+        Database().getPriorityTicket(data.user_logged_in.id, this,
+            { ticket ->
             if (ticket != null) {
                 Log.e("Ticket", ticket.number.toString())
                 data.ticket = ticket
@@ -221,7 +222,8 @@ class LandingActivity : Activity(), FetchDataCallback {
             } else {
                 Log.e("Ticket", "No existing ticket")
             }
-        }
+        },
+            this)
     }
 
     private fun showTransactionDialog(ticket: Ticket) {

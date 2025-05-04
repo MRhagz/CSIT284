@@ -347,7 +347,7 @@ class Database {
             })
     }
 
-    fun getPriorityTicket(studentId: String, activity: Activity,  onTicketFetched: (Ticket?) -> Unit) {
+    fun getPriorityTicket(studentId: String, activity: Activity,  onTicketFetched: (Ticket?) -> Unit, callback: FetchDataCallback) {
         val dialog = activity.showFullscreenLoadingDialog()
         Log.e("Ticket", "Fetching Ticket")
 
@@ -361,17 +361,20 @@ class Database {
                             if (ticket?.studentId == studentId && ticket.status != Status.SERVED) {
                                 Log.e("Ticket", ticket.toString())
                                 onTicketFetched(ticket)
+                                callback.onFetchFinish()
                                 return
                             }
                         }
                     }
                     onTicketFetched(null)
+                    callback.onFetchFinish()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("Firebase", "Error fetching ticket: ${error.message}")
                     dialog.dismiss()
                     onTicketFetched(null)
+                    callback.onFetchFinish()
                 }
             })
     }
