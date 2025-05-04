@@ -91,12 +91,20 @@ class QueueRegistrationActivity : Activity() {
             // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
             val paymentFor = PaymentFor.getValueFromDisplay(binding.sPaymentFor.selectedItem.toString())
             if(priority){
-                Queue.enqueuePriority(
-                    binding.etAmount.text.toString().toDouble(),
-                    this, student.id,
-                    paymentFor,
-                    data
-                )
+                Database().isWindowOpen(Window.NONE) { res ->
+                    if (!res) {
+                        Toast.makeText(this, "Category is closed.", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Queue.enqueuePriority(
+                            binding.etAmount.text.toString().toDouble(),
+                            this, student.id,
+                            paymentFor, data,
+                        )
+                        Log.e("QueuRegistration", "Navigating to LandingActivity")
+                        startActivity(Intent(this, LandingActivity::class.java))
+                    }
+                }
             } else {
                 Database().isWindowOpen(Window.valueOf(paymentFor.window)) { res ->
                     if (!res) {

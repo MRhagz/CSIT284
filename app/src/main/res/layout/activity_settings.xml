@@ -80,25 +80,29 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:gravity="center"
         android:background="@drawable/rounded_border">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/notification"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="Theme"/>
+                android:text="Enable Notification "/>
 
             <Switch
+                android:id="@+id/swtichNotifications"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
@@ -106,18 +110,22 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/sound"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/notification"
+            app:layout_constraintEnd_toEndOf="@+id/notification">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="Option 2"/>
+                android:text="Sound on Alerts"
+                android:textColor="@color/black" />
 
             <Switch
+                android:id="@+id/switchSound"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
@@ -125,25 +133,29 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/vibrate"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/sound"
+            app:layout_constraintEnd_toEndOf="@+id/notification">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="Option 3"/>
+                android:text="Vibrate on Alerts"/>
 
             <Switch
+                android:id="@+id/switchVibrate"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/flATD"

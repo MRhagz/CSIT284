@@ -33,7 +33,7 @@ class LandingActivity : Activity(), FetchDataCallback {
 //    lateinit var length: TextView
     private lateinit var data: DataManager
     private lateinit var binding: ActivityLandingBinding
-    val notification = NotificationHelper(this)
+    private lateinit var notification : NotificationHelper ;
     private var hasShownTurn = false
     private var ticket: Ticket? = null
 
@@ -49,6 +49,7 @@ class LandingActivity : Activity(), FetchDataCallback {
 //        position = findViewById(R.id.tvPosition)
 //        length = findViewById(R.id.tvLength)
         data = application as DataManager
+        notification = NotificationHelper(this);
 
         val btnNotifyMe = findViewById<Button>(R.id.btnNotifyMe)
         val btnJoinQueue = binding.btnJoinQueue
@@ -78,7 +79,7 @@ class LandingActivity : Activity(), FetchDataCallback {
 
         ibtnMenu.setOnClickListener {
             Log.e("QueTek", "Navigating to Menu")
-            val intent = Intent(this, ProfileActivity::class.java)
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
 
@@ -111,7 +112,7 @@ class LandingActivity : Activity(), FetchDataCallback {
             Log.e("Debug", "showing ticket...")
             if (ticket != null) {
                 disableButton(button = binding.btnJoinQueue)
-
+                disableButton(binding.btnPriorityLane)
 
                 this.ticket = ticket
                 Log.e("Ticket", ticket.number.toString())
@@ -165,6 +166,15 @@ class LandingActivity : Activity(), FetchDataCallback {
             } else {
                 Log.e("Ticket", "No existing ticket")
                 enableButton(binding.btnJoinQueue)
+                Database().isWindowOpen(com.example.quetek.models.Window.NONE){ isOpen ->
+                    if(isOpen && ticket == null){
+                        enableButton(binding.btnPriorityLane)
+                        return@isWindowOpen
+                    }
+
+                    disableButton(binding.btnPriorityLane)
+                    return@isWindowOpen
+                }
                 clearTicket()
             }
         },
@@ -175,6 +185,8 @@ class LandingActivity : Activity(), FetchDataCallback {
         Database().getPriorityTicket(data.user_logged_in.id, this,
             { ticket ->
             if (ticket != null) {
+                disableButton(button = binding.btnJoinQueue)
+                disableButton(binding.btnPriorityLane)
                 Log.e("Ticket", ticket.number.toString())
                 data.ticket = ticket
                 binding.tvTicketId.text = ticket.number.toString()
@@ -221,6 +233,16 @@ class LandingActivity : Activity(), FetchDataCallback {
                 )
             } else {
                 Log.e("Ticket", "No existing ticket")
+                Database().isWindowOpen(com.example.quetek.models.Window.NONE){ isOpen ->
+                    if(isOpen && ticket == null){
+                        enableButton(binding.btnPriorityLane)
+                        return@isWindowOpen
+                    }
+
+                    disableButton(binding.btnPriorityLane)
+                    return@isWindowOpen
+                }
+                enableButton(button = binding.btnJoinQueue)
             }
         },
             this)

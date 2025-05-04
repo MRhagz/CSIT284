@@ -39,14 +39,14 @@
 
         <ImageButton
             android:id="@+id/ibtnMenu"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center_vertical"
             android:background="@null"
             android:contentDescription="menu"
             android:scaleType="fitCenter"
-            android:layout_marginEnd="20dp"
-            android:src="@drawable/profile_icon" />
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/settings" />
     </LinearLayout>
 
     <FrameLayout
