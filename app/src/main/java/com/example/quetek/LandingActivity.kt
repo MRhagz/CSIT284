@@ -148,6 +148,7 @@ class LandingActivity : Activity(), FetchDataCallback {
                                 timeEstimator?.cancel()
                                 timeEstimator?.onFinish()
                                 showTransactionDialog(ticket)
+                                notification.showNotification("It's your turn, Teknoy! Please follow proceed to the next step.")
                                 return@listenToStudentTickets
                                 // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                             }
@@ -219,6 +220,7 @@ class LandingActivity : Activity(), FetchDataCallback {
                                 timeEstimator?.cancel()
                                 timeEstimator?.onFinish()
                                 showTransactionDialog(ticket)
+                                notification.showNotification("It's your turn, Teknoy! Please follow proceed to the next step.")
                                 return@listenToPriorityTickets
                                 // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                             }
