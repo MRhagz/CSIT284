@@ -215,6 +215,8 @@ class LandingActivity : Activity(), FetchDataCallback {
                             Log.e("Position", "position: ${pos}")
                             if (pos == 1) {
                                 hasShownTurn = true
+                                timeEstimator?.cancel()
+                                timeEstimator?.onFinish()
                                 showTransactionDialog(ticket)
                                 return@listenToPriorityTickets
                                 // TODO CLEAR THE LANDING PAGE TICKET DETAILS
@@ -234,7 +236,7 @@ class LandingActivity : Activity(), FetchDataCallback {
             } else {
                 Log.e("Ticket", "No existing ticket")
                 Database().isWindowOpen(com.example.quetek.models.Window.NONE){ isOpen ->
-                    if(isOpen && ticket == null){
+                    if(isOpen){
                         enableButton(binding.btnPriorityLane)
                         return@isWindowOpen
                     }
@@ -243,6 +245,7 @@ class LandingActivity : Activity(), FetchDataCallback {
                     return@isWindowOpen
                 }
                 enableButton(button = binding.btnJoinQueue)
+                clearTicket()
             }
         },
             this)
