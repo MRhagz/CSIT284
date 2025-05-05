@@ -33,7 +33,7 @@ class LandingActivity : Activity(), FetchDataCallback {
 //    lateinit var length: TextView
     private lateinit var data: DataManager
     private lateinit var binding: ActivityLandingBinding
-    private lateinit var notification : NotificationHelper ;
+    private lateinit var notification : NotificationHelper
     private var hasShownTurn = false
     private var ticket: Ticket? = null
 

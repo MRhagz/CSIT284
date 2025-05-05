@@ -18,15 +18,15 @@ open class User(
     var userType: UserType = UserType.NONE,
     var isPriority : Boolean = false
 ) {
-    constructor() : this("", "", "", "", UserType.NONE)
+    constructor() : this("", "", "", "", UserType.NONE, false)
 
     companion object {
-        fun create(id: String, password: String, firstName: String, lastName: String, userType: UserType): User {
-            return User(id, password, firstName, lastName, userType)
+        fun create(id: String, password: String, firstName: String, lastName: String, userType: UserType, isPriority: Boolean): User {
+            return User(id, password, firstName, lastName, userType, isPriority)
         }
     }
 
     override fun toString(): String {
-        return "${id}, ${password}, ${firstName}, ${userType}"
+        return "${id}, ${password}, ${firstName}, ${userType}, isPrio = ${isPriority}"
     }
 }

@@ -77,6 +77,8 @@ class Database {
                             val idMatch =
                                 userSnap.child("id").getValue(String::class.java) == enteredId
 
+                            val priorityValue = userSnap.child("isPriority").getValue(Boolean::class.java) ?: false
+
                             if (idMatch) {
                                 val user = when (baseUser?.userType) {
                                     UserType.STUDENT -> {
@@ -94,7 +96,7 @@ class Database {
                                             firstName = baseUser.firstName,
                                             lastName = baseUser.lastName,
                                             program = programEnum,
-                                            isPriority = baseUser.isPriority
+                                            isPriority = priorityValue
                                         )
                                     }
 
@@ -109,7 +111,7 @@ class Database {
                                             firstName = baseUser.firstName,
                                             lastName = baseUser.lastName,
                                             window = window,
-                                            isPriority = baseUser.isPriority
+                                            isPriority = priorityValue
                                         )
                                     }
 
