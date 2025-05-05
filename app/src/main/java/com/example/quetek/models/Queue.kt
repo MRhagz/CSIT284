@@ -40,8 +40,8 @@ object Queue {
         data.isPriority = false
     }
 
-    fun enqueuePriority(amount: Double, activity: Activity, studentId: String, paymentFor: PaymentFor, data: DataManager) {
-        Database().addPrioirtyLaneSynchronized(amount, activity, studentId, paymentFor)
+    fun enqueuePriority(amount: Double, activity: Activity, studentId: String, paymentFor: PaymentFor, data: DataManager, callback: () -> Unit) {
+        Database().addPrioirtyLaneSynchronized(amount, activity, studentId, paymentFor, callback)
         val dbRef = FirebaseDatabase.getInstance().getReference("users")
         val targetId = data.user_logged_in.id // ID you're searching for
 

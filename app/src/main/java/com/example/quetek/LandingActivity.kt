@@ -40,7 +40,6 @@ class LandingActivity : Activity(), FetchDataCallback {
     private var timeEstimator: CountDownTimer? = null
     private var notified: Boolean = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLandingBinding.inflate(layoutInflater)
@@ -102,9 +101,11 @@ class LandingActivity : Activity(), FetchDataCallback {
 
         if(data.user_logged_in.isPriority || data.isPriority){
             showPriorityTicket()
+
         } else {
             showTicket()
         }
+
     }
 
     private fun showTicket() {
@@ -167,7 +168,7 @@ class LandingActivity : Activity(), FetchDataCallback {
                 Log.e("Ticket", "No existing ticket")
                 enableButton(binding.btnJoinQueue)
                 Database().isWindowOpen(com.example.quetek.models.Window.NONE){ isOpen ->
-                    if(isOpen && ticket == null){
+                    if(isOpen){
                         enableButton(binding.btnPriorityLane)
                         return@isWindowOpen
                     }

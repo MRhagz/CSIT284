@@ -81,7 +81,6 @@ class QueueRegistrationActivity : Activity() {
 
 
         btnSubmit.setOnClickListener {
-            // TODO:  ADD VALIDATIONS
             if (!validateInputs()) {
                 binding.tvInputFeedback.text = "All fields must not be empty."
                 binding.tvInputFeedback.visibility = View.VISIBLE
@@ -91,6 +90,7 @@ class QueueRegistrationActivity : Activity() {
             // TODO: ADD DIALOG FOR CONFIRMATION AND DELETE THE CONFIRMATION ACTIVITY
             val paymentFor = PaymentFor.getValueFromDisplay(binding.sPaymentFor.selectedItem.toString())
             if(priority){
+                Log.e("QueueRegistrationDebug", "Priority lane")
                 Database().isWindowOpen(Window.NONE) { res ->
                     if (!res) {
                         Toast.makeText(this, "Category is closed.", Toast.LENGTH_SHORT).show()
@@ -100,9 +100,14 @@ class QueueRegistrationActivity : Activity() {
                             binding.etAmount.text.toString().toDouble(),
                             this, student.id,
                             paymentFor, data,
+                            callback = {
+                                val intent = Intent(this, LandingActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                            }
                         )
-                        Log.e("QueuRegistration", "Navigating to LandingActivity")
-                        startActivity(Intent(this, LandingActivity::class.java))
+
+//                        Log.e("QueuRegistration", "Navigating to LandingActivity")
                     }
                 }
             } else {
@@ -116,7 +121,7 @@ class QueueRegistrationActivity : Activity() {
                             paymentFor, data,
                             binding.etAmount.text.toString().toDouble(),
                         )
-                        Log.e("QueuRegistration", "Navigating to LandingActivity")
+//                        Log.e("QueuRegistration", "Navigating to LandingActivity")
                     }
                 }
             }

@@ -223,6 +223,7 @@ class Database {
         activity: Activity,
         studentId: String,
         paymentFor: PaymentFor,
+        callback: () -> Unit
     ) {
         val dialog = activity.showFullscreenLoadingDialog()
         val newTimestamp = System.currentTimeMillis()
@@ -251,14 +252,23 @@ class Database {
                     val key = priority_lane.push().key ?: return@generateTicketNumber
 
                     priority_lane.child(key).setValue(ticket)
-                        .addOnSuccessListener { dialog.dismiss() }
-                        .addOnFailureListener { dialog.dismiss() }
+                        .addOnSuccessListener {
+                            dialog.dismiss()
+                            callback()
+//                            activity.finish()
+                        }
+                        .addOnFailureListener {
+                            dialog.dismiss()
+                            callback()
+//                            activity.finish()
+                        }
 
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 dialog.dismiss()
+                callback()
             }
         })
     }
