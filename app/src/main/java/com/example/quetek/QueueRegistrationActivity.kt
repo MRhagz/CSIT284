@@ -106,8 +106,6 @@ class QueueRegistrationActivity : Activity() {
                                 startActivity(intent)
                             }
                         )
-
-//                        Log.e("QueuRegistration", "Navigating to LandingActivity")
                     }
                 }
             } else {
@@ -126,7 +124,6 @@ class QueueRegistrationActivity : Activity() {
                                 startActivity(intent)
                             }
                         )
-//                        Log.e("QueuRegistration", "Navigating to LandingActivity")
                     }
                 }
             }
