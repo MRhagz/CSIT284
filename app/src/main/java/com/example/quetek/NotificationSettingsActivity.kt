@@ -66,24 +66,26 @@ class NotificationSettingsActivity : Activity() {
             if(data.notifPref == NotificationSetting.POSITIONBASED){
                 data.positionValue = (position as EditText).text.toString().toInt()
             } else if (data.notifPref == NotificationSetting.TIMEBASED) {
-                data.timeValue = (time as EditText).text.toString().toInt()
+                val time = (time as EditText).text.toString().toInt()
+                if (time < 1) {
+                    showToast("Invalid input")
+                    return@setOnClickListener
+                }
+                else {
+                    data.timeValue = time
+                }
             }
-//            startActivity(Intent(this, LandingActivity::class.java))
             finish()
         }
 
         btnCancel.setOnClickListener {
-//            startActivity(Intent(this, LandingActivity::class.java))
             Log.e("QueTek","Cancel button clicked" )
             finish()
-//            notificationHelper.showNotification()
         }
 
         btnBack.setOnClickListener {
-//            startActivity(Intent(this, LandingActivity::class.java))
             Log.e("QueTek","Cancel button clicked" )
             finish()
-//            notificationHelper.showNotification()
         }
 
     }

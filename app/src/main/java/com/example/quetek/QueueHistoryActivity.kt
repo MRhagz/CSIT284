@@ -1,10 +1,6 @@
 package com.example.quetek
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
-import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,24 +10,18 @@ import android.widget.DatePicker
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityQueueHistoryBinding
 import com.example.quetek.models.Ticket
 import com.example.quetek.models.user.Accountant
-import com.example.quetek.util.TicketCustomListViewAdapter
+import com.example.quetek.utils.TicketCustomListViewAdapter
 import isSameDay
 import isThisMonth
 import isThisWeek
 import isToday
-import setVisibilityGone
-import setVisibilityToggle
-import setVisibilityVisible
 import java.util.Calendar
 
 class QueueHistoryActivity : AppCompatActivity() {

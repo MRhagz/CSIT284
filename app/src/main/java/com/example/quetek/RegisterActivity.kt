@@ -24,7 +24,7 @@ import com.example.quetek.databinding.ActivityRegisterBinding
 import com.example.quetek.models.Program
 import com.example.quetek.models.UserType
 import com.example.quetek.models.Window
-import com.example.quetek.util.UserFactory
+import com.example.quetek.utils.UserFactory
 import com.google.firebase.FirebaseApp
 import showFullscreenLoadingDialog
 //import showLoadingDialog
@@ -136,17 +136,10 @@ class RegisterActivity : AppCompatActivity() {
                         databaseReference.child(userKey).setValue(user)
                             .addOnSuccessListener {
                                 loadingDialog.dismiss()
-//                                Toast.makeText(this, "User added successfully!", Toast.LENGTH_SHORT)
-//                                    .show()
                                 showID(user.id)
                             }
                             .addOnFailureListener { error ->
                                 loadingDialog.dismiss()
-//                                Toast.makeText(
-//                                    this,
-//                                    "Failed to add user: ${error.message}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
                             }
                     },
                     onFailure = { error ->

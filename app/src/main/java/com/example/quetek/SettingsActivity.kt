@@ -72,15 +72,11 @@ class SettingsActivity : Activity() {
 
         llAccount.setOnClickListener {
             Log.e("Quetek", "Account option is clicked")
-//            Toast.makeText(this, "Teammate has the screen.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
         ibtnBack.setOnClickListener {
             Log.e("Quetek", "Navigating to LandingActivity")
-
-            val intent = Intent(this, ProfileActivity::class.java)
-//            startActivity(intent)
             finish()
         }
 

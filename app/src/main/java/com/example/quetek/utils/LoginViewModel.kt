@@ -1,24 +1,16 @@
-package com.example.quetek.util
+package com.example.quetek.utils
 
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quetek.AdminActivity
-import com.example.quetek.LandingActivity
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
-import com.example.quetek.models.UserType
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeout
 
 sealed class LoginResult {

@@ -1,4 +1,4 @@
-package com.example.quetek.util
+package com.example.quetek.utils
 
 import com.example.quetek.models.Program
 import com.example.quetek.models.Student

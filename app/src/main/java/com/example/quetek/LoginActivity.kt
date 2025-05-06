@@ -48,7 +48,6 @@ class LoginActivity : Activity() {
         val view = binding.root
         setContentView(view)
 
-//        checkAutoLogin()
         etUsername = binding.etIdNumber
         val etPassword = binding.etPassword
         val btnGuest = binding.btnGuest
@@ -77,14 +76,10 @@ class LoginActivity : Activity() {
                         Log.e("DEBUG", user.toString())
                         Toast.makeText(this, "Welcome ${user.firstName}", Toast.LENGTH_SHORT).show()
                         navigateToLandingPage(user.userType)
-//                        dialog.dismiss()
-//                        saveLogin() // TODO ADD A TOGGLE BUTTON "REMEMBER ME"
                     }
                     else {
                         tvLoginFeedback.setText("Incorrect ID or password.")
                     }
-                } else {
-//                    tvLoginFeedback.setText("ID or password incorrect")
                 }
             }
 
@@ -194,45 +189,3 @@ class LoginActivity : Activity() {
     }
 
 }
-
-
-//    private fun verifyLogin() {
-//        val data = (application as DataManager);
-//
-//        Database().getUser(etUsername.text.toString()) { userSnapshot ->
-//            if (userSnapshot != null) {
-//                val username = userSnapshot.child("username").getValue(String::class.java) ?: ""
-//                val password = userSnapshot.child("password").getValue(String::class.java) ?: ""
-//                val id = userSnapshot.child("id").getValue(String::class.java) ?: ""
-//
-//                // save to data manager
-//                data.firstname  = username.split(" ").dropLast(1).joinToString(" ");
-//                data.lastname = username.split(" ").last();
-//                data.email = userSnapshot.child("email").getValue(String::class.java) ?: "";
-//                data.idNumber = id;
-//                data.key = userSnapshot.key.toString()
-//
-////                navigateToLandingPage()
-//                Log.d("User", "User name: $username")
-//            } else {
-//                tvLoginFeedback.setText("Incorrect ID or password.")
-//                Log.d("User", "User not found")
-//            }
-//        }
-//    }
-
-//            val adminUser = "admin"
-//            val adminPass = "123"
-//            val student = SampleData.userList.find { it.idNumber == username.toString()}
-//            if (adminUser == username.toString() && adminPass == password.toString()) {
-//                Log.e("QueTek", "Navigating to AdminActivity")
-//                val intent = Intent(this, AdminActivity::class.java)
-//                startActivity(intent)
-//            } else if (student != null && student.password == password.toString()) {
-//                Log.e("QueTek", "Navigating to LandingActivity")
-//                val intent = Intent(this, LandingActivity::class.java)
-//                startActivity(intent)
-////                Log.e("Quetek", "Incorrect information.")
-////                print("invalid")
-////                tvloginFeedback.setText("Incorrect username or password.")
-//}

@@ -47,8 +47,6 @@ class EditProfileActivity : Activity() {
         val confirmpassword = findViewById<EditText>(R.id.confirmPasswordInput)
 
         backProfileButton.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-//            startActivity(intent)
             finish()
         }
 
@@ -83,8 +81,6 @@ class EditProfileActivity : Activity() {
                         } else if(!password.text.isNullOrBlank() && password.getTextValue().equals(confirmpassword.getTextValue())){
                             usersnapshot.ref.child("password").setValue(password.getTextValue())
                         }
-                        val intent = Intent(applicationContext, ProfileActivity::class.java)
-//                        startActivity(intent)
                         finish()
                     }
                 }

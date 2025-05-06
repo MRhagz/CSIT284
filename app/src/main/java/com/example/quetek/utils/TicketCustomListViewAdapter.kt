@@ -1,4 +1,4 @@
-package com.example.quetek.util
+package com.example.quetek.utils
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quetek.R
 import com.example.quetek.models.Ticket
-import com.example.quetek.utils.TicketDiffCallback
 
 class TicketCustomListViewAdapter(
     private val context: Context,

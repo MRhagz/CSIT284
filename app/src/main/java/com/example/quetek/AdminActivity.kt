@@ -2,34 +2,23 @@ package com.example.quetek
 
 import android.app.Activity
 import android.content.Intent
-import android.location.GnssAntennaInfo.Listener
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.view.Window
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.quetek.app.DataManager
 import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityAdminBinding
 import com.example.quetek.models.Ticket
 import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
-import com.example.quetek.util.TicketCustomListViewAdapter
+import com.example.quetek.utils.TicketCustomListViewAdapter
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.values
-import disable
-import enable
-import setVisibilityGone
-import setVisibilityVisible
-import stopShimmerNull
 import textReturn
 
 class AdminActivity : Activity() {
@@ -149,51 +138,9 @@ class AdminActivity : Activity() {
 
         setQueueState(adapter)
 
-
-        val removedUser : MutableList<User>  = mutableListOf()
-        val removedUserString : MutableList<String>  = mutableListOf()
-//        binding.btnStart.setOnClickListener {
-//            if(binding.btnStart.text.equals("Done")){
-//                Database().serveNextTicketForWindow(accountant.window.name) {
-//                    Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
-//                }
-//            } else {
-//                binding.btnStart.text = "Done"
-//                binding.btnCancel.visibility = View.VISIBLE
-//                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
-//                binding.btnStop.visibility = View.VISIBLE
-//            }
-//        }
-
         setToggleWindowListener(adapter)
         setButtonServeListener()
-//
-//        btnCancel.setOnClickListener { // TODO and prepend "binding" on views
-//            if(removedUser.isNotEmpty()){
-//                userList.add(0,removedUser[removedUser.lastIndex].toString())
-//                users.add(0,removedUser[removedUser.lastIndex])
-//                removedUser.removeAt(removedUser.lastIndex)
-//                servingNumber.text = users[0].id
-//                recyclerView.post {
-//                    recyclerView.notifyDataSetChanged()
-//                    queueLength.text = if (userList.size < 10) "0${userList.size}" else "${userList.size}"
-//                    windowNumber.text = "01"
-//                }
-//            }
-//
-//        }
-//
-//
     }
-
-//    private fun setFirstTicket(updatedTickets: List<Ticket>) {
-//        val firstTicket = updatedTickets.first().number
-//        val curr = Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").addV
-//        if (curr == -1) {
-//            Database().database.getReference("windows").child(accountant.window.name)
-//                .child("currentTicket").setValue(firstTicket)
-//        }
-//    }
 
     private fun setButtonServeListener() {
         if(accountant.isPriority){
@@ -236,9 +183,6 @@ class AdminActivity : Activity() {
                         }
                     )
 
-//                    Database().NextPriorityLaneWindow() {
-//                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
-//                    }
                 } else {
                     addListener(adapter)
                     Database().setWindowOpen(
@@ -407,22 +351,3 @@ class AdminActivity : Activity() {
 
 
 }
-
-//        binding.btnToggleWindow.setOnClickListener {
-//            if(binding.btnStart.text.equals("Done")){
-//                if(binding.windowNumber.text.equals("PL")){
-//                    Database().NextPriorityLaneWindow() {
-//                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
-//                    }
-//                } else {
-//                    Database().serveNextTicketForWindow(accountant.window.name) {
-//                        Toast.makeText(this, "No tickets left to serve!", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            } else {
-//                binding.btnStart.text = "Done"
-//                binding.btnCancel.visibility = View.VISIBLE
-//                Database().database.getReference("windows").child(accountant.window.name).child("currentTicket").setValue(firstTicket)
-//                binding.btnStop.visibility = View.VISIBLE
-//            }
-//        }

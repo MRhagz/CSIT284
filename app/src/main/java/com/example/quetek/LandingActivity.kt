@@ -29,8 +29,6 @@ import java.util.concurrent.TimeUnit
 
 
 class LandingActivity : Activity(), FetchDataCallback {
-//    lateinit var position: TextView
-//    lateinit var length: TextView
     private lateinit var data: DataManager
     private lateinit var binding: ActivityLandingBinding
     private lateinit var notification : NotificationHelper
@@ -40,13 +38,15 @@ class LandingActivity : Activity(), FetchDataCallback {
     private var timeEstimator: CountDownTimer? = null
     private var notified: Boolean = false
 
+    private var currentMillisRemaining: Long = 0L
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLandingBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-//        position = findViewById(R.id.tvPosition)
-//        length = findViewById(R.id.tvLength)
+
         data = application as DataManager
         notification = NotificationHelper(this);
 
@@ -59,10 +59,6 @@ class LandingActivity : Activity(), FetchDataCallback {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_priority_lane)
         dialog.window?.setBackgroundDrawable(getDrawable(R.drawable.rectanglelogoutdialog))
-
-//        val notify = NotificationHelper(this)
-//        notify.showNotification()
-
 
         binding.tvTime.setText("00:00:00") // temporary for now
         notification.notificationPermission()
@@ -154,12 +150,21 @@ class LandingActivity : Activity(), FetchDataCallback {
                             }
 
                             binding.tvPosition.text =  pos.toString()
-                            if(!notified && pos == data.positionValue && (data.notifPref == NotificationSetting.DEFAULT ||
-                                data.notifPref == NotificationSetting.POSITIONBASED)){
-                                notified = true
-                                Log.e("Notification", "Notified at ${pos}")
-                                notification.showNotification("You're now at position $pos in the queue. Please get ready!")
+                            if (!notified) {
+                                if (pos == data.positionValue && (data.notifPref == NotificationSetting.DEFAULT ||
+                                    data.notifPref == NotificationSetting.POSITIONBASED)
+                                ) {
+                                    notified = true
+                                    Log.e("Notification", "Notified at ${pos}")
+                                    notification.showNotification("You're now at position $pos in the queue. Please get ready!")
+                                }
+                                else if (getCurrentMinute() < data.timeValue) {
+                                    Log.e("Debug", "Time notified")
+                                    notified = true
+                                    notification.showNotification("Estimated time remaining is less than you set up. Please get ready!")
+                                }
                             }
+
                         }
 
                     },
@@ -197,7 +202,6 @@ class LandingActivity : Activity(), FetchDataCallback {
 
                 Database().listenToPriorityTickets(
                     onServed = { servedTicket ->
-                        // this does not work
                         clearTicket()
                         Toast.makeText(
                             this,
@@ -270,7 +274,6 @@ class LandingActivity : Activity(), FetchDataCallback {
 
             dialogView.findViewById<Button>(R.id.btnDismiss)?.setOnClickListener {
                 dialog.dismiss()
-//                clearTicket()
             }
 
             val drawable = ContextCompat.getDrawable(this, R.drawable.rectanglelogoutdialog)
@@ -291,6 +294,11 @@ class LandingActivity : Activity(), FetchDataCallback {
         binding.tvLength.text = "00"
     }
 
+    fun getCurrentMinute(): Int {
+        return (TimeUnit.MILLISECONDS.toMinutes(currentMillisRemaining) % 60).toInt()
+    }
+
+
     private fun setTImer(pos: Int) {
         timeEstimator?.cancel()
         if (!hasShownTurn) {
@@ -299,6 +307,8 @@ class LandingActivity : Activity(), FetchDataCallback {
 
             timeEstimator = object : CountDownTimer(minsInMill, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
+                    currentMillisRemaining = millisUntilFinished
+
                     val hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished)
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60
                     val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60
@@ -340,10 +350,6 @@ class LandingActivity : Activity(), FetchDataCallback {
         binding.tvWindow.textReturn(binding.shimmerWindowNumber)
         binding.tvPosition.textReturn(binding.shimmerQueuePosition)
         binding.tvTime.textReturn(binding.shimmerServingTime)
-    }
-
-    private fun toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
 }

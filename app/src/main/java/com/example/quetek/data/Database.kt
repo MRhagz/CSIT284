@@ -1,18 +1,12 @@
 package com.example.quetek.data
 
-import android.R
 import android.app.Activity
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.renderscript.Sampler.Value
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.example.quetek.FetchDataCallback
-import com.example.quetek.app.DataManager
 import com.example.quetek.models.PaymentFor
 import com.example.quetek.models.Program
 import com.example.quetek.models.Status
@@ -22,7 +16,6 @@ import com.example.quetek.models.UserType
 import com.example.quetek.models.Window
 import com.example.quetek.models.user.Accountant
 import com.example.quetek.models.user.User
-import com.google.firebase.Timestamp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -30,9 +23,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.MutableData
 import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.getValue
 import showFullscreenLoadingDialog
-import java.time.temporal.TemporalAmount
 import java.util.Calendar
 
 class Database {
@@ -140,52 +131,6 @@ class Database {
             })
     }
 
-    fun addTicket(activity: Activity, ticket: Ticket) {
-        val ticketId = tickets.push().key ?: return
-
-        tickets.child(ticketId).setValue(ticket)
-            .addOnSuccessListener {
-                activity.showFullscreenLoadingDialog().dismiss()
-
-            }
-            .addOnFailureListener { error ->
-                activity.showFullscreenLoadingDialog().dismiss()
-
-            }
-    }
-
-//    private fun generateTicketNumber(windowId: String, callback: (String) -> Unit) {
-//        val counterRef = FirebaseDatabase.getInstance()
-//            .getReference("counters")
-//            .child("ticket_number")
-//            .child(windowId)
-//
-//        counterRef.runTransaction(object : Transaction.Handler {
-//            override fun doTransaction(currentData: MutableData): Transaction.Result {
-//                var currentNumber = currentData.getValue(Int::class.java) ?: 0
-//                currentNumber += 1
-//                currentData.value = currentNumber
-//                return Transaction.success(currentData)
-//            }
-//
-//            override fun onComplete(
-//                error: DatabaseError?,
-//                committed: Boolean,
-//                currentData: DataSnapshot?
-//            ) {
-//                if (error != null || !committed) {
-//                    Log.e("TicketGen", "Failed to generate ticket number: ${error?.message}")
-//                    callback("ERR") // fallback
-//                } else {
-//                    val ticketNumber = currentData?.getValue(Int::class.java) ?: 0
-//                    val prefix = windowId.first().uppercaseChar() // e.g., 'E' from "Enrollment"
-//                    val formattedNumber = String.format("%03d", ticketNumber) // 001, 002, ...
-//                    callback("$prefix$formattedNumber") // E.g., "E001"
-//                }
-//            }
-//        })
-//    }
-
     private fun generateTicketNumber(windowId: String, callback: (Int) -> Unit) {
         val counterRef = FirebaseDatabase.getInstance()
             .getReference("counters")
@@ -210,7 +155,6 @@ class Database {
                     callback(0) // fallback
                 } else {
                     val ticketNumber = currentData?.getValue(Int::class.java) ?: 0
-                    val formattedNumber = String.format("%02d", ticketNumber) // 01, 02, ..., 99
                     callback(ticketNumber)
                 }
             }
@@ -218,7 +162,7 @@ class Database {
     }
 
 
-    fun addPrioirtyLaneSynchronized(
+    fun addPriorityLaneSynchronized(
         amount: Double,
         activity: Activity,
         studentId: String,
@@ -255,12 +199,10 @@ class Database {
                         .addOnSuccessListener {
                             dialog.dismiss()
                             callback()
-//                            activity.finish()
                         }
                         .addOnFailureListener {
                             dialog.dismiss()
                             callback()
-//                            activity.finish()
                         }
 
                 }
@@ -794,19 +736,6 @@ class Database {
                 } else {
                     onError(error)
                 }
-            }
-        })
-    }
-
-    fun bindTextViewToDatabase(textView: TextView, path: String) {
-        database.getReference(path).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.getValue(Int::class.java) ?: 0
-                textView.text = value.toString()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("FIREBASE", "Failed to read $path", error.toException())
             }
         })
     }
