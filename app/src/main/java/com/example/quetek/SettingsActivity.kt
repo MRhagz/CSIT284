@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,15 +47,29 @@ class SettingsActivity : Activity() {
 
         val notificationHelper = NotificationHelper(this)
 
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
         switchSound.setOnCheckedChangeListener { _, isChecked ->
             notificationHelper.saveSoundSettings(isChecked)
+            notificationHelper.saveVibrateSettings(false)
+            switchVibrate.isChecked = false;
+            switchSound.isChecked = isChecked
+//            if (isChecked) {
+//                audioManager.ringerMode = AudioManager.RINGER_MODE_NORMAL
+//            }
         }
 
         switchVibrate.setOnCheckedChangeListener { _, isChecked ->
             notificationHelper.saveVibrateSettings(isChecked)
+            notificationHelper.saveSoundSettings(false)
+            switchSound.isChecked = false
+            switchVibrate.isChecked = isChecked;
+//            if (isChecked) {
+//                audioManager.ringerMode = AudioManager.RINGER_MODE_VIBRATE
+//            }
         }
 
-        val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("NotificationSettings", Context.MODE_PRIVATE)
         switchNotification.isChecked = sharedPref.getBoolean("notifications_enabled", true)
         switchNotification.setOnCheckedChangeListener { _, isChecked ->
             with(sharedPref.edit()) {
@@ -65,6 +80,8 @@ class SettingsActivity : Activity() {
                 val notificationHelper = NotificationHelper(this);
                 notificationHelper.notificationPermission()
             } else {
+                notificationHelper.saveSoundSettings(false)
+                switchSound.isChecked = false
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(1)
             }

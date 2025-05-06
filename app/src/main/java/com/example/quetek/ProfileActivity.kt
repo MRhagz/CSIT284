@@ -29,7 +29,6 @@ class ProfileActivity : Activity() {
 
         val backButton = findViewById<Button>(R.id.btnBack)
         val editProfileButton = findViewById<Button>(R.id.editProfile)
-        val settingsButton = findViewById<Button>(R.id.settingsButton)
         val logoutButton = findViewById<Button>(R.id.logoutButton)
         val usernameDisplay = findViewById<TextView>(R.id.usernameDisplay)
         val idDisplay = findViewById<TextView>(R.id.idNumberDisplay)
@@ -80,10 +79,6 @@ class ProfileActivity : Activity() {
             startActivity(Intent(this, EditProfileActivity::class.java))
         }
 
-        settingsButton.setOnClickListener {
-            Log.e("ProfileActivity", "Navigating to Settings Activity")
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
 
         logoutButton.setOnClickListener {
             dialog.show()

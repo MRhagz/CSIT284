@@ -21,7 +21,12 @@ import com.example.quetek.data.Database
 import com.example.quetek.databinding.ActivityLandingBinding
 import com.example.quetek.models.NotificationSetting
 import com.example.quetek.models.Status
+import com.example.quetek.models.Student
 import com.example.quetek.models.Ticket
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import disableButton
 import enableButton
 import textReturn
@@ -225,8 +230,27 @@ class LandingActivity : Activity(), FetchDataCallback {
                                 timeEstimator?.onFinish()
                                 showTransactionDialog(ticket)
                                 notification.showNotification("It's your turn, Teknoy! Please follow proceed to the next step.")
+                                data.user_logged_in.isPriority = false
+                                data.isPriority = false
+
+                                val data = ((application as DataManager).user_logged_in as Student)
+                                val database = FirebaseDatabase.getInstance().getReference("users")
+                                database.orderByChild("id").equalTo(data.id).addValueEventListener(object :
+                                    ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        if(snapshot.exists()){
+                                            val usersnapshot = snapshot.children.first();
+                                            usersnapshot.ref.child("isPriority").setValue(false)
+                                        }
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        Toast.makeText(applicationContext, "Update user information failed.", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                })
+
                                 return@listenToPriorityTickets
-                                // TODO CLEAR THE LANDING PAGE TICKET DETAILS
                             }
 
                             binding.tvPosition.text = pos.toString()
