@@ -219,7 +219,8 @@ class Database {
         activity: Activity,
         studentId: String,
         paymentFor: PaymentFor,
-        amount: Double
+        amount: Double,
+        callback: () -> Unit
     ) {
         val dialog = activity.showFullscreenLoadingDialog()
         val ticketsRef = tickets
@@ -251,11 +252,11 @@ class Database {
                     ticketsRef.child(key).setValue(ticket)
                         .addOnSuccessListener {
                             dialog.dismiss()
-                            activity.finish()
+                            callback()
                         }
                         .addOnFailureListener {
                             dialog.dismiss()
-                            activity.finish()
+                            callback()
                         }
 
                 }

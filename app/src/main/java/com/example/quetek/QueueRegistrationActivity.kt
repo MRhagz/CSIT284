@@ -120,6 +120,11 @@ class QueueRegistrationActivity : Activity() {
                             this, student.id,
                             paymentFor, data,
                             binding.etAmount.text.toString().toDouble(),
+                            callback = {
+                                val intent = Intent(this, LandingActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                            }
                         )
 //                        Log.e("QueuRegistration", "Navigating to LandingActivity")
                     }

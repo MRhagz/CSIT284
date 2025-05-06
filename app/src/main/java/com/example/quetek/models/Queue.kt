@@ -15,8 +15,8 @@ object Queue {
     var length: Int = 0
     var window: Window? = null
 
-    fun enqueue(activity: Activity, studentId: String, paymentFor: PaymentFor, data : DataManager, amount: Double) {
-        Database().addTicketSynchronized(activity, studentId, paymentFor, amount)
+    fun enqueue(activity: Activity, studentId: String, paymentFor: PaymentFor, data : DataManager, amount: Double, callback: () -> Unit) {
+        Database().addTicketSynchronized(activity, studentId, paymentFor, amount, callback)
 
         val dbRef = FirebaseDatabase.getInstance().getReference("users")
         val targetId = data.user_logged_in.id // ID you're searching for
