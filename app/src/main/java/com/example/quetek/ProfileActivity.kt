@@ -79,7 +79,6 @@ class ProfileActivity : Activity() {
             startActivity(Intent(this, EditProfileActivity::class.java))
         }
 
-
         logoutButton.setOnClickListener {
             dialog.show()
         }

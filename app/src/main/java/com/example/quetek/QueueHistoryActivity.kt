@@ -63,6 +63,7 @@ class QueueHistoryActivity : AppCompatActivity() {
         if(accountant.isPriority){
             Database().listenToServedPriorityLane { updatedTickets ->
                 adapter.updateList(updatedTickets)
+                tickets = updatedTickets
                 if (updatedTickets.isEmpty()) {
                     Toast.makeText(this, "No queued tickets!", Toast.LENGTH_SHORT).show()
                     emptyState.visibility = View.VISIBLE

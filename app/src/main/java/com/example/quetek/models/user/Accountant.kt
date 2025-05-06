@@ -1,9 +1,7 @@
 package com.example.quetek.models.user
 
-import com.example.quetek.models.Program
 import com.example.quetek.models.UserType
 import com.example.quetek.models.Window
-import java.util.Date
 
 class Accountant(
     id: String,
